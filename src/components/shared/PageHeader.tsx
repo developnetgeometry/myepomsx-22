@@ -12,6 +12,8 @@ import {
 
 interface PageHeaderProps {
   title: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
   onSearch?: (query: string) => void;
   onAddNew?: () => void;
   addNewLabel?: string;
@@ -23,6 +25,8 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
+  subtitle,
+  icon,
   onSearch,
   onAddNew,
   addNewLabel = "Add New",
@@ -45,11 +49,17 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   };
 
   return (
-    <div className="page-header">
-      <h1 className="page-title">{title}</h1>
+    <div className="page-header space-y-4 mb-6">
+      <div className="flex items-center gap-3">
+        {icon && <div className="text-epomsx-primary">{icon}</div>}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
+          {subtitle && <p className="text-gray-500 text-sm mt-1">{subtitle}</p>}
+        </div>
+      </div>
       
       <div className="flex flex-col md:flex-row gap-3">
-        <form onSubmit={handleSearchSubmit} className="search-bar">
+        <form onSubmit={handleSearchSubmit} className="search-bar flex gap-2 flex-1">
           <div className="relative w-full">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
             <Input
