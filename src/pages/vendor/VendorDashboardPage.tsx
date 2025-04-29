@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Calendar } from 'lucide-react';
+import { Calendar, Download, FilterIcon } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -13,26 +12,27 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Area,
-  AreaChart
 } from 'recharts';
+import { format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
+import { AreaChart, Area } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar } from 'recharts';
+import { LineChart, Line } from 'recharts';
+import { toast } from '@/hooks/use-toast';
 
 // Sample chart data
 const workOrderData = [
@@ -54,9 +54,11 @@ const regionData = [
 ];
 
 const slaData = [
-  { name: 'On Time', value: 85 },
-  { name: 'Delayed', value: 12 },
-  { name: 'Failed', value: 3 },
+  { vendor: 'ABC Maintenance', value: 85 },
+  { vendor: 'XYZ Services', value: 92 },
+  { vendor: 'Tech Solutions', value: 78 },
+  { vendor: 'Quality Repairs', value: 65 },
+  { vendor: 'Industrial Pro', value: 89 },
 ];
 
 const issueReportData = [
@@ -70,132 +72,176 @@ const issueReportData = [
   { month: 'Aug', critical: 1, major: 5, minor: 12 },
 ];
 
-// COLORS for bars and other elements
-const COLORS = {
-  completed: '#4caf50',
-  pending: '#ff9800',
-  critical: '#f44336',
-  major: '#ff9800',
-  minor: '#2196f3',
+// Define chart colors config
+const chartConfig = {
+  completed: { color: '#4caf50', label: 'Completed' },
+  pending: { color: '#ff9800', label: 'Pending' },
+  critical: { color: '#f44336', label: 'Critical' },
+  major: { color: '#ff9800', label: 'Major' },
+  minor: { color: '#2196f3', label: 'Minor' },
+  sla: { color: '#1976d2', label: 'SLA Compliance' },
 };
 
 const VendorDashboardPage: React.FC = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({
+    from: new Date(2025, 0, 1), // January 1, 2025
+    to: new Date(), // Current date
+  });
   const [vendorType, setVendorType] = useState('all');
   const [region, setRegion] = useState('all');
 
-  const handleExport = (format: 'csv' | 'png') => {
+  const handleExport = (format: 'csv' | 'png', chartName: string) => {
     // In a real app, this would trigger an export
-    console.log(`Exporting dashboard as ${format}`);
-    // For demo purposes, show a download notification
-    alert(`Dashboard exported as ${format.toUpperCase()}`);
+    console.log(`Exporting ${chartName} as ${format}`);
+    // Show notification
+    toast({
+      title: "Export started",
+      description: `${chartName} is being exported as ${format.toUpperCase()}`,
+    });
   };
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Vendor Dashboard" />
+      <PageHeader 
+        title="Vendor Dashboard" 
+        subtitle="Monitor vendor performance and activity"
+      />
       
       {/* Filters row */}
-      <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-        <div className="w-full md:w-1/3">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <Calendar className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarComponent
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        
-        <div className="w-full md:w-1/3">
-          <Select value={vendorType} onValueChange={setVendorType}>
-            <SelectTrigger>
-              <SelectValue placeholder="Vendor Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Vendor Types</SelectItem>
-              <SelectItem value="maintenance">Maintenance</SelectItem>
-              <SelectItem value="supplies">Supplies</SelectItem>
-              <SelectItem value="calibration">Calibration</SelectItem>
-              <SelectItem value="inspection">Inspection</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="w-full md:w-1/3">
-          <Select value={region} onValueChange={setRegion}>
-            <SelectTrigger>
-              <SelectValue placeholder="Region" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Regions</SelectItem>
-              <SelectItem value="north">North</SelectItem>
-              <SelectItem value="south">South</SelectItem>
-              <SelectItem value="east">East</SelectItem>
-              <SelectItem value="west">West</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <Card className="overflow-visible">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="w-full md:w-1/3 space-y-2">
+              <label className="text-sm font-medium">Date Range</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !dateRange && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {dateRange.from ? (
+                      dateRange.to ? (
+                        <>
+                          {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(dateRange.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date range</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            <div className="w-full md:w-1/3 space-y-2">
+              <label className="text-sm font-medium">Vendor Type</label>
+              <Select value={vendorType} onValueChange={setVendorType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Vendor Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Vendor Types</SelectItem>
+                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                  <SelectItem value="supplies">Supplies</SelectItem>
+                  <SelectItem value="calibration">Calibration</SelectItem>
+                  <SelectItem value="inspection">Inspection</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="w-full md:w-1/3 space-y-2">
+              <label className="text-sm font-medium">Region</label>
+              <Select value={region} onValueChange={setRegion}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Region" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Regions</SelectItem>
+                  <SelectItem value="north">North</SelectItem>
+                  <SelectItem value="south">South</SelectItem>
+                  <SelectItem value="east">East</SelectItem>
+                  <SelectItem value="west">West</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       
       {/* Charts - 2x2 grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart 1: Work Orders by Month */}
+        {/* Chart 1: Vendor Work Orders by Month */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Work Orders by Month</CardTitle>
+            <CardTitle className="text-lg font-medium">Vendor Work Orders by Month</CardTitle>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => handleExport('csv')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('csv', 'Work Orders by Month')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 CSV
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleExport('png')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('png', 'Work Orders by Month')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 PNG
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer 
+                config={chartConfig}
+              >
                 <AreaChart data={workOrderData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
                   <Legend />
                   <Area 
                     type="monotone" 
                     dataKey="completed" 
-                    name="Completed" 
-                    stroke={COLORS.completed} 
-                    fill={COLORS.completed} 
+                    name="completed" 
+                    stroke={chartConfig.completed.color} 
+                    fill={chartConfig.completed.color} 
                     fillOpacity={0.3} 
                   />
                   <Area 
                     type="monotone" 
                     dataKey="pending" 
-                    name="Pending" 
-                    stroke={COLORS.pending} 
-                    fill={COLORS.pending} 
+                    name="pending" 
+                    stroke={chartConfig.pending.color} 
+                    fill={chartConfig.pending.color} 
                     fillOpacity={0.3} 
                   />
                 </AreaChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </CardContent>
         </Card>
@@ -205,25 +251,36 @@ const VendorDashboardPage: React.FC = () => {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-medium">Vendor Distribution by Region</CardTitle>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => handleExport('csv')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('csv', 'Vendor Distribution by Region')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 CSV
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleExport('png')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('png', 'Vendor Distribution by Region')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 PNG
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-80 flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer 
+                config={chartConfig}
+              >
                 <PieChart>
                   <Pie
                     data={regionData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
+                    outerRadius={100}
                     dataKey="value"
                     label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   >
@@ -231,94 +288,124 @@ const VendorDashboardPage: React.FC = () => {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
                   <Legend />
                 </PieChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </CardContent>
         </Card>
         
-        {/* Chart 3: SLA Compliance */}
+        {/* Chart 3: Average SLA Compliance per Vendor */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">SLA Compliance</CardTitle>
+            <CardTitle className="text-lg font-medium">Average SLA Compliance per Vendor</CardTitle>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => handleExport('csv')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('csv', 'SLA Compliance')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 CSV
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleExport('png')}>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleExport('png', 'SLA Compliance')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 PNG
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer 
+                config={{...chartConfig, sla: chartConfig.sla}}
+              >
                 <BarChart data={slaData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" width={80} />
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                  <YAxis dataKey="vendor" type="category" width={120} />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
                   <Legend />
                   <Bar 
                     dataKey="value" 
-                    name="SLA Compliance" 
-                    fill="#1976d2"
+                    name="sla" 
+                    fill={chartConfig.sla.color}
                     radius={[0, 4, 4, 0]}
                     label={{ position: 'right', formatter: (value) => `${value}%` }} 
                   />
                 </BarChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </CardContent>
         </Card>
         
-        {/* Chart 4: Issue Reports Over Time */}
+        {/* Chart 4: Vendor Issue Reports Over Time */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Issue Reports Over Time</CardTitle>
+            <CardTitle className="text-lg font-medium">Vendor Issue Reports Over Time</CardTitle>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" onClick={() => handleExport('csv')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('csv', 'Issue Reports')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 CSV
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleExport('png')}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => handleExport('png', 'Issue Reports')}
+              >
+                <Download className="h-4 w-4 mr-1" />
                 PNG
               </Button>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer 
+                config={chartConfig}
+              >
                 <LineChart data={issueReportData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
                   <Legend />
                   <Line 
                     type="monotone" 
                     dataKey="critical" 
-                    stroke={COLORS.critical} 
-                    name="Critical Issues" 
+                    name="critical" 
+                    stroke={chartConfig.critical.color} 
                     strokeWidth={2} 
                   />
                   <Line 
                     type="monotone" 
                     dataKey="major" 
-                    stroke={COLORS.major} 
-                    name="Major Issues" 
+                    name="major" 
+                    stroke={chartConfig.major.color} 
                     strokeWidth={2} 
                   />
                   <Line 
                     type="monotone" 
                     dataKey="minor" 
-                    stroke={COLORS.minor} 
-                    name="Minor Issues" 
+                    name="minor" 
+                    stroke={chartConfig.minor.color} 
                     strokeWidth={2} 
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </CardContent>
         </Card>
