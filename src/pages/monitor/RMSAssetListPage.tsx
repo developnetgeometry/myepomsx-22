@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
-import { Hard_Drive } from 'lucide-react';
+import { HardDrive } from 'lucide-react';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -161,7 +161,7 @@ const RMSAssetListPage: React.FC = () => {
       <PageHeader
         title="RMS Asset List" 
         subtitle="Remote monitoring system assets"
-        icon={<Hard_Drive className="h-6 w-6" />}
+        icon={<HardDrive className="h-6 w-6" />}
         onAddNew={handleAddNew}
         addNewLabel="+ Add Asset"
         onSearch={(query) => console.log('Search:', query)}
