@@ -46,7 +46,7 @@ const PMSchedulePage: React.FC = () => {
     date.setMonth(date.getMonth() + 1);
     return date.toISOString().split('T')[0];
   });
-  const [selectedAsset, setSelectedAsset] = useState<string>("");
+  const [selectedAsset, setSelectedAsset] = useState<string>("all");
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
   
   // Loading states
@@ -98,7 +98,7 @@ const PMSchedulePage: React.FC = () => {
     });
     
     // If asset filter is applied
-    if (selectedAsset) {
+    if (selectedAsset && selectedAsset !== "all") {
       const assetName = assetOptions.find(opt => opt.value === selectedAsset)?.label || "";
       return schedules.filter(schedule => schedule.asset === assetName);
     }
@@ -215,7 +215,7 @@ const PMSchedulePage: React.FC = () => {
                 <SelectValue placeholder="Select Asset" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Assets</SelectItem>
+                <SelectItem value="all">All Assets</SelectItem>
                 {assetOptions.map(option => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
