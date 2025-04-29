@@ -9,6 +9,7 @@ import {
 import { X } from "lucide-react";
 import ManageForm from "./ManageForm";
 import * as z from "zod";
+import { useEffect } from "react";
 
 interface ManageDialogProps {
   open: boolean;
@@ -24,6 +25,7 @@ interface ManageDialogProps {
   }[];
   onSubmit: (values: any) => void;
   isEdit?: boolean;
+  isProcessing?: boolean;
 }
 
 const ManageDialog = ({
@@ -35,7 +37,15 @@ const ManageDialog = ({
   formFields,
   onSubmit,
   isEdit = false,
+  isProcessing = false,
 }: ManageDialogProps) => {
+  // Reset form when dialog closes
+  useEffect(() => {
+    if (!open) {
+      // Form will be reset when dialog reopens with new defaultValues
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -45,6 +55,7 @@ const ManageDialog = ({
             variant="ghost"
             size="icon"
             onClick={() => onOpenChange(false)}
+            disabled={isProcessing}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -55,9 +66,10 @@ const ManageDialog = ({
           fields={formFields}
           onSubmit={(values) => {
             onSubmit(values);
-            onOpenChange(false);
           }}
+          onCancel={() => onOpenChange(false)}
           isEdit={isEdit}
+          isSubmitting={isProcessing}
         />
       </DialogContent>
     </Dialog>

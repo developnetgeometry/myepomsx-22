@@ -3,19 +3,25 @@ import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Building } from 'lucide-react';
+import { Building, Plus, Filter } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { facilityLocations } from '@/data/sampleData';
 import { FacilityLocation } from '@/types/manage';
 import ManageDialog from '@/components/manage/ManageDialog';
 import { Column } from '@/components/shared/DataTable';
 import * as z from 'zod';
+import { toast } from "sonner";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const FacilitiesPage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<FacilityLocation | null>(null);
   const [data, setData] = useState<FacilityLocation[]>(facilityLocations);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState<FacilityLocation[]>(facilityLocations);
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -29,12 +35,80 @@ const FacilitiesPage: React.FC = () => {
     setIsDialogOpen(true);
   };
 
+  const handleDelete = (item: FacilityLocation) => {
+    // In a real app, this would send a DELETE request to the API
+    // Simulate a delay to show loading state
+    setIsProcessing(true);
+    setTimeout(() => {
+      setData(data.filter(facility => facility.id !== item.id));
+      setFilteredData(filteredData.filter(facility => facility.id !== item.id));
+      toast.success("Facility deleted successfully");
+      setIsProcessing(false);
+    }, 500);
+  };
+
   const handleSubmit = (values: any) => {
-    if (isEditMode && currentItem) {
-      setData(data.map(item => item.id === currentItem.id ? { ...item, ...values } : item));
-    } else {
-      setData([...data, { id: String(data.length + 1), ...values }]);
+    // Simulate API call with loading state
+    setIsProcessing(true);
+    
+    // Simulate network delay
+    setTimeout(() => {
+      if (isEditMode && currentItem) {
+        // Update existing record
+        const updatedData = data.map(item => 
+          item.id === currentItem.id ? { ...item, ...values } : item
+        );
+        setData(updatedData);
+        setFilteredData(
+          searchTerm 
+            ? updatedData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                item.code.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+            : updatedData
+        );
+        toast.success("Facility updated successfully");
+      } else {
+        // Create new record
+        const newItem = { id: String(data.length + 1), ...values };
+        const newData = [...data, newItem];
+        setData(newData);
+        setFilteredData(
+          searchTerm 
+            ? newData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                item.code.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+            : newData
+        );
+        toast.success("Facility created successfully");
+      }
+      
+      setIsProcessing(false);
+      setIsDialogOpen(false);
+    }, 700);
+  };
+
+  const handleSearch = () => {
+    if (!searchTerm.trim()) {
+      setFilteredData(data);
+      return;
     }
+    
+    const filtered = data.filter(item => 
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      item.code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    setFilteredData(filtered);
+    if (filtered.length === 0) {
+      toast.info("No matching facilities found");
+    }
+  };
+
+  const handleExport = () => {
+    toast.success("Facilities exported successfully");
+    // In a real app, this would generate and download a CSV file
   };
 
   const columns: Column[] = [
@@ -70,6 +144,30 @@ const FacilitiesPage: React.FC = () => {
       
       <Card>
         <CardContent className="pt-6">
+          <div className="mb-6 flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-1 gap-2">
+              <div className="relative flex-1">
+                <Input
+                  placeholder="Search facilities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-3 pr-10"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch();
+                    }
+                  }}
+                />
+              </div>
+              <Button onClick={handleSearch} size="default" className="flex gap-2 items-center">
+                <Filter className="h-4 w-4" /> Filter
+              </Button>
+            </div>
+            <Button onClick={handleAddNew} className="flex gap-2 items-center">
+              <Plus className="h-4 w-4" /> Add New
+            </Button>
+          </div>
+          
           <Tabs defaultValue="list">
             <TabsList>
               <TabsTrigger value="list">List View</TabsTrigger>
@@ -77,9 +175,11 @@ const FacilitiesPage: React.FC = () => {
             </TabsList>
             <TabsContent value="list" className="pt-4">
               <DataTable 
-                data={data} 
+                data={filteredData} 
                 columns={columns} 
-                onEdit={handleEdit} 
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onExport={handleExport}
               />
             </TabsContent>
             <TabsContent value="details" className="pt-4">
@@ -96,13 +196,16 @@ const FacilitiesPage: React.FC = () => {
 
       <ManageDialog
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        onOpenChange={(open) => {
+          if (!isProcessing) setIsDialogOpen(open);
+        }}
         title={isEditMode ? "Edit Facility" : "Add New Facility"}
         formSchema={formSchema}
         defaultValues={currentItem || { code: "", name: "" }}
         formFields={formFields}
         onSubmit={handleSubmit}
         isEdit={isEditMode}
+        isProcessing={isProcessing}
       />
     </div>
   );

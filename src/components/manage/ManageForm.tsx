@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 
 interface ManageFormProps {
   schema: z.ZodSchema<any>;
@@ -34,6 +35,7 @@ interface ManageFormProps {
   onSubmit: (values: any) => void;
   isEdit?: boolean;
   onCancel?: () => void;
+  isSubmitting?: boolean;
 }
 
 const ManageForm = ({
@@ -42,7 +44,8 @@ const ManageForm = ({
   fields,
   onSubmit,
   isEdit = false,
-  onCancel
+  onCancel,
+  isSubmitting = false,
 }: ManageFormProps) => {
   const form = useForm({
     resolver: zodResolver(schema),
@@ -51,7 +54,7 @@ const ManageForm = ({
 
   const handleSubmit = (values: any) => {
     onSubmit(values);
-    toast.success(`${isEdit ? "Updated" : "Created"} successfully`);
+    // Toast is now handled at a higher level after the operation is successful
   };
 
   return (
@@ -71,6 +74,7 @@ const ManageForm = ({
                       <Select
                         value={formField.value}
                         onValueChange={formField.onChange}
+                        disabled={isSubmitting}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder={`Select ${field.label}`} />
@@ -88,9 +92,10 @@ const ManageForm = ({
                         type="number"
                         {...formField}
                         onChange={(e) => formField.onChange(Number(e.target.value))}
+                        disabled={isSubmitting}
                       />
                     ) : (
-                      <Input {...formField} />
+                      <Input {...formField} disabled={isSubmitting} />
                     )}
                   </FormControl>
                   <FormMessage />
@@ -101,11 +106,28 @@ const ManageForm = ({
         </div>
         <div className="flex justify-end space-x-4">
           {onCancel && (
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onCancel}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
           )}
-          <Button type="submit">{isEdit ? "Update" : "Create"}</Button>
+          <Button 
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {isEdit ? "Updating..." : "Creating..."}
+              </>
+            ) : (
+              isEdit ? "Update" : "Create"
+            )}
+          </Button>
         </div>
       </form>
     </Form>
