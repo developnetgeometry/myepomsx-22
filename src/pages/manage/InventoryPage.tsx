@@ -172,22 +172,18 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => 
         </div>
       ) : null}
       
-      {!hideHeader && (
+      {!hideHeader ? (
         <Tabs defaultValue="list">
           <TabsList>
             <TabsTrigger value="list">List View</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
           </TabsList>
           <TabsContent value="list" className="pt-4">
-      )}
-
-      <DataTable 
-        data={data} 
-        columns={columns} 
-        onEdit={handleEdit} 
-      />
-
-      {!hideHeader && (
+            <DataTable 
+              data={data} 
+              columns={columns} 
+              onEdit={handleEdit} 
+            />
           </TabsContent>
           <TabsContent value="details" className="pt-4">
             <div className="p-4 border rounded-md bg-muted/50">
@@ -198,6 +194,12 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => 
             </div>
           </TabsContent>
         </Tabs>
+      ) : (
+        <DataTable 
+          data={data} 
+          columns={columns} 
+          onEdit={handleEdit} 
+        />
       )}
 
       <ManageDialog
