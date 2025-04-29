@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -14,6 +13,12 @@ import {
   ChevronRight,
   Menu,
   X,
+  Building,
+  Package,
+  Archive,
+  Layers,
+  Box,
+  List,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,9 +39,15 @@ const sidebarItems: SidebarItemType[] = [
     name: 'Manage',
     icon: ClipboardList,
     children: [
-      { name: 'Asset Register', path: '/manage/asset-register' },
+      { name: 'Facilities', path: '/manage/facilities' },
+      { name: 'System', path: '/manage/system' },
+      { name: 'Package', path: '/manage/package' },
+      { name: 'Assets', path: '/manage/assets' },
+      { name: 'BOM Assembly', path: '/manage/bom-assembly' },
       { name: 'Asset Hierarchy', path: '/manage/asset-hierarchy' },
-      { name: 'Parts & Inventory', path: '/manage/parts-inventory' },
+      { name: 'Material', path: '/manage/material' },
+      { name: 'Items Master', path: '/manage/items-master' },
+      { name: 'Inventory', path: '/manage/inventory' },
     ],
   },
   {

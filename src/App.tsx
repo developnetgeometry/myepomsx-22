@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,9 +10,15 @@ import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
 import NotFound from "./pages/NotFound";
 
 // Manage module pages
-import AssetRegisterPage from "./pages/manage/AssetRegisterPage";
+import FacilitiesPage from "./pages/manage/FacilitiesPage";
+import SystemPage from "./pages/manage/SystemPage";
+import PackagePage from "./pages/manage/PackagePage";
+import AssetsPage from "./pages/manage/AssetsPage";
+import BomAssemblyPage from "./pages/manage/BomAssemblyPage";
 import AssetHierarchyPage from "./pages/manage/AssetHierarchyPage";
-import PartsInventoryPage from "./pages/manage/PartsInventoryPage";
+import MaterialPage from "./pages/manage/MaterialPage";
+import ItemsMasterPage from "./pages/manage/ItemsMasterPage";
+import InventoryPage from "./pages/manage/InventoryPage";
 
 // Maintain module pages
 import PMSchedulePage from "./pages/maintain/PMSchedulePage";
@@ -69,9 +74,15 @@ const App = () => (
           <Route path="/" element={<Layout><Overview /></Layout>} />
           
           {/* Manage Module */}
-          <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
+          <Route path="/manage/facilities" element={<Layout><FacilitiesPage /></Layout>} />
+          <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
+          <Route path="/manage/package" element={<Layout><PackagePage /></Layout>} />
+          <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+          <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
           <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
-          <Route path="/manage/parts-inventory" element={<Layout><PartsInventoryPage /></Layout>} />
+          <Route path="/manage/material" element={<Layout><MaterialPage /></Layout>} />
+          <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
+          <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
           
           {/* Maintain Module */}
           <Route path="/maintain/pm-schedule" element={<Layout><PMSchedulePage /></Layout>} />
