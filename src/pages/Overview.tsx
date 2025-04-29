@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import KpiCard from '@/components/shared/KpiCard';
@@ -21,7 +20,7 @@ import {
   Area,
   AreaChart
 } from 'recharts';
-import { AlertCircle, Clock, Tool, CheckCircle2, BarChart4, Calendar, Gauge } from 'lucide-react';
+import { AlertCircle, Clock, Wrench, CheckCircle2, BarChart4, Calendar, Gauge } from 'lucide-react';
 
 // Sample data for charts
 const barChartData = [
@@ -76,7 +75,7 @@ const Overview: React.FC = () => {
         <KpiCard 
           title="Open Work Orders"
           value="87"
-          icon={<Tool size={24} />}
+          icon={<Wrench size={24} />}
           change={3.2}
           changeLabel="vs last month"
           changeDirection="down"

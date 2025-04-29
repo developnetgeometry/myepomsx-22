@@ -5,7 +5,7 @@ import {
   BarChart4,
   Settings,
   ClipboardList,
-  Tool,
+  Wrench,
   LineChart,
   Gauge,
   Users,
@@ -41,7 +41,7 @@ const sidebarItems: SidebarItemType[] = [
   },
   {
     name: 'Maintain',
-    icon: Tool,
+    icon: Wrench,
     children: [
       { name: 'PM Schedule', path: '/maintain/pm-schedule' },
       { name: 'Work Request', path: '/maintain/work-request' },
