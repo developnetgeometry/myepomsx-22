@@ -2,15 +2,8 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Pencil, MoreHorizontal, Download, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Download, Trash2 } from 'lucide-react';
 import StatusBadge from './StatusBadge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export interface Column {
   id: string;
@@ -63,7 +57,8 @@ const DataTable: React.FC<DataTableProps> = ({
     setCurrentPage(page);
   };
   
-  const handleDeleteClick = (row: any) => {
+  const handleDeleteClick = (row: any, e: React.MouseEvent) => {
+    e.stopPropagation();
     setRowToDelete(row);
     setDeleteDialogOpen(true);
   };
@@ -71,10 +66,16 @@ const DataTable: React.FC<DataTableProps> = ({
   const handleDeleteConfirm = () => {
     if (rowToDelete && onDelete) {
       onDelete(rowToDelete);
-      toast.success("Item deleted successfully");
     }
     setDeleteDialogOpen(false);
     setRowToDelete(null);
+  };
+  
+  const handleEditClick = (row: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(row);
+    }
   };
   
   const handleExport = () => {
@@ -128,13 +129,15 @@ const DataTable: React.FC<DataTableProps> = ({
                 {columns.map((column) => (
                   <TableHead key={column.id}>{column.header}</TableHead>
                 ))}
-                <TableHead className="w-16">Actions</TableHead>
+                {(onEdit || onDelete) && (
+                  <TableHead className="w-24 text-right">Actions</TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length + 1} className="h-24 text-center">
+                  <TableCell colSpan={columns.length + ((onEdit || onDelete) ? 1 : 0)} className="h-24 text-center">
                     No results found
                   </TableCell>
                 </TableRow>
@@ -154,46 +157,47 @@ const DataTable: React.FC<DataTableProps> = ({
                             : row[column.accessorKey]}
                       </TableCell>
                     ))}
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {onEdit && (
-                            <DropdownMenuItem 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onEdit(row);
-                              }}
-                            >
-                              <Pencil className="h-4 w-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                          )}
-                          {onDelete && (
-                            <>
-                              {onEdit && <DropdownMenuSeparator />}
-                              <DropdownMenuItem 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteClick(row);
-                                }}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                    {(onEdit || onDelete) && (
+                      <TableCell className="text-right">
+                        <div className="flex flex-col space-y-1">
+                          <TooltipProvider>
+                            {onEdit && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="link"
+                                    size="sm"
+                                    className="h-auto p-0 text-gray-700 hover:text-primary flex items-center justify-end w-full"
+                                    onClick={(e) => handleEditClick(row, e)}
+                                  >
+                                    <Pencil className="h-4 w-4 mr-1" />
+                                    Edit
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Edit this item</TooltipContent>
+                              </Tooltip>
+                            )}
+                            
+                            {onDelete && (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="link"
+                                    size="sm"
+                                    className="h-auto p-0 text-red-500 hover:text-red-700 flex items-center justify-end w-full"
+                                    onClick={(e) => handleDeleteClick(row, e)}
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-1" />
+                                    Delete
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Delete this item</TooltipContent>
+                              </Tooltip>
+                            )}
+                          </TooltipProvider>
+                        </div>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}
