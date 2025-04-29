@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,6 +32,7 @@ import { PieChart, Pie, Cell } from 'recharts';
 import { BarChart, Bar } from 'recharts';
 import { LineChart, Line } from 'recharts';
 import { toast } from '@/hooks/use-toast';
+import { DateRange } from 'react-day-picker';
 
 // Sample chart data
 const workOrderData = [
@@ -83,10 +83,8 @@ const chartConfig = {
 };
 
 const VendorDashboardPage: React.FC = () => {
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
+  // Update the state type to use DateRange from react-day-picker
+  const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(2025, 0, 1), // January 1, 2025
     to: new Date(), // Current date
   });
