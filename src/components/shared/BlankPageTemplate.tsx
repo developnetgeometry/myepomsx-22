@@ -6,9 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface BlankPageTemplateProps {
   title: string;
+  icon?: React.ReactNode;
 }
 
-const BlankPageTemplate: React.FC<BlankPageTemplateProps> = ({ title }) => {
+const BlankPageTemplate: React.FC<BlankPageTemplateProps> = ({ title, icon }) => {
   return (
     <div className="space-y-6">
       <PageHeader title={title} />

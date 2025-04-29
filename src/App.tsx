@@ -19,6 +19,7 @@ import AssetHierarchyPage from "./pages/manage/AssetHierarchyPage";
 import MaterialPage from "./pages/manage/MaterialPage";
 import ItemsMasterPage from "./pages/manage/ItemsMasterPage";
 import InventoryPage from "./pages/manage/InventoryPage";
+import AssetRegisterPage from "./pages/manage/AssetRegisterPage";
 
 // Maintain module pages
 import PMSchedulePage from "./pages/maintain/PMSchedulePage";
@@ -83,6 +84,7 @@ const App = () => (
           <Route path="/manage/material" element={<Layout><MaterialPage /></Layout>} />
           <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
           <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
+          <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
           
           {/* Maintain Module */}
           <Route path="/maintain/pm-schedule" element={<Layout><PMSchedulePage /></Layout>} />
