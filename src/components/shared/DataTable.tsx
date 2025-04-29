@@ -17,13 +17,15 @@ interface DataTableProps {
   columns: Column[];
   onEdit?: (row: any) => void;
   pageSize?: number;
+  onRowClick?: (row: any) => void;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
   data = [],
   columns = [],
   onEdit,
-  pageSize = 10
+  pageSize = 10,
+  onRowClick
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / pageSize);
@@ -58,7 +60,11 @@ const DataTable: React.FC<DataTableProps> = ({
                 </TableRow>
               ) : (
                 currentData.map((row, rowIndex) => (
-                  <TableRow key={rowIndex}>
+                  <TableRow 
+                    key={rowIndex} 
+                    className={onRowClick ? "cursor-pointer" : ""}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  >
                     {columns.map((column) => (
                       <TableCell key={`${rowIndex}-${column.id}`}>
                         {column.cell 
@@ -73,7 +79,10 @@ const DataTable: React.FC<DataTableProps> = ({
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          onClick={() => onEdit(row)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEdit(row);
+                          }}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
