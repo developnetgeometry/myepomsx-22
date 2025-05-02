@@ -173,11 +173,11 @@ const PMSchedulePage: React.FC = () => {
       />
       
       <div className="bg-white p-4 rounded-md border shadow-sm space-y-4">
-        <h2 className="text-lg font-semibold">Schedule Parameters</h2>
+        <h2 className="text-lg font-semibold text-gray-800">Schedule Parameters</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="space-y-2">
-            <label htmlFor="startDate" className="text-sm font-medium">Start Date</label>
+            <label htmlFor="startDate" className="text-sm font-medium text-gray-700">Start Date</label>
             <div className="relative">
               <Input
                 id="startDate"
@@ -185,13 +185,14 @@ const PMSchedulePage: React.FC = () => {
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 disabled={isSearching || isGenerating}
+                className="pl-3 pr-8"
               />
               <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             </div>
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="endDate" className="text-sm font-medium">End Date</label>
+            <label htmlFor="endDate" className="text-sm font-medium text-gray-700">End Date</label>
             <div className="relative">
               <Input
                 id="endDate"
@@ -199,13 +200,14 @@ const PMSchedulePage: React.FC = () => {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 disabled={isSearching || isGenerating}
+                className="pl-3 pr-8"
               />
               <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             </div>
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="asset" className="text-sm font-medium">Asset (Optional)</label>
+            <label htmlFor="asset" className="text-sm font-medium text-gray-700">Asset (Optional)</label>
             <Select 
               value={selectedAsset}
               onValueChange={setSelectedAsset}
@@ -280,17 +282,6 @@ const PMSchedulePage: React.FC = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          
-          {pmSchedules.length > 0 && (
-            <Button 
-              variant="outline" 
-              onClick={handleExport}
-              disabled={isSearching || isGenerating}
-              className="flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" /> Export
-            </Button>
-          )}
         </div>
       </div>
       

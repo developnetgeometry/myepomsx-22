@@ -10,34 +10,91 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
-  const getStatusClass = (status: string) => {
-    const lowercaseStatus = status.toLowerCase();
+  const lowercaseStatus = status?.toLowerCase() || '';
+  
+  // Health status with colored dot indicator
+  if (lowercaseStatus === 'good' || lowercaseStatus === 'excellent') {
+    return (
+      <div className="flex items-center">
+        <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
+        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+          {status}
+        </span>
+      </div>
+    );
+  }
+  
+  if (lowercaseStatus === 'fair') {
+    return (
+      <div className="flex items-center">
+        <div className="h-2 w-2 rounded-full bg-yellow-500 mr-2"></div>
+        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+          {status}
+        </span>
+      </div>
+    );
+  }
+  
+  if (lowercaseStatus === 'poor' || lowercaseStatus === 'needs attention') {
+    return (
+      <div className="flex items-center">
+        <div className="h-2 w-2 rounded-full bg-red-500 mr-2"></div>
+        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+          {status}
+        </span>
+      </div>
+    );
+  }
+  
+  // Regular status badges
+  const getStatusClass = (status: string) => {    
+    if (lowercaseStatus.includes('operational') || lowercaseStatus === 'active' || lowercaseStatus.includes('completed') || lowercaseStatus === 'normal' || lowercaseStatus === 'good') {
+      return 'bg-green-50 text-green-800 border-green-100';
+    }
     
-    if (lowercaseStatus.includes('active') || lowercaseStatus.includes('completed') || lowercaseStatus === 'normal' || lowercaseStatus === 'good') {
-      return 'bg-green-100 text-green-800';
+    if (lowercaseStatus === 'critical') {
+      return 'bg-red-50 text-red-800 border-red-100';
+    }
+    
+    if (lowercaseStatus.includes('under maintenance')) {
+      return 'bg-yellow-50 text-yellow-800 border-yellow-100';
+    }
+    
+    if (lowercaseStatus.includes('scheduled maintenance')) {
+      return 'bg-blue-50 text-blue-800 border-blue-100';
+    }
+    
+    if (lowercaseStatus === 'high') {
+      return 'bg-amber-50 text-amber-800 border-amber-100';
+    }
+    
+    if (lowercaseStatus === 'medium') {
+      return 'bg-blue-50 text-blue-800 border-blue-100';
+    }
+    
+    if (lowercaseStatus === 'low') {
+      return 'bg-slate-50 text-slate-800 border-slate-100';
     }
     
     if (lowercaseStatus.includes('inactive') || lowercaseStatus === 'cancelled' || lowercaseStatus === 'closed') {
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-50 text-gray-800 border-gray-100';
     }
     
-    if (lowercaseStatus.includes('pending') || lowercaseStatus.includes('in progress') || lowercaseStatus === 'medium' || lowercaseStatus === 'warning') {
-      return 'bg-yellow-100 text-yellow-800';
+    if (lowercaseStatus.includes('pending') || lowercaseStatus.includes('in progress') || lowercaseStatus === 'warning') {
+      return 'bg-yellow-50 text-yellow-800 border-yellow-100';
     }
     
-    if (lowercaseStatus.includes('critical') || lowercaseStatus.includes('high') || lowercaseStatus === 'urgent') {
-      return 'bg-red-100 text-red-800';
-    }
-    
-    if (lowercaseStatus.includes('low') || lowercaseStatus === 'info') {
-      return 'bg-blue-100 text-blue-800';
-    }
-    
-    return 'bg-gray-100 text-gray-800';
+    return 'bg-gray-50 text-gray-800 border-gray-100';
   };
 
   return (
-    <span className={cn('status-badge', getStatusClass(status), className)}>
+    <span 
+      className={cn(
+        'inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        getStatusClass(status),
+        className
+      )}
+    >
       {status}
     </span>
   );

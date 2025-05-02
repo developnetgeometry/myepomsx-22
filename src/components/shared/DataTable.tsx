@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Pencil, Download, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import {
   AlertDialog,
@@ -46,6 +46,7 @@ const DataTable: React.FC<DataTableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<any>(null);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   
   const totalPages = Math.ceil(data.length / pageSize);
   
@@ -63,12 +64,17 @@ const DataTable: React.FC<DataTableProps> = ({
     setDeleteDialogOpen(true);
   };
   
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (rowToDelete && onDelete) {
-      onDelete(rowToDelete);
+      setIsDeleteLoading(true);
+      try {
+        await onDelete(rowToDelete);
+      } finally {
+        setIsDeleteLoading(false);
+        setDeleteDialogOpen(false);
+        setRowToDelete(null);
+      }
     }
-    setDeleteDialogOpen(false);
-    setRowToDelete(null);
   };
   
   const handleEditClick = (row: any, e: React.MouseEvent) => {
@@ -108,36 +114,28 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className="w-full">
-      {data.length > 0 && (
-        <div className="flex justify-end mb-4 gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleExport}
-            className="flex items-center gap-1"
-          >
-            <Download className="h-4 w-4" /> Export
-          </Button>
-        </div>
-      )}
-      
-      <div className="rounded-md border shadow-sm bg-white overflow-hidden">
+      <div className="rounded-md border border-gray-200 shadow-sm bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-gray-50">
                 {columns.map((column) => (
-                  <TableHead key={column.id}>{column.header}</TableHead>
+                  <TableHead 
+                    key={column.id} 
+                    className="py-3 text-sm font-medium text-gray-700"
+                  >
+                    {column.header}
+                  </TableHead>
                 ))}
                 {(onEdit || onDelete) && (
-                  <TableHead className="w-24 text-right">Actions</TableHead>
+                  <TableHead className="w-24 text-right text-sm font-medium text-gray-700">Actions</TableHead>
                 )}
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length + ((onEdit || onDelete) ? 1 : 0)} className="h-24 text-center">
+                  <TableCell colSpan={columns.length + ((onEdit || onDelete) ? 1 : 0)} className="h-24 text-center text-gray-500">
                     No results found
                   </TableCell>
                 </TableRow>
@@ -145,11 +143,14 @@ const DataTable: React.FC<DataTableProps> = ({
                 currentData.map((row, rowIndex) => (
                   <TableRow 
                     key={rowIndex} 
-                    className={onRowClick ? "cursor-pointer" : ""}
+                    className={`border-t border-gray-200 ${onRowClick ? "cursor-pointer hover:bg-gray-50" : ""}`}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((column) => (
-                      <TableCell key={`${rowIndex}-${column.id}`}>
+                      <TableCell 
+                        key={`${rowIndex}-${column.id}`}
+                        className="py-4 text-sm"
+                      >
                         {column.cell 
                           ? column.cell(row[column.accessorKey]) 
                           : column.accessorKey.includes('status') 
@@ -158,43 +159,45 @@ const DataTable: React.FC<DataTableProps> = ({
                       </TableCell>
                     ))}
                     {(onEdit || onDelete) && (
-                      <TableCell className="text-right">
-                        <div className="flex flex-col space-y-1">
-                          <TooltipProvider>
-                            {onEdit && (
+                      <TableCell className="text-right py-2 pr-4">
+                        <div className="flex space-x-2 justify-end">
+                          {onEdit && (
+                            <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button
-                                    variant="link"
+                                    variant="ghost"
                                     size="sm"
-                                    className="h-auto p-0 text-gray-700 hover:text-primary flex items-center justify-end w-full"
+                                    className="h-8 w-8 p-0 text-gray-500 hover:text-blue-600 hover:bg-blue-50"
                                     onClick={(e) => handleEditClick(row, e)}
                                   >
-                                    <Pencil className="h-4 w-4 mr-1" />
-                                    Edit
+                                    <Pencil className="h-4 w-4" />
+                                    <span className="sr-only">Edit</span>
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Edit this item</TooltipContent>
+                                <TooltipContent>Edit</TooltipContent>
                               </Tooltip>
-                            )}
-                            
-                            {onDelete && (
+                            </TooltipProvider>
+                          )}
+                          
+                          {onDelete && (
+                            <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button
-                                    variant="link"
+                                    variant="ghost"
                                     size="sm"
-                                    className="h-auto p-0 text-red-500 hover:text-red-700 flex items-center justify-end w-full"
+                                    className="h-8 w-8 p-0 text-gray-500 hover:text-red-600 hover:bg-red-50"
                                     onClick={(e) => handleDeleteClick(row, e)}
                                   >
-                                    <Trash2 className="h-4 w-4 mr-1" />
-                                    Delete
+                                    <Trash2 className="h-4 w-4" />
+                                    <span className="sr-only">Delete</span>
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Delete this item</TooltipContent>
+                                <TooltipContent>Delete</TooltipContent>
                               </Tooltip>
-                            )}
-                          </TooltipProvider>
+                            </TooltipProvider>
+                          )}
                         </div>
                       </TableCell>
                     )}
@@ -204,6 +207,32 @@ const DataTable: React.FC<DataTableProps> = ({
             </TableBody>
           </Table>
         </div>
+        
+        {data.length > 0 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-white">
+            <div className="text-sm text-gray-500">
+              Total {data.length} {data.length === 1 ? 'item' : 'items'}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 text-gray-600 border-gray-300"
+                onClick={handleExport}
+              >
+                <FileText className="h-4 w-4 mr-1" /> Export
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 text-gray-600 border-gray-300"
+                onClick={handleExport}
+              >
+                <Download className="h-4 w-4 mr-1" /> Download
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
       
       {data.length > pageSize && (
@@ -217,6 +246,7 @@ const DataTable: React.FC<DataTableProps> = ({
               size="sm" 
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
+              className="h-8 w-8 p-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -240,6 +270,7 @@ const DataTable: React.FC<DataTableProps> = ({
                           key={page}
                           variant={currentPage === page ? "default" : "outline"}
                           size="sm"
+                          className="h-8 w-8 p-0"
                           onClick={() => handlePageChange(page)}
                         >
                           {page}
@@ -252,6 +283,7 @@ const DataTable: React.FC<DataTableProps> = ({
                       key={page}
                       variant={currentPage === page ? "default" : "outline"}
                       size="sm"
+                      className="h-8 w-8 p-0"
                       onClick={() => handlePageChange(page)}
                     >
                       {page}
@@ -265,6 +297,7 @@ const DataTable: React.FC<DataTableProps> = ({
               size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
+              className="h-8 w-8 p-0"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -281,9 +314,18 @@ const DataTable: React.FC<DataTableProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground">
-              Delete
+            <AlertDialogCancel disabled={isDeleteLoading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteConfirm} 
+              className="bg-destructive text-destructive-foreground"
+              disabled={isDeleteLoading}
+            >
+              {isDeleteLoading ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                  Deleting...
+                </>
+              ) : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
