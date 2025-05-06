@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Overview from "./pages/Overview";
 import WorkRequestPage from "./pages/maintain/WorkRequestPage";
-import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
 import NotFound from "./pages/NotFound";
 
 // Manage module pages
@@ -59,9 +59,6 @@ import MaintenanceTypePage from "./pages/admin/settings/MaintenanceTypePage";
 import FrequencySetupPage from "./pages/admin/settings/FrequencySetupPage";
 import AverageUARSPage from "./pages/admin/settings/AverageUARSPage";
 import CorrosionGroupPage from "./pages/admin/settings/CorrosionGroupPage";
-
-// Integrity module page
-import IntegrityModulePage from "./pages/integrity/IntegrityModulePage";
 
 const queryClient = new QueryClient();
 
@@ -125,12 +122,6 @@ const App = () => (
           <Route path="/admin/settings/frequency-setup" element={<Layout><FrequencySetupPage /></Layout>} />
           <Route path="/admin/settings/average-uars" element={<Layout><AverageUARSPage /></Layout>} />
           <Route path="/admin/settings/corrosion-group" element={<Layout><CorrosionGroupPage /></Layout>} />
-          
-          {/* Vendor Dashboard */}
-          <Route path="/vendor-dashboard" element={<Layout><VendorDashboardPage /></Layout>} />
-          
-          {/* Integrity Module */}
-          <Route path="/integrity" element={<Layout><IntegrityModulePage /></Layout>} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

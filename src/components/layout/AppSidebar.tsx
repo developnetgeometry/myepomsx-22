@@ -7,8 +7,6 @@ import {
   Wrench,
   LineChart,
   Gauge,
-  Users,
-  ShieldCheck,
   ChevronDown,
   ChevronRight,
   Menu,
@@ -66,7 +64,6 @@ const sidebarItems: SidebarItemType[] = [
     icon: Gauge,
     children: [
       { name: 'IMS Dashboard', path: '/monitor/ims-dashboard' },
-      { name: 'Integrity', path: '/monitor/integrity' },
       { name: 'RBI Assessment', path: '/monitor/rbi-assessment' },
       { name: 'Corrosion Studies', path: '/monitor/corrosion-studies' },
       { name: 'Inspection Data', path: '/monitor/inspection-data' },
@@ -105,16 +102,6 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'Average UARS', path: '/admin/settings/average-uars' },
       { name: 'Corrosion Group', path: '/admin/settings/corrosion-group' },
     ],
-  },
-  {
-    name: 'Vendor Dashboard',
-    icon: Users,
-    path: '/vendor-dashboard',
-  },
-  {
-    name: 'Integrity',
-    icon: ShieldCheck,
-    path: '/integrity',
   },
 ];
 
