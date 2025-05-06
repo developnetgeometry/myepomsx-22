@@ -277,7 +277,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <span className={cn("text-xl font-bold text-white", {
               "sr-only": isCollapsed
             })}>MyEPOMSX</span>
-              {isCollapsed && <span className="text-xl font-bold text-white">i</span>}
+              {isCollapsed && <span className="font-bold text-white text-2xl">E</span>}
             </div>
             {!isMobile && <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn("ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none", {
             "mr-auto ml-0": isCollapsed
