@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,6 +9,16 @@ import ItemsMasterPage from './ItemsMasterPage';
 import InventoryPage from './InventoryPage';
 
 const MaterialPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleItemsMasterRowClick = (row: any) => {
+    navigate(`/manage/items-master/${row.id}`);
+  };
+
+  const handleInventoryRowClick = (row: any) => {
+    navigate(`/manage/inventory/${row.id}`);
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader 
@@ -23,10 +34,10 @@ const MaterialPage: React.FC = () => {
               <TabsTrigger value="inventory">Inventory</TabsTrigger>
             </TabsList>
             <TabsContent value="items-master" className="pt-4">
-              <ItemsMasterPage hideHeader={true} />
+              <ItemsMasterPage hideHeader={true} onRowClick={handleItemsMasterRowClick} />
             </TabsContent>
             <TabsContent value="inventory" className="pt-4">
-              <InventoryPage hideHeader={true} />
+              <InventoryPage hideHeader={true} onRowClick={handleInventoryRowClick} />
             </TabsContent>
           </Tabs>
         </CardContent>

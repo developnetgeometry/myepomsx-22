@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,13 +14,15 @@ import * as z from 'zod';
 
 interface ItemsMasterPageProps {
   hideHeader?: boolean;
+  onRowClick?: (row: ItemsMaster) => void;
 }
 
-const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false }) => {
+const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, onRowClick }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<ItemsMaster | null>(null);
   const [data, setData] = useState<ItemsMaster[]>(itemsMaster);
+  const navigate = useNavigate();
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -33,11 +36,11 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false })
     setIsDialogOpen(true);
   };
 
-  const handleSubmit = (values: any) => {
-    if (isEditMode && currentItem) {
-      setData(data.map(item => item.id === currentItem.id ? { ...item, ...values } : item));
+  const handleRowClick = (row: ItemsMaster) => {
+    if (onRowClick) {
+      onRowClick(row);
     } else {
-      setData([...data, { id: String(data.length + 1), ...values }]);
+      navigate(`/manage/items-master/${row.id}`);
     }
   };
 
@@ -142,6 +145,7 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false })
               data={data} 
               columns={columns} 
               onEdit={handleEdit} 
+              onRowClick={handleRowClick}
             />
           </TabsContent>
           <TabsContent value="details" className="pt-4">
@@ -158,6 +162,7 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false })
           data={data} 
           columns={columns} 
           onEdit={handleEdit} 
+          onRowClick={handleRowClick}
         />
       )}
 

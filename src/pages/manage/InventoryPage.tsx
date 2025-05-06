@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,13 +13,15 @@ import * as z from 'zod';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
+  onRowClick?: (row: Inventory) => void;
 }
 
-const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => {
+const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRowClick }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<Inventory | null>(null);
   const [data, setData] = useState<Inventory[]>(inventory);
+  const navigate = useNavigate();
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -31,6 +33,14 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => 
     setIsEditMode(true);
     setCurrentItem(item);
     setIsDialogOpen(true);
+  };
+  
+  const handleRowClick = (row: Inventory) => {
+    if (onRowClick) {
+      onRowClick(row);
+    } else {
+      navigate(`/manage/inventory/${row.id}`);
+    }
   };
 
   const handleSubmit = (values: any) => {
@@ -182,7 +192,8 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => 
             <DataTable 
               data={data} 
               columns={columns} 
-              onEdit={handleEdit} 
+              onEdit={handleEdit}
+              onRowClick={handleRowClick}
             />
           </TabsContent>
           <TabsContent value="details" className="pt-4">
@@ -198,7 +209,8 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false }) => 
         <DataTable 
           data={data} 
           columns={columns} 
-          onEdit={handleEdit} 
+          onEdit={handleEdit}
+          onRowClick={handleRowClick}
         />
       )}
 
