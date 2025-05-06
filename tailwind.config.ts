@@ -76,21 +76,6 @@ export default {
 					gray: '#757575',
 					'gray-light': '#e0e0e0',
 					'gray-dark': '#424242',
-					purple: '#9b87f5',
-					'purple-dark': '#6E59A5',
-					'purple-light': '#D6BCFA',
-					teal: '#4fd1c5',
-					'teal-dark': '#319795',
-					'teal-light': '#b2f5ea',
-					indigo: '#667eea',
-					'indigo-dark': '#5a67d8',
-					'indigo-light': '#c3dafe',
-					amber: '#ffc107',
-					'amber-dark': '#ff8f00',
-					'amber-light': '#ffecb3',
-					cyan: '#0bc5ea',
-					'cyan-dark': '#0987a0',
-					'cyan-light': '#c4f1f9'
 				}
 			},
 			borderRadius: {

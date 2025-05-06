@@ -104,28 +104,6 @@ body {
   @apply h-2.5 w-2.5 rounded-full bg-red-500 mr-2;
 }
 
-/* Gradients and colorful elements */
-.gradient-primary {
-  background: linear-gradient(135deg, #9b87f5 0%, #6E59A5 100%);
-  color: white;
-}
-
-.gradient-secondary {
-  background: linear-gradient(135deg, #4fd1c5 0%, #0987a0 100%);
-  color: white;
-}
-
-.gradient-tertiary {
-  background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
-  color: white;
-}
-
-.accent-divider {
-  border-color: #9b87f5;
-  border-width: 2px;
-  margin: 0.75rem 0;
-}
-
 /* Keep other existing styles */
 .logo {
   height: 6em;

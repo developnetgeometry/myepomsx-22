@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
@@ -174,47 +173,39 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   };
 
   return <li className="w-full">
-      {item.path ? <Link to={item.path} className={cn('flex items-center py-3 px-4 text-white hover:bg-sidebar-accent w-full transition-colors duration-200', {
-      'bg-sidebar-accent text-white': isActive,
+      {item.path ? <Link to={item.path} className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full', {
+      'bg-[#2a314a]': isActive,
       'justify-center': isCollapsed
     })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-white" : "text-white")} />
+          <item.icon size={20} className="flex-shrink-0 mr-3" />
           {!isCollapsed && <>
               <span className="flex-1">{item.name}</span>
               {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} className="text-white" />
+                  <ChevronRight size={16} />
                 </div>}
             </>}
-        </Link> : <button className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-sidebar-accent transition-colors duration-200', {
-      'bg-sidebar-accent text-white': isActive,
+        </Link> : <button className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a]', {
+      'bg-[#2a314a]': isActive,
       'justify-center': isCollapsed
     })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-white" : "text-white")} />
+          <item.icon size={20} className="flex-shrink-0 mr-3" />
           {!isCollapsed && <>
               <span className="flex-1">{item.name}</span>
               {item.children && <div className="ml-auto">
                   <ChevronRight size={16} className={cn('transition-transform duration-200', {
-            'rotate-90': isSubmenuOpen,
-            'text-white': isActive
+            'rotate-90': isSubmenuOpen
           })} />
                 </div>}
             </>}
         </button>}
-      {isSubmenuOpen && item.children && !isCollapsed && <ul className="bg-sidebar-background py-1">
-          {item.children.map(child => {
-            const isChildActive = location.pathname === child.path;
-            return (
-              <li key={child.name}>
-                <Link to={child.path} className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-sidebar-accent hover:text-white transition-colors duration-200', {
-                  'bg-sidebar-accent text-white': isChildActive
-                })}>
-                  <span className={cn("flex-1", { "text-white": isChildActive })}>
-                    {child.name}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
+      {isSubmenuOpen && item.children && !isCollapsed && <ul className="bg-[#242b3d] py-1">
+          {item.children.map(child => <li key={child.name}>
+              <Link to={child.path} className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white', {
+          'bg-[#2a314a] text-white': location.pathname === child.path
+        })}>
+                <span className="flex-1">{child.name}</span>
+              </Link>
+            </li>)}
         </ul>}
     </li>;
 };
@@ -244,14 +235,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       {isMobile && (
         <button 
           onClick={onToggle} 
-          className="fixed top-4 left-4 z-50 p-2 bg-sidebar-background rounded-md text-white"
+          className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white"
         >
           {!isCollapsed ? <X size={20} /> : <Menu size={20} />}
         </button>
       )}
       
       <div className={cn(
-        'fixed inset-y-0 left-0 z-40 bg-sidebar-background shadow-lg transition-all duration-300 ease-in-out transform', 
+        'fixed inset-y-0 left-0 z-40 bg-[#1A1F2C] transition-all duration-300 ease-in-out transform', 
         {
           'w-60': !isCollapsed,
           'w-16': isCollapsed && !isMobile,
@@ -261,30 +252,25 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       )}>
         <div className="h-full flex flex-col">
           <div className={cn(
-            "flex items-center h-16 px-4 border-b border-sidebar-border", 
+            "flex items-center h-16 px-4 border-b border-white/10", 
             { "justify-center": isCollapsed }
           )}>
             <div className={cn(
               "flex items-center", 
               { "justify-center": isCollapsed }
             )}>
-              {!isCollapsed && (
-                <span className="text-xl font-bold text-white">
-                  MyEPOMSX
-                </span>
-              )}
-              {isCollapsed && (
-                <span className="font-bold text-white text-2xl">
-                  E
-                </span>
-              )}
+              <span className={cn(
+                "text-xl font-bold text-white", 
+                { "sr-only": isCollapsed }
+              )}>MyEPOMSX</span>
+              {isCollapsed && <span className="font-bold text-white text-2xl">E</span>}
             </div>
             
             {!isMobile && (
               <button 
                 onClick={onToggle} 
                 className={cn(
-                  "ml-auto p-1 rounded-md text-white hover:bg-sidebar-accent focus:outline-none transition-colors duration-200", 
+                  "ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none", 
                   { "mr-auto ml-0": isCollapsed }
                 )}
               >
@@ -294,7 +280,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           </div>
           
           <div className="flex-1 overflow-y-auto">
-            <ul className="space-y-0.5 py-2">
+            <ul className="space-y-0.5">
               {sidebarItems.map((item, index) => (
                 <React.Fragment key={item.name}>
                   <SidebarItem 
@@ -304,7 +290,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     onActiveItemChange={handleActiveItemChange} 
                   />
                   {/* Add horizontal separator line after Reports & Analytics */}
-                  {index === 6 && <li className="border-b-2 border-sidebar-border my-2 mx-4"></li>}
+                  {index === 6 && <li className="border-b-2 border-white/10 my-1"></li>}
                 </React.Fragment>
               ))}
             </ul>

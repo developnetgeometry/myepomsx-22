@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,7 +23,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 262 83% 74%;
+    --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -34,13 +35,13 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 225 24% 14%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 262 83% 74%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 211 100% 45%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 225 30% 24%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 224 25% 28%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 211 100% 45%;
   }
 
@@ -63,7 +64,7 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 262 83% 74%;
+    --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -75,7 +76,7 @@
     
     --sidebar-background: 222.2 84% 4.9%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 262 83% 74%;
+    --sidebar-primary: 211 100% 45%;
     --sidebar-primary-foreground: 210 40% 98%;
     --sidebar-accent: 217.2 32.6% 17.5%;
     --sidebar-accent-foreground: 210 40% 98%;
@@ -153,17 +154,5 @@
   
   .search-bar {
     @apply flex flex-col sm:flex-row gap-2 items-start sm:items-center;
-  }
-
-  .gradient-card {
-    @apply bg-gradient-to-br from-white to-gray-50 border border-gray-100;
-  }
-  
-  .accent-border {
-    @apply border-l-4 border-epomsx-purple pl-4;
-  }
-
-  .stat-card {
-    @apply bg-white border border-gray-100 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow;
   }
 }
