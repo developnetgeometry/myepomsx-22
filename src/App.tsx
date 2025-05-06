@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound';
 
 // Manage pages
 import AssetsPage from './pages/manage/AssetsPage';
+import AssetDetailPage from './pages/manage/AssetDetailPage';
 import AssetHierarchyPage from './pages/manage/AssetHierarchyPage';
 import AssetRegisterPage from './pages/manage/AssetRegisterPage';
 import AssetRegisterDetailPage from './pages/manage/AssetRegisterDetailPage';
@@ -101,6 +102,7 @@ function App() {
         
         {/* Manage routes */}
         <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+        <Route path="/manage/assets/:id" element={<Layout><AssetDetailPage /></Layout>} />
         <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
         <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
