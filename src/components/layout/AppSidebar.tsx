@@ -292,7 +292,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     onActiveItemChange={handleActiveItemChange} 
                   />
                   {/* Add horizontal separator line after Reports & Analytics */}
-                  {index === 6 && <li className="border-b border-white/10 my-1"></li>}
+                  {index === 6 && <li className="border-b-2 border-white/10 my-1"></li>}
                 </React.Fragment>
               ))}
             </ul>
