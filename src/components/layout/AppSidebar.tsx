@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
@@ -19,112 +20,152 @@ const sidebarItems: SidebarItemType[] = [
     name: 'Dashboard',
     icon: Home,
     path: '/'
-  }, {
+  }, 
+  {
     name: 'Asset Management',
     icon: Database,
-    children: [{
-      name: 'Facilities',
-      path: '/manage/facilities'
-    }, {
-      name: 'System',
-      path: '/manage/system'
-    }, {
-      name: 'Package',
-      path: '/manage/package'
-    }, {
-      name: 'Assets',
-      path: '/manage/assets'
-    }, {
-      name: 'BOM Assembly',
-      path: '/manage/bom-assembly'
-    }, {
-      name: 'Asset Hierarchy',
-      path: '/manage/asset-hierarchy'
-    }, {
-      name: 'Asset Register',
-      path: '/manage/asset-register'
-    }]
-  }, {
+    children: [
+      {
+        name: 'Facilities',
+        path: '/manage/facilities'
+      }, 
+      {
+        name: 'System',
+        path: '/manage/system'
+      }, 
+      {
+        name: 'Package',
+        path: '/manage/package'
+      }, 
+      {
+        name: 'Assets',
+        path: '/manage/assets'
+      }, 
+      {
+        name: 'BOM Assembly',
+        path: '/manage/bom-assembly'
+      }, 
+      {
+        name: 'Asset Hierarchy',
+        path: '/manage/asset-hierarchy'
+      }, 
+      {
+        name: 'Asset Register',
+        path: '/manage/asset-register'
+      }
+    ]
+  }, 
+  {
     name: 'Inventory',
     icon: Box,
-    children: [{
-      name: 'Material',
-      path: '/manage/material'
-    }, {
-      name: 'Items Master',
-      path: '/manage/items-master'
-    }, {
-      name: 'Inventory',
-      path: '/manage/inventory'
-    }]
-  }, {
+    children: [
+      {
+        name: 'Material',
+        path: '/manage/material'
+      }, 
+      {
+        name: 'Items Master',
+        path: '/manage/items-master'
+      }, 
+      {
+        name: 'Inventory',
+        path: '/manage/inventory'
+      }
+    ]
+  }, 
+  {
     name: 'Work Orders',
     icon: ListOrdered,
-    children: [{
-      name: 'Work Request',
-      path: '/maintain/work-request'
-    }, {
-      name: 'Work Order List',
-      path: '/maintain/work-order-list'
-    }, {
-      name: 'WO History',
-      path: '/maintain/wo-history'
-    }]
-  }, {
+    children: [
+      {
+        name: 'Work Request',
+        path: '/maintain/work-request'
+      }, 
+      {
+        name: 'Work Order List',
+        path: '/maintain/work-order-list'
+      }, 
+      {
+        name: 'WO History',
+        path: '/maintain/wo-history'
+      }
+    ]
+  }, 
+  {
     name: 'Maintenance Planning',
     icon: Calendar,
-    children: [{
-      name: 'PM Schedule',
-      path: '/maintain/pm-schedule'
-    }, {
-      name: 'Task Library',
-      path: '/maintain/task-library'
-    }]
-  }, {
+    children: [
+      {
+        name: 'PM Schedule',
+        path: '/maintain/pm-schedule'
+      }, 
+      {
+        name: 'Task Library',
+        path: '/maintain/task-library'
+      }
+    ]
+  }, 
+  {
     name: 'Field Operations',
     icon: Users,
-    children: [{
-      name: 'IMS Dashboard',
-      path: '/monitor/ims-dashboard'
-    }, {
-      name: 'RBI Assessment',
-      path: '/monitor/rbi-assessment'
-    }, {
-      name: 'Corrosion Studies',
-      path: '/monitor/corrosion-studies'
-    }, {
-      name: 'Inspection Data',
-      path: '/monitor/inspection-data'
-    }, {
-      name: 'Inventory Groups',
-      path: '/monitor/inventory-groups'
-    }, {
-      name: 'RMS Asset List',
-      path: '/monitor/rms-asset-list'
-    }, {
-      name: 'Critical Assets',
-      path: '/monitor/critical-assets'
-    }, {
-      name: 'RMS Dashboard',
-      path: '/monitor/rms-dashboard'
-    }]
-  }, {
+    children: [
+      {
+        name: 'IMS Dashboard',
+        path: '/monitor/ims-dashboard'
+      }, 
+      {
+        name: 'RBI Assessment',
+        path: '/monitor/rbi-assessment'
+      }, 
+      {
+        name: 'Corrosion Studies',
+        path: '/monitor/corrosion-studies'
+      }, 
+      {
+        name: 'Inspection Data',
+        path: '/monitor/inspection-data'
+      }, 
+      {
+        name: 'Inventory Groups',
+        path: '/monitor/inventory-groups'
+      }, 
+      {
+        name: 'RMS Asset List',
+        path: '/monitor/rms-asset-list'
+      }, 
+      {
+        name: 'Critical Assets',
+        path: '/monitor/critical-assets'
+      }, 
+      {
+        name: 'RMS Dashboard',
+        path: '/monitor/rms-dashboard'
+      }
+    ]
+  }, 
+  {
     name: 'Reports & Analytics',
     icon: BarChart4,
-    children: [{
-      name: 'Asset Performance',
-      path: '/measure/asset-performance'
-    }, {
-      name: 'Work Analytics',
-      path: '/measure/work-analytics'
-    }, {
-      name: 'Cost Analysis',
-      path: '/measure/cost-analysis'
-    }, {
-      name: 'KPI Dashboard',
-      path: '/measure/kpi-dashboard'
-    }]
-  }, {
+    children: [
+      {
+        name: 'Asset Performance',
+        path: '/measure/asset-performance'
+      }, 
+      {
+        name: 'Work Analytics',
+        path: '/measure/work-analytics'
+      }, 
+      {
+        name: 'Cost Analysis',
+        path: '/measure/cost-analysis'
+      }, 
+      {
+        name: 'KPI Dashboard',
+        path: '/measure/kpi-dashboard'
+      }
+    ]
+  }, 
+  {
     name: 'Setup',
     icon: Settings,
     children: [
@@ -132,19 +173,24 @@ const sidebarItems: SidebarItemType[] = [
       {
         name: 'Company',
         path: '/admin/setup/company'
-      }, {
+      }, 
+      {
         name: 'Client',
         path: '/admin/setup/client'
-      }, {
+      }, 
+      {
         name: 'Project',
         path: '/admin/setup/project'
-      }, {
+      }, 
+      {
         name: 'Vendor',
         path: '/admin/setup/vendor'
-      }, {
+      }, 
+      {
         name: 'Sensor',
         path: '/admin/setup/sensor'
-      }, {
+      }, 
+      {
         name: 'Work Center',
         path: '/admin/setup/work-center'
       },
@@ -152,29 +198,37 @@ const sidebarItems: SidebarItemType[] = [
       {
         name: 'Data Category',
         path: '/admin/settings/data-category'
-      }, {
+      }, 
+      {
         name: 'Asset Tag',
         path: '/admin/settings/asset-tag'
-      }, {
+      }, 
+      {
         name: 'Asset Class',
         path: '/admin/settings/asset-class'
-      }, {
+      }, 
+      {
         name: 'Discipline',
         path: '/admin/settings/discipline'
-      }, {
+      }, 
+      {
         name: 'Maintenance Type',
         path: '/admin/settings/maintenance-type'
-      }, {
+      }, 
+      {
         name: 'Frequency Setup',
         path: '/admin/settings/frequency-setup'
-      }, {
+      }, 
+      {
         name: 'Average UARS',
         path: '/admin/settings/average-uars'
-      }, {
+      }, 
+      {
         name: 'Corrosion Group',
         path: '/admin/settings/corrosion-group'
-      }]
-  }]
+      }
+    ]
+  }
 ];
 
 type SidebarItemProps = {
