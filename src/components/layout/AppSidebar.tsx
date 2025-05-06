@@ -28,8 +28,8 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'Facilities', path: '/manage/facilities' },
       { name: 'System', path: '/manage/system' },
       { name: 'Package', path: '/manage/package' },
-      { name: 'Assets', path: '/manage/assets' },
-      { name: 'Asset Register', path: '/manage/asset-register' }
+      { name: 'Assets', path: '/manage/assets' }
+      // Removed "Asset Register" item from here
     ]
   },
   {
