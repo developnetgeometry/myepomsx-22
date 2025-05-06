@@ -11,6 +11,7 @@ import AssetHierarchyPage from './pages/manage/AssetHierarchyPage';
 import AssetRegisterPage from './pages/manage/AssetRegisterPage';
 import BomAssemblyPage from './pages/manage/BomAssemblyPage';
 import FacilitiesPage from './pages/manage/FacilitiesPage';
+import FacilityDetailPage from './pages/manage/FacilityDetailPage';
 import InventoryPage from './pages/manage/InventoryPage';
 import ItemsMasterPage from './pages/manage/ItemsMasterPage';
 import MaterialPage from './pages/manage/MaterialPage';
@@ -89,6 +90,7 @@ function App() {
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
         <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
         <Route path="/manage/facilities" element={<Layout><FacilitiesPage /></Layout>} />
+        <Route path="/manage/facilities/:id" element={<Layout><FacilityDetailPage /></Layout>} />
         <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
         <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
         <Route path="/manage/material" element={<Layout><MaterialPage /></Layout>} />

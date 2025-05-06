@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { useLoadingState } from '@/hooks/use-loading-state';
 
 const FacilitiesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<FacilityLocation | null>(null);
@@ -46,6 +48,10 @@ const FacilitiesPage: React.FC = () => {
       setFilteredData(filteredData.filter(facility => facility.id !== item.id));
       toast.success("Facility deleted successfully");
     });
+  };
+
+  const handleRowClick = (row: FacilityLocation) => {
+    navigate(`/manage/facilities/${row.id}`);
   };
 
   const handleSubmit = (values: any) => {
@@ -162,7 +168,8 @@ const FacilitiesPage: React.FC = () => {
                 columns={columns} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete} 
-                onExport={handleExport} 
+                onExport={handleExport}
+                onRowClick={handleRowClick} 
               />
             </TabsContent>
             <TabsContent value="details" className="pt-4">
