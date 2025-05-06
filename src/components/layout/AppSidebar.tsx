@@ -178,24 +178,24 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       'bg-sidebar-accent text-white': isActive,
       'justify-center': isCollapsed
     })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-sidebar-primary" : "text-white")} />
+          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-white" : "text-white")} />
           {!isCollapsed && <>
               <span className="flex-1">{item.name}</span>
               {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} className={isActive ? "text-sidebar-primary" : "text-white"} />
+                  <ChevronRight size={16} className="text-white" />
                 </div>}
             </>}
         </Link> : <button className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-sidebar-accent transition-colors duration-200', {
       'bg-sidebar-accent text-white': isActive,
       'justify-center': isCollapsed
     })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-sidebar-primary" : "text-white")} />
+          <item.icon size={20} className={cn("flex-shrink-0 mr-3", isActive ? "text-white" : "text-white")} />
           {!isCollapsed && <>
               <span className="flex-1">{item.name}</span>
               {item.children && <div className="ml-auto">
                   <ChevronRight size={16} className={cn('transition-transform duration-200', {
             'rotate-90': isSubmenuOpen,
-            'text-sidebar-primary': isActive
+            'text-white': isActive
           })} />
                 </div>}
             </>}
@@ -208,7 +208,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                 <Link to={child.path} className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-sidebar-accent hover:text-white transition-colors duration-200', {
                   'bg-sidebar-accent text-white': isChildActive
                 })}>
-                  <span className={cn("flex-1", { "text-sidebar-primary": isChildActive })}>
+                  <span className={cn("flex-1", { "text-white": isChildActive })}>
                     {child.name}
                   </span>
                 </Link>
@@ -269,12 +269,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               { "justify-center": isCollapsed }
             )}>
               {!isCollapsed && (
-                <span className="text-xl font-bold text-white bg-gradient-to-r from-epomsx-purple to-epomsx-purple-dark bg-clip-text text-transparent">
+                <span className="text-xl font-bold text-white">
                   MyEPOMSX
                 </span>
               )}
               {isCollapsed && (
-                <span className="font-bold text-white text-2xl bg-gradient-to-r from-epomsx-purple to-epomsx-purple-dark bg-clip-text text-transparent">
+                <span className="font-bold text-white text-2xl">
                   E
                 </span>
               )}
