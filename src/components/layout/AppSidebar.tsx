@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, 
   ChevronRight, Menu, X, Home, Database, Box, ListOrdered, 
-  Calendar, Users, ChevronLeft 
+  Calendar, Users, ChevronLeft, Monitor
 } from 'lucide-react';
 import { 
   IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, 
@@ -18,7 +19,13 @@ type SidebarItemType = {
   path?: string;
   children?: {
     name: string;
-    path: string;
+    path?: string;
+    icon?: React.ElementType;
+    children?: {
+      name: string;
+      path: string;
+      icon?: React.ElementType;
+    }[];
   }[];
 };
 
@@ -66,41 +73,32 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'Task Library', path: '/maintain/task-library' }
     ]
   },
+  // Updated Monitor section with IMS and RMS as children
   {
-    name: 'Field Operations',
-    icon: Users,
+    name: 'Monitor',
+    icon: Monitor,
     children: [
-      { name: 'IMS Dashboard', path: '/monitor/ims-dashboard' },
-      { name: 'RBI Assessment', path: '/monitor/rbi-assessment' },
-      { name: 'Corrosion Studies', path: '/monitor/corrosion-studies' },
-      { name: 'Inspection Data', path: '/monitor/inspection-data' },
-      { name: 'Inventory Groups', path: '/monitor/inventory-groups' },
-      { name: 'RMS Asset List', path: '/monitor/rms-asset-list' },
-      { name: 'Critical Assets', path: '/monitor/critical-assets' },
-      { name: 'RMS Dashboard', path: '/monitor/rms-dashboard' }
-    ]
-  },
-  // Add IMS section as shown in the image
-  {
-    name: 'IMS',
-    icon: IMSIcon,
-    children: [
-      { name: 'IMS Dashboard', path: '/monitor/ims-dashboard' },
-      { name: 'Integrity', path: '/monitor/integrity' },
-      { name: 'RBI Assessment', path: '/monitor/rbi-assessment' },
-      { name: 'Corrosion Studies', path: '/monitor/corrosion-studies' },
-      { name: 'Inspection Data Management', path: '/monitor/inspection-data' },
-      { name: 'Inventory Groups', path: '/monitor/inventory-groups' }
-    ]
-  },
-  // Add new RMS section
-  {
-    name: 'RMS',
-    icon: RMSIcon,
-    children: [
-      { name: 'RMS Asset List', path: '/monitor/rms-asset-list' },
-      { name: 'Critical Assets Tracking', path: '/monitor/critical-assets' },
-      { name: 'RMS Dashboard', path: '/monitor/rms-dashboard' }
+      {
+        name: 'IMS',
+        icon: IMSIcon,
+        children: [
+          { name: 'IMS Dashboard', path: '/monitor/ims-dashboard', icon: IMSIcon },
+          { name: 'Integrity', path: '/monitor/integrity', icon: IntegrityIcon },
+          { name: 'RBI Assessment', path: '/monitor/rbi-assessment', icon: RBIAssessmentIcon },
+          { name: 'Corrosion Studies', path: '/monitor/corrosion-studies', icon: CorrosionStudiesIcon },
+          { name: 'Inspection Data Management', path: '/monitor/inspection-data', icon: InspectionDataIcon },
+          { name: 'Inventory Groups', path: '/monitor/inventory-groups', icon: InventoryGroupsIcon }
+        ]
+      },
+      {
+        name: 'RMS',
+        icon: RMSIcon,
+        children: [
+          { name: 'RMS Asset List', path: '/monitor/rms-asset-list', icon: RMSAssetListIcon },
+          { name: 'Critical Assets Tracking', path: '/monitor/critical-assets', icon: CriticalAssetsIcon },
+          { name: 'RMS Dashboard', path: '/monitor/rms-dashboard', icon: RMSDashboardIcon }
+        ]
+      }
     ]
   },
   {
@@ -166,21 +164,30 @@ const sidebarItems: SidebarItemType[] = [
   }
 ];
 
+// Remove standalone IMS and RMS sections as they're now under Monitor
+
 type SidebarItemProps = {
   item: SidebarItemType;
   isCollapsed: boolean;
   activeItem: string;
   onActiveItemChange: (item: string) => void;
+  depth?: number;
 };
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
   isCollapsed,
   activeItem,
-  onActiveItemChange
+  onActiveItemChange,
+  depth = 0
 }) => {
   const location = useLocation();
-  const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => location.pathname === child.path);
+  const isActive = activeItem === item.name || 
+                  location.pathname === item.path || 
+                  item.children?.some(child => 
+                    location.pathname === child.path || 
+                    child.children?.some(grandchild => location.pathname === grandchild.path)
+                  );
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
 
   React.useEffect(() => {
@@ -214,7 +221,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           to={item.path} 
           className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full transition-colors duration-200', {
             'bg-[#2a314a]': isActive,
-            'justify-center': isCollapsed
+            'justify-center': isCollapsed,
+            'pl-8': depth === 1,
+            'pl-12': depth === 2
           }, specialSectionClass)} 
           onClick={handleClick} 
           title={isCollapsed ? item.name : undefined}
@@ -237,7 +246,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         <button 
           className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a] transition-colors duration-200', {
             'bg-[#2a314a]': isActive,
-            'justify-center': isCollapsed
+            'justify-center': isCollapsed,
+            'pl-8': depth === 1,
+            'pl-12': depth === 2
           }, specialSectionClass)} 
           onClick={handleClick} 
           title={isCollapsed ? item.name : undefined}
@@ -264,37 +275,46 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       )}
 
       {isSubmenuOpen && item.children && !isCollapsed && (
-        <ul className={cn("bg-[#242b3d] py-1", { "bg-[#1A1F2C]": isSpecialSection })}>
+        <ul className={cn("bg-[#242b3d] py-1", { 
+          "bg-[#1A1F2C]": isSpecialSection,
+          "bg-[#2a314a]": depth === 1 && !isSpecialSection
+        })}>
           {item.children.map((child, index) => {
-            // For IMS and RMS sections, use specific icons
-            let ChildIcon = null;
-            if (item.name === 'IMS') {
-              if (child.name === 'IMS Dashboard') ChildIcon = IMSIcon;
-              else if (child.name === 'Integrity') ChildIcon = IntegrityIcon;
-              else if (child.name === 'RBI Assessment') ChildIcon = RBIAssessmentIcon;
-              else if (child.name === 'Corrosion Studies') ChildIcon = CorrosionStudiesIcon;
-              else if (child.name === 'Inspection Data Management') ChildIcon = InspectionDataIcon;
-              else if (child.name === 'Inventory Groups') ChildIcon = InventoryGroupsIcon;
+            if (child.children) {
+              // Handle nested submenu (for IMS and RMS under Monitor)
+              return (
+                <SidebarItem 
+                  key={child.name}
+                  item={child}
+                  isCollapsed={isCollapsed}
+                  activeItem={activeItem}
+                  onActiveItemChange={onActiveItemChange}
+                  depth={depth + 1}
+                />
+              );
             }
-            else if (item.name === 'RMS') {
-              if (child.name === 'RMS Asset List') ChildIcon = RMSAssetListIcon;
-              else if (child.name === 'Critical Assets Tracking') ChildIcon = CriticalAssetsIcon;
-              else if (child.name === 'RMS Dashboard') ChildIcon = RMSDashboardIcon;
-            }
+            
+            // For IMS and RMS child items, use specific icons
+            let ChildIcon = child.icon || null;
             
             return (
               <li key={child.name}>
                 <Link 
-                  to={child.path} 
+                  to={child.path || '#'} 
                   className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
                     'bg-[#2a314a] text-white': location.pathname === child.path,
-                    'py-3 px-6': isSpecialSection // Special styling for IMS and RMS submenu items
+                    'py-3 px-6': isSpecialSection, // Special styling for IMS and RMS submenu items
+                    'pl-12': depth === 1,
+                    'pl-16': depth === 2
                   })}
                 >
-                  {isSpecialSection && ChildIcon && (
+                  {ChildIcon && (
                     <ChildIcon size={16} className="mr-3 flex-shrink-0" />
                   )}
                   <span className="flex-1">{child.name}</span>
+                  {child.children && (
+                    <ChevronRight size={16} />
+                  )}
                 </Link>
               </li>
             );
@@ -384,8 +404,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     activeItem={activeItem} 
                     onActiveItemChange={handleActiveItemChange} 
                   />
-                  {/* Add horizontal separator line after Field Operations, IMS, RMS and Reports & Analytics */}
-                  {(index === 5 || index === 6 || index === 7 || index === 8) && <li className="border-b-2 border-white/10 my-1"></li>}
+                  {/* Add horizontal separator line after Field Operations and Reports & Analytics */}
+                  {(index === 4 || index === 5 || index === 6) && <li className="border-b-2 border-white/10 my-1"></li>}
                 </React.Fragment>
               ))}
             </ul>
