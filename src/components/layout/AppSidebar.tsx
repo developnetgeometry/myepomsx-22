@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
@@ -28,7 +29,6 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'System', path: '/manage/system' },
       { name: 'Package', path: '/manage/package' },
       { name: 'Assets', path: '/manage/assets' },
-      { name: 'BOM Assembly', path: '/manage/bom-assembly' },
       { name: 'Asset Hierarchy', path: '/manage/asset-hierarchy' },
       { name: 'Asset Register', path: '/manage/asset-register' }
     ]
@@ -39,7 +39,8 @@ const sidebarItems: SidebarItemType[] = [
     children: [
       { name: 'Material', path: '/manage/material' },
       { name: 'Items Master', path: '/manage/items-master' },
-      { name: 'Inventory', path: '/manage/inventory' }
+      { name: 'Inventory', path: '/manage/inventory' },
+      { name: 'BOM Assembly', path: '/manage/bom-assembly' }
     ]
   },
   {
