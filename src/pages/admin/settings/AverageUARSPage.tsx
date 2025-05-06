@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,7 @@ const initialUARS = [
 ];
 
 const AverageUARSPage: React.FC = () => {
+  const navigate = useNavigate();
   const [uarsData, setUarsData] = useState(initialUARS);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -98,6 +99,10 @@ const AverageUARSPage: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRowClick = (row: any) => {
+    navigate(`/admin/settings/average-uars/${row.id}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -142,6 +147,7 @@ const AverageUARSPage: React.FC = () => {
         columns={columns}
         data={uarsData}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

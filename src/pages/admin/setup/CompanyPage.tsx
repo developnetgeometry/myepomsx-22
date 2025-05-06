@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -72,6 +72,7 @@ const initialCompanies = [
 ];
 
 const CompanyPage: React.FC = () => {
+  const navigate = useNavigate();
   const [companies, setCompanies] = useState(initialCompanies);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -114,6 +115,10 @@ const CompanyPage: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRowClick = (row: any) => {
+    navigate(`/admin/setup/company/${row.id}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -159,6 +164,7 @@ const CompanyPage: React.FC = () => {
         columns={columns}
         data={companies}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

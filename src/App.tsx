@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
@@ -57,11 +58,15 @@ import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
 // Admin pages
 import AssetClassPage from './pages/admin/settings/AssetClassPage';
 import AssetTagPage from './pages/admin/settings/AssetTagPage';
+import AssetTagDetailPage from './pages/admin/settings/AssetTagDetailPage';
 import AverageUARSPage from './pages/admin/settings/AverageUARSPage';
+import AverageUARSDetailPage from './pages/admin/settings/AverageUARSDetailPage';
 import ClientPage from './pages/admin/setup/ClientPage';
 import CompanyPage from './pages/admin/setup/CompanyPage';
+import CompanyDetailPage from './pages/admin/setup/CompanyDetailPage';
 import CorrosionGroupPage from './pages/admin/settings/CorrosionGroupPage';
 import DataCategoryPage from './pages/admin/settings/DataCategoryPage';
+import DataCategoryDetailPage from './pages/admin/settings/DataCategoryDetailPage';
 import DisciplinePage from './pages/admin/settings/DisciplinePage';
 import FrequencySetupPage from './pages/admin/settings/FrequencySetupPage';
 import MaintenanceTypePage from './pages/admin/settings/MaintenanceTypePage';
@@ -147,15 +152,19 @@ function App() {
         {/* Admin routes */}
         <Route path="/admin/settings/asset-class" element={<Layout><AssetClassPage /></Layout>} />
         <Route path="/admin/settings/asset-tag" element={<Layout><AssetTagPage /></Layout>} />
+        <Route path="/admin/settings/asset-tag/:id" element={<Layout><AssetTagDetailPage /></Layout>} />
         <Route path="/admin/settings/average-uars" element={<Layout><AverageUARSPage /></Layout>} />
+        <Route path="/admin/settings/average-uars/:id" element={<Layout><AverageUARSDetailPage /></Layout>} />
         <Route path="/admin/settings/corrosion-group" element={<Layout><CorrosionGroupPage /></Layout>} />
         <Route path="/admin/settings/data-category" element={<Layout><DataCategoryPage /></Layout>} />
+        <Route path="/admin/settings/data-category/:id" element={<Layout><DataCategoryDetailPage /></Layout>} />
         <Route path="/admin/settings/discipline" element={<Layout><DisciplinePage /></Layout>} />
         <Route path="/admin/settings/frequency-setup" element={<Layout><FrequencySetupPage /></Layout>} />
         <Route path="/admin/settings/maintenance-type" element={<Layout><MaintenanceTypePage /></Layout>} />
         
         <Route path="/admin/setup/client" element={<Layout><ClientPage /></Layout>} />
         <Route path="/admin/setup/company" element={<Layout><CompanyPage /></Layout>} />
+        <Route path="/admin/setup/company/:id" element={<Layout><CompanyDetailPage /></Layout>} />
         <Route path="/admin/setup/project" element={<Layout><ProjectPage /></Layout>} />
         <Route path="/admin/setup/sensor" element={<Layout><SensorPage /></Layout>} />
         <Route path="/admin/setup/vendor" element={<Layout><VendorPage /></Layout>} />
