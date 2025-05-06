@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -166,7 +167,7 @@ const BomAssemblyPage: React.FC = () => {
     });
   };
 
-  // Add the missing handleSparePartRowClick function
+  // Add the handleSparePartRowClick function
   const handleSparePartRowClick = (row: SparePart) => {
     // Navigate to the spare part detail page
     navigate(`/manage/spare-part/${row.id}`);
