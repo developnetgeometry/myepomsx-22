@@ -22,11 +22,15 @@ interface ManageDialogProps {
     }[];
     required?: boolean;
     placeholder?: string;
+    richText?: boolean;
+    section?: "main" | "dates" | "maintenance" | "additional";
+    width?: "full" | "half";
   }[];
   onSubmit: (values: any) => void;
   isEdit?: boolean;
   isProcessing?: boolean;
   headerColor?: string;
+  showFileUploads?: boolean;
 }
 
 const ManageDialog = ({
@@ -39,7 +43,8 @@ const ManageDialog = ({
   onSubmit,
   isEdit = false,
   isProcessing = false,
-  headerColor
+  headerColor,
+  showFileUploads = false
 }: ManageDialogProps) => {
   // Reset form when dialog closes
   useEffect(() => {
@@ -50,7 +55,7 @@ const ManageDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader className={`flex flex-row items-center justify-between ${headerColor ? headerColor : ''}`}>
           <DialogTitle className={headerColor ? "text-white" : ""}>{title}</DialogTitle>
           <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className={headerColor ? "text-white hover:bg-white/20" : ""}>
@@ -66,7 +71,8 @@ const ManageDialog = ({
           }} 
           onCancel={() => onOpenChange(false)} 
           isEdit={isEdit} 
-          isSubmitting={isProcessing} 
+          isSubmitting={isProcessing}
+          showFileUploads={showFileUploads}
         />
       </DialogContent>
     </Dialog>

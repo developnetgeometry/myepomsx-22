@@ -1,27 +1,12 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import StatusBadge from '@/components/shared/StatusBadge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { toast } from 'sonner';
+import ManageDialog from '@/components/manage/ManageDialog';
+import * as z from 'zod';
 
 // Sample data
 const initialWorkRequests = [
@@ -125,24 +110,54 @@ const initialWorkRequests = [
   },
 ];
 
+const formSchema = z.object({
+  noWorkRequest: z.string(),
+  status: z.string(),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  requestDate: z.string(),
+  targetDueDate: z.string().optional(),
+  facilityLocation: z.string().optional(),
+  system: z.string().optional(),
+  package: z.string().optional(),
+  asset: z.string(),
+  assetSCECode: z.string().optional(),
+  workCenter: z.string(),
+  dateFinding: z.string(),
+  maintenanceType: z.string(),
+  requestType: z.string().optional(),
+  requestedBy: z.string(),
+  criticality: z.string().optional(),
+  findingDetails: z.string().optional(),
+});
+
 const WorkRequestPage: React.FC = () => {
   const navigate = useNavigate();
   const [workRequests, setWorkRequests] = useState(initialWorkRequests);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isManageDialogOpen, setIsManageDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     noWorkRequest: '',
     description: '',
-    status: 'Pending',
-    requestedBy: '',
+    status: 'Draft',
+    requestedBy: 'John Doe',
     workCenter: '',
     workOrderNo: '',
     woStatus: '',
     asset: '',
-    requestDate: '',
-    workType: 'Corrective',
-    dateFinding: '',
+    requestDate: new Date().toISOString().split('T')[0],
+    targetDueDate: '',
+    facilityLocation: '',
+    system: '',
+    package: '',
+    assetSCECode: '',
+    dateFinding: new Date().toISOString().split('T')[0],
+    maintenanceType: 'Corrective',
+    requestType: 'Finding',
+    criticality: 'Medium',
+    findingDetails: '',
+    attachReport: false,
+    childIncidentReport: false,
   });
 
   const handleAddNew = () => {
@@ -151,17 +166,27 @@ const WorkRequestPage: React.FC = () => {
       id: `WR-2023-${String(workRequests.length + 1).padStart(4, '0')}`,
       noWorkRequest: `WR-2023-${String(workRequests.length + 1).padStart(4, '0')}`,
       description: '',
-      status: 'Pending',
-      requestedBy: '',
+      status: 'Draft',
+      requestedBy: 'John Doe',
       workCenter: '',
       workOrderNo: '',
       woStatus: '',
       asset: '',
       requestDate: new Date().toISOString().split('T')[0],
-      workType: 'Corrective',
+      targetDueDate: '',
+      facilityLocation: '',
+      system: '',
+      package: '',
+      assetSCECode: '',
       dateFinding: new Date().toISOString().split('T')[0],
+      maintenanceType: 'Corrective',
+      requestType: 'Finding',
+      criticality: 'Medium',
+      findingDetails: '',
+      attachReport: false,
+      childIncidentReport: false,
     });
-    setIsDialogOpen(true);
+    setIsManageDialogOpen(true);
   };
 
   const handleEdit = (row: any) => {
@@ -169,35 +194,209 @@ const WorkRequestPage: React.FC = () => {
     setFormData({
       ...row
     });
-    setIsDialogOpen(true);
+    setIsManageDialogOpen(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = (values: any) => {
     if (isEditMode) {
       setWorkRequests(prev => 
-        prev.map(item => item.id === formData.id ? formData : item)
+        prev.map(item => item.id === values.id ? { ...values } : item)
       );
+      toast.success("Work request updated successfully");
     } else {
-      setWorkRequests(prev => [...prev, formData]);
+      setWorkRequests(prev => [...prev, values]);
+      toast.success("Work request created successfully");
     }
     
-    setIsDialogOpen(false);
+    setIsManageDialogOpen(false);
   };
 
   const handleRowClick = (row: any) => {
     navigate(`/maintain/work-request/${row.id}`);
   };
+
+  const formFields = [
+    {
+      name: "noWorkRequest", 
+      label: "Work Request No", 
+      type: "text" as const,
+      required: true,
+      placeholder: "Auto-generated",
+      section: "main" as const,
+    },
+    {
+      name: "status", 
+      label: "Status", 
+      type: "select" as const,
+      required: true,
+      options: [
+        { value: "Draft", label: "Draft" },
+        { value: "Submitted", label: "Submitted" },
+        { value: "Pending", label: "Pending" },
+        { value: "Approved", label: "Approved" },
+        { value: "Rejected", label: "Rejected" },
+      ],
+      section: "main" as const,
+    },
+    {
+      name: "description", 
+      label: "Description", 
+      type: "textarea" as const,
+      required: true,
+      placeholder: "Describe the issue or request in detail",
+      section: "main" as const,
+      richText: true,
+    },
+    {
+      name: "requestDate", 
+      label: "Work Request Date", 
+      type: "date" as const,
+      required: true,
+      section: "dates" as const,
+    },
+    {
+      name: "targetDueDate", 
+      label: "Target Due Date", 
+      type: "date" as const,
+      section: "dates" as const,
+    },
+    {
+      name: "facilityLocation", 
+      label: "Facility", 
+      type: "select" as const,
+      options: [
+        { value: "Central Processing", label: "Central Processing" },
+        { value: "North Field", label: "North Field" },
+        { value: "South Field", label: "South Field" },
+        { value: "Terminal", label: "Terminal" },
+      ],
+      section: "dates" as const,
+    },
+    {
+      name: "system", 
+      label: "System", 
+      type: "select" as const,
+      options: [
+        { value: "Production", label: "Production" },
+        { value: "Compression", label: "Compression" },
+        { value: "Separation", label: "Separation" },
+        { value: "Treatment", label: "Treatment" },
+      ],
+      section: "dates" as const,
+    },
+    {
+      name: "package", 
+      label: "Package", 
+      type: "select" as const,
+      options: [
+        { value: "V-110 Test Separator", label: "V-110 Test Separator" },
+        { value: "P-120 Transfer Pump", label: "P-120 Transfer Pump" },
+        { value: "C-130 Compressor", label: "C-130 Compressor" },
+        { value: "E-140 Heat Exchanger", label: "E-140 Heat Exchanger" },
+      ],
+      section: "dates" as const,
+    },
+    {
+      name: "asset", 
+      label: "Asset", 
+      type: "select" as const,
+      required: true,
+      options: [
+        { value: "V-110", label: "V-110" },
+        { value: "P-120", label: "P-120" },
+        { value: "C-130", label: "C-130" },
+        { value: "E-140", label: "E-140" },
+      ],
+      section: "dates" as const,
+    },
+    {
+      name: "assetSCECode", 
+      label: "Asset SCE Code", 
+      type: "text" as const,
+      placeholder: "Safety Critical Element code",
+      section: "dates" as const,
+    },
+    {
+      name: "workCenter", 
+      label: "Work Center", 
+      type: "select" as const,
+      required: true,
+      options: [
+        { value: "Mechanical", label: "Mechanical" },
+        { value: "Electrical", label: "Electrical" },
+        { value: "Instrumentation", label: "Instrumentation" },
+        { value: "Piping", label: "Piping" },
+        { value: "Civil", label: "Civil" },
+      ],
+      section: "maintenance" as const,
+    },
+    {
+      name: "dateFinding", 
+      label: "Date Finding", 
+      type: "date" as const,
+      required: true,
+      section: "maintenance" as const,
+    },
+    {
+      name: "maintenanceType", 
+      label: "Maintenance Type", 
+      type: "select" as const,
+      required: true,
+      options: [
+        { value: "Corrective", label: "Corrective (CM)" },
+        { value: "Preventive", label: "Preventive (PM)" },
+        { value: "Predictive", label: "Predictive (PdM)" },
+        { value: "Detective", label: "Detective" },
+        { value: "Modification", label: "Modification" },
+      ],
+      section: "maintenance" as const,
+    },
+    {
+      name: "requestType", 
+      label: "Request Type", 
+      type: "select" as const,
+      options: [
+        { value: "Finding", label: "Finding" },
+        { value: "Failure", label: "Failure" },
+        { value: "Audit", label: "Audit" },
+        { value: "Inspection", label: "Inspection" },
+      ],
+      section: "maintenance" as const,
+    },
+    {
+      name: "requestedBy", 
+      label: "Requested By", 
+      type: "select" as const,
+      required: true,
+      options: [
+        { value: "John Doe", label: "John Doe" },
+        { value: "Jane Smith", label: "Jane Smith" },
+        { value: "Mike Johnson", label: "Mike Johnson" },
+        { value: "Sarah Williams", label: "Sarah Williams" },
+      ],
+      section: "maintenance" as const,
+    },
+    {
+      name: "criticality", 
+      label: "Criticality", 
+      type: "select" as const,
+      options: [
+        { value: "Low", label: "Low" },
+        { value: "Medium", label: "Medium" },
+        { value: "High", label: "High" },
+        { value: "Critical", label: "Critical" },
+      ],
+      section: "maintenance" as const,
+    },
+    {
+      name: "findingDetails", 
+      label: "Finding Incident Details", 
+      type: "textarea" as const,
+      placeholder: "Provide detailed information about the finding or incident",
+      section: "additional" as const,
+      richText: true,
+    },
+  ];
 
   const columns: Column[] = [
     { id: 'noWorkRequest', header: 'Work Request No', accessorKey: 'noWorkRequest' },
@@ -239,197 +438,18 @@ const WorkRequestPage: React.FC = () => {
         onRowClick={handleRowClick}
       />
       
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>
-              {isEditMode ? 'Edit Work Request' : 'Create New Work Request'}
-            </DialogTitle>
-            <DialogDescription>
-              Fill in the details for the work request. Click save when you're done.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="noWorkRequest">Work Request No</Label>
-                <Input
-                  id="noWorkRequest"
-                  name="noWorkRequest"
-                  value={formData.noWorkRequest}
-                  onChange={handleInputChange}
-                  readOnly
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="asset">Asset</Label>
-                <Input
-                  id="asset"
-                  name="asset"
-                  value={formData.asset}
-                  onChange={handleInputChange}
-                  placeholder="Enter asset ID"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Enter work request description"
-                  rows={3}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="requestedBy">Requested By</Label>
-                <Input
-                  id="requestedBy"
-                  name="requestedBy"
-                  value={formData.requestedBy}
-                  onChange={handleInputChange}
-                  placeholder="Enter requester name"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="workCenter">Work Center</Label>
-                <Select
-                  name="workCenter"
-                  value={formData.workCenter}
-                  onValueChange={(value) => handleSelectChange('workCenter', value)}
-                >
-                  <SelectTrigger id="workCenter">
-                    <SelectValue placeholder="Select work center" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Mechanical">Mechanical</SelectItem>
-                    <SelectItem value="Electrical">Electrical</SelectItem>
-                    <SelectItem value="Instrumentation">Instrumentation</SelectItem>
-                    <SelectItem value="Piping">Piping</SelectItem>
-                    <SelectItem value="Civil">Civil</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="workType">Work Type</Label>
-                <Select
-                  name="workType"
-                  value={formData.workType}
-                  onValueChange={(value) => handleSelectChange('workType', value)}
-                >
-                  <SelectTrigger id="workType">
-                    <SelectValue placeholder="Select work type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Corrective">Corrective</SelectItem>
-                    <SelectItem value="Preventive">Preventive</SelectItem>
-                    <SelectItem value="Calibration">Calibration</SelectItem>
-                    <SelectItem value="Inspection">Inspection</SelectItem>
-                    <SelectItem value="Modification">Modification</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  name="status"
-                  value={formData.status}
-                  onValueChange={(value) => handleSelectChange('status', value)}
-                >
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Approved">Approved</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Completed">Completed</SelectItem>
-                    <SelectItem value="Rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="requestDate">Request Date</Label>
-                <Input
-                  id="requestDate"
-                  name="requestDate"
-                  type="date"
-                  value={formData.requestDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="dateFinding">Date Finding</Label>
-                <Input
-                  id="dateFinding"
-                  name="dateFinding"
-                  type="date"
-                  value={formData.dateFinding}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              {isEditMode && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="workOrderNo">Work Order No</Label>
-                    <Input
-                      id="workOrderNo"
-                      name="workOrderNo"
-                      value={formData.workOrderNo}
-                      onChange={handleInputChange}
-                      placeholder="Enter work order number"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="woStatus">WO Status</Label>
-                    <Select
-                      name="woStatus"
-                      value={formData.woStatus}
-                      onValueChange={(value) => handleSelectChange('woStatus', value)}
-                    >
-                      <SelectTrigger id="woStatus">
-                        <SelectValue placeholder="Select work order status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">Not Assigned</SelectItem>
-                        <SelectItem value="Open">Open</SelectItem>
-                        <SelectItem value="In Progress">In Progress</SelectItem>
-                        <SelectItem value="On Hold">On Hold</SelectItem>
-                        <SelectItem value="Completed">Completed</SelectItem>
-                        <SelectItem value="Closed">Closed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </>
-              )}
-            </div>
-            
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <ManageDialog
+        open={isManageDialogOpen}
+        onOpenChange={setIsManageDialogOpen}
+        title={isEditMode ? "Edit Work Request" : "Create New Work Request"}
+        formSchema={formSchema}
+        defaultValues={formData}
+        formFields={formFields}
+        onSubmit={handleSubmit}
+        isEdit={isEditMode}
+        headerColor="bg-blue-600"
+        showFileUploads={true}
+      />
     </div>
   );
 };
