@@ -52,12 +52,43 @@ const formatSegment = (segment: string): string => {
     .join(" ");
 };
 
-interface BreadcrumbsProps {
-  showHome?: boolean;
+interface BreadcrumbItem {
+  href?: string;
+  label: string;
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true }) => {
+interface BreadcrumbsProps {
+  showHome?: boolean;
+  overrideItems?: BreadcrumbItem[];
+}
+
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true, overrideItems }) => {
   const location = useLocation();
+  
+  // If override items are provided, use those instead
+  if (overrideItems) {
+    return (
+      <Breadcrumb className="mb-4">
+        <BreadcrumbList>
+          {overrideItems.map((item, index) => (
+            <React.Fragment key={index}>
+              <BreadcrumbItem>
+                {item.href ? (
+                  <BreadcrumbLink asChild>
+                    <Link to={item.href}>{item.label}</Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
+              {index < overrideItems.length - 1 && <BreadcrumbSeparator />}
+            </React.Fragment>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
+    );
+  }
+  
   const pathSegments = location.pathname.split("/").filter(segment => segment);
   
   // Handle root path
