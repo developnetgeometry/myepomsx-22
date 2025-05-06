@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Package, Tool } from 'lucide-react';
+import { Package, Wrench } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { itemsMaster } from '@/data/sampleData';
 import { Column } from '@/components/shared/DataTable';
@@ -74,7 +74,7 @@ const PartsInventoryPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader 
         title="Parts & Inventory" 
-        icon={<Tool className="h-6 w-6" />}
+        icon={<Wrench className="h-6 w-6" />}
       />
       
       <Card>

@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Edit, Tool } from 'lucide-react';
+import { ArrowLeft, Edit, Wrench } from 'lucide-react';
 import { itemsMaster } from '@/data/sampleData';
 import { toast } from "sonner";
 import { Separator } from '@/components/ui/separator';
@@ -66,7 +65,7 @@ const PartsInventoryDetailPage: React.FC = () => {
       <div className="space-y-6">
         <PageHeader 
           title="Part Details" 
-          icon={<Tool className="h-6 w-6" />}
+          icon={<Wrench className="h-6 w-6" />}
           breadcrumbOverride={[
             { href: "/", label: "Home" },
             { href: "/manage", label: "Manage" },
@@ -91,7 +90,7 @@ const PartsInventoryDetailPage: React.FC = () => {
       <div className="space-y-6">
         <PageHeader 
           title="Part Not Found" 
-          icon={<Tool className="h-6 w-6" />}
+          icon={<Wrench className="h-6 w-6" />}
           breadcrumbOverride={[
             { href: "/", label: "Home" },
             { href: "/manage", label: "Manage" },
@@ -115,7 +114,7 @@ const PartsInventoryDetailPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader 
         title={part.partName || "Part Details"} 
-        icon={<Tool className="h-6 w-6" />}
+        icon={<Wrench className="h-6 w-6" />}
         breadcrumbOverride={[
           { href: "/", label: "Home" },
           { href: "/manage", label: "Manage" },
