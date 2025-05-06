@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Archive, ChevronDown, ChevronRight } from 'lucide-react';
+import { Archive, ChevronDown, ChevronRight, Printer } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { assets, packages, systems, facilityLocations, assetHierarchy } from '@/data/sampleData';
 import { Asset } from '@/types/manage';
@@ -17,6 +17,16 @@ import {
   CollapsibleTrigger 
 } from "@/components/ui/collapsible";
 import { Button } from '@/components/ui/button';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { Badge } from "@/components/ui/badge";
 
 type HierarchyNodeProps = {
   node: any;
@@ -91,6 +101,8 @@ const AssetsPage: React.FC = () => {
   const [currentItem, setCurrentItem] = useState<Asset | null>(null);
   const [data, setData] = useState<Asset[]>(assets);
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
 
   const handleNodeSelect = (node: any) => {
     setSelectedNode(node);
@@ -116,6 +128,11 @@ const AssetsPage: React.FC = () => {
     setIsEditMode(true);
     setCurrentItem(item);
     setIsDialogOpen(true);
+  };
+
+  const handleRowClick = (row: Asset) => {
+    setSelectedAsset(row);
+    setIsDrawerOpen(true);
   };
 
   const handleSubmit = (values: any) => {
@@ -279,7 +296,8 @@ const AssetsPage: React.FC = () => {
               <DataTable 
                 data={data} 
                 columns={columns} 
-                onEdit={handleEdit} 
+                onEdit={handleEdit}
+                onRowClick={handleRowClick}
               />
             </TabsContent>
             <TabsContent value="details" className="pt-4">
@@ -386,6 +404,111 @@ const AssetsPage: React.FC = () => {
         onSubmit={handleSubmit}
         isEdit={isEditMode}
       />
+
+      {/* Asset Details Drawer */}
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader className="border-b border-gray-200 pb-4">
+            <DrawerTitle className="text-xl font-semibold">{selectedAsset?.name || 'Asset Details'}</DrawerTitle>
+            <DrawerDescription>
+              Asset ID: {selectedAsset?.assetNo}
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          {selectedAsset && (
+            <div className="px-4 py-6 overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Asset Information</h3>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Asset Name</span>
+                        <span className="text-sm font-medium">{selectedAsset.name}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Asset Tag</span>
+                        <span className="text-sm font-medium">{selectedAsset.assetTag}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Model</span>
+                        <span className="text-sm font-medium">{selectedAsset.model}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Status</span>
+                        <StatusBadge status={selectedAsset.status} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Location Information</h3>
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">System</span>
+                        <span className="text-sm font-medium">{selectedAsset.system}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Package</span>
+                        <span className="text-sm font-medium">{selectedAsset.package}</span>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-md">
+                        <span className="text-xs text-gray-500 block">Facility</span>
+                        <span className="text-sm font-medium">{selectedAsset.facility}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Technical Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="bg-gray-50 p-3 rounded-md">
+                      <span className="text-xs text-gray-500 block">SCE Code</span>
+                      <span className="text-sm font-medium">{selectedAsset.sceCode}</span>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-md">
+                      <span className="text-xs text-gray-500 block">Criticality Code</span>
+                      <Badge variant={
+                        selectedAsset.criticalityCode === 'A' ? 'danger' :
+                        selectedAsset.criticalityCode === 'B' ? 'warning' : 'success'
+                      }>
+                        {selectedAsset.criticalityCode === 'A' ? 'A - Critical' :
+                         selectedAsset.criticalityCode === 'B' ? 'B - Important' : 'C - Standard'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <DrawerFooter className="border-t border-gray-200 pt-4">
+            <div className="flex justify-between w-full">
+              <Button 
+                onClick={() => {
+                  if (selectedAsset) handleEdit(selectedAsset);
+                  setIsDrawerOpen(false);
+                }}
+                variant="outline-indigo"
+              >
+                Edit Asset
+              </Button>
+              <Button variant="outline" onClick={() => console.log('Print asset details')}>
+                <Printer className="mr-2 h-4 w-4" />
+                Print Details
+              </Button>
+            </div>
+            <DrawerClose asChild>
+              <Button variant="outline">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

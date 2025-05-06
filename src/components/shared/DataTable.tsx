@@ -143,7 +143,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 currentData.map((row, rowIndex) => (
                   <TableRow 
                     key={rowIndex} 
-                    className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${onRowClick ? "cursor-pointer hover:bg-gray-100" : ""}`}
+                    className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${onRowClick ? "cursor-pointer hover:bg-blue-50/50 transition-colors duration-150" : ""}`}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((column) => (
