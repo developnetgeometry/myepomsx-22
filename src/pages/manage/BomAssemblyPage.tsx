@@ -166,6 +166,12 @@ const BomAssemblyPage: React.FC = () => {
     });
   };
 
+  // Add the missing handleSparePartRowClick function
+  const handleSparePartRowClick = (row: SparePart) => {
+    // Navigate to the spare part detail page
+    navigate(`/manage/spare-part/${row.id}`);
+  };
+
   // Search handlers
   const handleAssemblySearch = (query: string) => {
     if (!query) {
