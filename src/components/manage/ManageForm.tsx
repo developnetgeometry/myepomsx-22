@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -29,8 +30,10 @@ interface ManageFormProps {
   fields: {
     name: string;
     label: string;
-    type: "text" | "number" | "select";
+    type: "text" | "number" | "select" | "date" | "textarea";
     options?: { value: string; label: string }[];
+    required?: boolean;
+    placeholder?: string;
   }[];
   onSubmit: (values: any) => void;
   isEdit?: boolean;
@@ -67,8 +70,8 @@ const ManageForm = ({
               control={form.control}
               name={field.name}
               render={({ field: formField }) => (
-                <FormItem>
-                  <FormLabel>{field.label}</FormLabel>
+                <FormItem className={field.type === "textarea" ? "col-span-2" : ""}>
+                  <FormLabel>{field.label} {field.required && <span className="text-destructive">*</span>}</FormLabel>
                   <FormControl>
                     {field.type === "select" ? (
                       <Select
@@ -93,9 +96,23 @@ const ManageForm = ({
                         {...formField}
                         onChange={(e) => formField.onChange(Number(e.target.value))}
                         disabled={isSubmitting}
+                        placeholder={field.placeholder}
+                      />
+                    ) : field.type === "date" ? (
+                      <Input
+                        type="date"
+                        {...formField}
+                        disabled={isSubmitting}
+                      />
+                    ) : field.type === "textarea" ? (
+                      <Textarea
+                        {...formField}
+                        disabled={isSubmitting}
+                        placeholder={field.placeholder}
+                        className="min-h-[150px]"
                       />
                     ) : (
-                      <Input {...formField} disabled={isSubmitting} />
+                      <Input {...formField} disabled={isSubmitting} placeholder={field.placeholder} />
                     )}
                   </FormControl>
                   <FormMessage />

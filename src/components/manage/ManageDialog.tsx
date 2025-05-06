@@ -15,15 +15,18 @@ interface ManageDialogProps {
   formFields: {
     name: string;
     label: string;
-    type: "text" | "number" | "select";
+    type: "text" | "number" | "select" | "date" | "textarea";
     options?: {
       value: string;
       label: string;
     }[];
+    required?: boolean;
+    placeholder?: string;
   }[];
   onSubmit: (values: any) => void;
   isEdit?: boolean;
   isProcessing?: boolean;
+  headerColor?: string;
 }
 
 const ManageDialog = ({
@@ -35,7 +38,8 @@ const ManageDialog = ({
   formFields,
   onSubmit,
   isEdit = false,
-  isProcessing = false
+  isProcessing = false,
+  headerColor
 }: ManageDialogProps) => {
   // Reset form when dialog closes
   useEffect(() => {
@@ -46,10 +50,10 @@ const ManageDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle>{title}</DialogTitle>
-          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)}>
+      <DialogContent className="sm:max-w-[800px]">
+        <DialogHeader className={`flex flex-row items-center justify-between ${headerColor ? headerColor : ''}`}>
+          <DialogTitle className={headerColor ? "text-white" : ""}>{title}</DialogTitle>
+          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className={headerColor ? "text-white hover:bg-white/20" : ""}>
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>

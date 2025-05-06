@@ -26,6 +26,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import ManageDialog from '@/components/manage/ManageDialog';
+import * as z from 'zod';
 
 interface PMSchedule {
   id: string;
@@ -49,11 +51,13 @@ const PMSchedulePage: React.FC = () => {
   });
   const [selectedAsset, setSelectedAsset] = useState<string>("all");
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false);
+  const [isCreatePMDialogOpen, setIsCreatePMDialogOpen] = useState(false);
   
   // Loading states
   const { isLoading: isSearching, withLoading: withSearchLoading } = useLoadingState();
   const { isLoading: isGenerating, withLoading: withGenerateLoading } = useLoadingState();
   const { isLoading: isDeleting, withLoading: withDeleteLoading } = useLoadingState();
+  const { isLoading: isCreatingPM, withLoading: withCreatePMLoading } = useLoadingState();
   
   // Define columns
   const columns: Column[] = [
@@ -105,6 +109,189 @@ const PMSchedulePage: React.FC = () => {
     }
     
     return schedules;
+  };
+
+  // PM Form Schema
+  const pmFormSchema = z.object({
+    pmNo: z.string().min(1, "PM No is required"),
+    dueDate: z.string().min(1, "Due Date is required"),
+    maintenance: z.string().min(1, "Maintenance is required"),
+    status: z.string().min(1, "Status is required"),
+    priority: z.string().min(1, "Priority is required"),
+    workCenter: z.string().min(1, "Work Center is required"),
+    discipline: z.string().min(1, "Discipline is required"),
+    task: z.string().min(1, "Task is required"),
+    manPower: z.string().optional(),
+    manHour: z.string().optional(),
+    frequency: z.string().min(1, "Frequency is required"),
+    facility: z.string().optional(),
+    system: z.string().optional(),
+    package: z.string().optional(),
+    assets: z.string().optional(),
+    pmGroup: z.string().optional(),
+    pmSCECode: z.string().optional(),
+    pmDescription: z.string().optional(),
+  });
+
+  // Form fields for PM creation
+  const pmFormFields = [
+    { name: 'pmNo', label: 'PM No', type: 'text' as const, required: true },
+    { name: 'dueDate', label: 'Due Date', type: 'date' as const, required: true },
+    { 
+      name: 'maintenance', 
+      label: 'Maintenance', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: '001-PM', label: '001-PM' },
+        { value: '002-PM', label: '002-PM' },
+      ]
+    },
+    { 
+      name: 'status', 
+      label: 'Status', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'Active', label: 'Active' },
+        { value: 'Inactive', label: 'Inactive' },
+      ]
+    },
+    { 
+      name: 'priority', 
+      label: 'Priority', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'High', label: 'High' },
+        { value: 'Medium', label: 'Medium' },
+        { value: 'Low', label: 'Low' },
+      ]
+    },
+    { 
+      name: 'workCenter', 
+      label: 'Work Center', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'Electrical Work Center', label: 'Electrical Work Center' },
+        { value: 'Mechanical Work Center', label: 'Mechanical Work Center' },
+      ]
+    },
+    { 
+      name: 'discipline', 
+      label: 'Discipline', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'Electrical', label: 'Electrical' },
+        { value: 'Mechanical', label: 'Mechanical' },
+        { value: 'Instrumentation', label: 'Instrumentation' },
+      ]
+    },
+    { 
+      name: 'task', 
+      label: 'Task', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'Inspection', label: 'Inspection' },
+        { value: 'Maintenance', label: 'Maintenance' },
+        { value: 'Calibration', label: 'Calibration' },
+      ]
+    },
+    { name: 'manPower', label: 'Man Power', type: 'text' as const },
+    { name: 'manHour', label: 'Man Hour', type: 'text' as const },
+    { 
+      name: 'frequency', 
+      label: 'Frequency', 
+      type: 'select' as const, 
+      required: true,
+      options: [
+        { value: 'P0001-Monthly', label: 'P0001-Monthly' },
+        { value: 'P0002-Quarterly', label: 'P0002-Quarterly' },
+        { value: 'P0003-Annually', label: 'P0003-Annually' },
+      ]
+    },
+    { 
+      name: 'facility', 
+      label: 'Facility', 
+      type: 'select' as const,
+      options: [
+        { value: 'Facility 1', label: 'Facility 1' },
+        { value: 'Facility 2', label: 'Facility 2' },
+      ]
+    },
+    { 
+      name: 'system', 
+      label: 'System', 
+      type: 'select' as const,
+      options: [
+        { value: 'System 1', label: 'System 1' },
+        { value: 'System 2', label: 'System 2' },
+      ]
+    },
+    { 
+      name: 'package', 
+      label: 'Package', 
+      type: 'select' as const,
+      options: [
+        { value: 'Package 1', label: 'Package 1' },
+        { value: 'Package 2', label: 'Package 2' },
+      ]
+    },
+    { 
+      name: 'assets', 
+      label: 'Assets', 
+      type: 'select' as const,
+      options: assetOptions
+    },
+    { 
+      name: 'pmGroup', 
+      label: 'PM Group', 
+      type: 'select' as const,
+      options: [
+        { value: 'Group 1', label: 'Group 1' },
+        { value: 'Group 2', label: 'Group 2' },
+      ]
+    },
+    { 
+      name: 'pmSCECode', 
+      label: 'PM SCE Code', 
+      type: 'select' as const,
+      options: [
+        { value: 'SCE-001', label: 'SCE-001' },
+        { value: 'SCE-002', label: 'SCE-002' },
+      ]
+    },
+    { 
+      name: 'pmDescription', 
+      label: 'PM Description', 
+      type: 'textarea' as const,
+      placeholder: 'Enter detailed description of the PM task'
+    },
+  ];
+
+  // Default values for PM creation form
+  const pmDefaultValues = {
+    pmNo: '',
+    dueDate: new Date().toISOString().split('T')[0],
+    maintenance: '001-PM',
+    status: 'Active',
+    priority: 'High',
+    workCenter: 'Electrical Work Center',
+    discipline: '',
+    task: '',
+    manPower: '',
+    manHour: '',
+    frequency: 'P0001-Monthly',
+    facility: '',
+    system: '',
+    package: '',
+    assets: '',
+    pmGroup: '',
+    pmSCECode: '',
+    pmDescription: '',
   };
 
   // Handlers
@@ -168,6 +355,29 @@ const PMSchedulePage: React.FC = () => {
 
   const handleRowClick = (row: PMSchedule) => {
     navigate(`/maintain/pm-schedule/${row.id}`);
+  };
+
+  const handleCreatePM = (values: any) => {
+    withCreatePMLoading(async () => {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create new PM with generated ID
+      const newPM: PMSchedule = {
+        id: `PM-${1000 + pmSchedules.length + 1}`,
+        pmNo: values.pmNo,
+        description: values.pmDescription || `PM for ${values.assets}`,
+        asset: values.assets ? assetOptions.find(a => a.value === values.assets)?.label || '' : '',
+        frequency: values.frequency,
+        nextDueDate: values.dueDate,
+        status: values.status
+      };
+      
+      setPmSchedules([...pmSchedules, newPM]);
+      setIsCreatePMDialogOpen(false);
+      
+      toast.success(`PM Schedule ${values.pmNo} created successfully`);
+    });
   };
 
   return (
@@ -251,6 +461,15 @@ const PMSchedulePage: React.FC = () => {
             )}
           </Button>
           
+          <Button 
+            variant="outline" 
+            disabled={isSearching || isGenerating || isCreatingPM}
+            className="flex items-center gap-2"
+            onClick={() => setIsCreatePMDialogOpen(true)}
+          >
+            <Plus className="h-4 w-4" /> Generate Schedule
+          </Button>
+
           <AlertDialog open={isGenerateDialogOpen} onOpenChange={setIsGenerateDialogOpen}>
             <AlertDialogTrigger asChild>
               <Button 
@@ -258,7 +477,7 @@ const PMSchedulePage: React.FC = () => {
                 disabled={isSearching || isGenerating}
                 className="flex items-center gap-2"
               >
-                <Plus className="h-4 w-4" /> Generate Schedule
+                <Plus className="h-4 w-4" /> Auto Generate
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -305,6 +524,19 @@ const PMSchedulePage: React.FC = () => {
           </p>
         </div>
       )}
+
+      {/* PM Schedule Creation Dialog */}
+      <ManageDialog
+        open={isCreatePMDialogOpen}
+        onOpenChange={setIsCreatePMDialogOpen}
+        title="Create PM Schedule"
+        formSchema={pmFormSchema}
+        defaultValues={pmDefaultValues}
+        formFields={pmFormFields}
+        onSubmit={handleCreatePM}
+        isProcessing={isCreatingPM}
+        headerColor="bg-blue-500"
+      />
     </div>
   );
 };
