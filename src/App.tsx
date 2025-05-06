@@ -28,7 +28,6 @@ import MaintenanceTypePage from './pages/admin/settings/MaintenanceTypePage';
 import AssetHierarchyPage from './pages/manage/AssetHierarchyPage';
 import AssetRegisterPage from './pages/manage/AssetRegisterPage';
 import AssetsPage from './pages/manage/AssetsPage';
-import AssetDetailsPage from './pages/manage/AssetDetailsPage';
 import BomAssemblyPage from './pages/manage/BomAssemblyPage';
 import FacilitiesPage from './pages/manage/FacilitiesPage';
 import InventoryPage from './pages/manage/InventoryPage';
@@ -101,7 +100,6 @@ function App() {
             <Route path="/manage/asset-hierarchy" element={<AssetHierarchyPage />} />
             <Route path="/manage/asset-register" element={<AssetRegisterPage />} />
             <Route path="/manage/assets" element={<AssetsPage />} />
-            <Route path="/manage/assets/:id" element={<AssetDetailsPage />} />
             <Route path="/manage/bom-assembly" element={<BomAssemblyPage />} />
             <Route path="/manage/facilities" element={<FacilitiesPage />} />
             <Route path="/manage/inventory" element={<InventoryPage />} />

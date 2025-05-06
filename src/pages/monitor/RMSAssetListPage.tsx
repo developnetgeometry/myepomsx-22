@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
@@ -16,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import AssetDetailsDrawer from '@/components/assets/AssetDetailsDrawer';
 
 // Sample data for RMS assets
 const initialAssets = [
@@ -88,6 +88,8 @@ const RMSAssetListPage: React.FC = () => {
   const [assets, setAssets] = useState(initialAssets);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState<any>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     assetId: '',
@@ -119,6 +121,11 @@ const RMSAssetListPage: React.FC = () => {
       ...row
     });
     setIsDialogOpen(true);
+  };
+
+  const handleRowClick = (row: any) => {
+    setSelectedAsset(row);
+    setIsDrawerOpen(true);
   };
 
   const handleInputChange = (
@@ -173,9 +180,16 @@ const RMSAssetListPage: React.FC = () => {
             columns={columns}
             data={assets}
             onEdit={handleEdit}
+            onRowClick={handleRowClick}
           />
         </CardContent>
       </Card>
+
+      <AssetDetailsDrawer 
+        asset={selectedAsset}
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+      />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
