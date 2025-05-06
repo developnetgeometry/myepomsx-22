@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
@@ -9,23 +8,34 @@ import NotFound from './pages/NotFound';
 import AssetsPage from './pages/manage/AssetsPage';
 import AssetHierarchyPage from './pages/manage/AssetHierarchyPage';
 import AssetRegisterPage from './pages/manage/AssetRegisterPage';
+import AssetRegisterDetailPage from './pages/manage/AssetRegisterDetailPage';
 import BomAssemblyPage from './pages/manage/BomAssemblyPage';
 import FacilitiesPage from './pages/manage/FacilitiesPage';
 import FacilityDetailPage from './pages/manage/FacilityDetailPage';
 import InventoryPage from './pages/manage/InventoryPage';
+import InventoryDetailPage from './pages/manage/InventoryDetailPage';
 import ItemsMasterPage from './pages/manage/ItemsMasterPage';
+import ItemsMasterDetailPage from './pages/manage/ItemsMasterDetailPage';
 import MaterialPage from './pages/manage/MaterialPage';
+import MaterialDetailPage from './pages/manage/MaterialDetailPage';
 import PackagePage from './pages/manage/PackagePage';
+import PackageDetailPage from './pages/manage/PackageDetailPage';
 import PartsInventoryPage from './pages/manage/PartsInventoryPage';
 import PartsInventoryDetailPage from './pages/manage/PartsInventoryDetailPage';
 import SystemPage from './pages/manage/SystemPage';
+import SystemDetailPage from './pages/manage/SystemDetailPage';
 
 // Maintain pages
 import PMSchedulePage from './pages/maintain/PMSchedulePage';
+import PMScheduleDetailPage from './pages/maintain/PMScheduleDetailPage';
 import TaskLibraryPage from './pages/maintain/TaskLibraryPage';
+import TaskLibraryDetailPage from './pages/maintain/TaskLibraryDetailPage';
 import WOHistoryPage from './pages/maintain/WOHistoryPage';
+import WOHistoryDetailPage from './pages/maintain/WOHistoryDetailPage';
 import WorkOrderListPage from './pages/maintain/WorkOrderListPage';
+import WorkOrderDetailPage from './pages/maintain/WorkOrderDetailPage';
 import WorkRequestPage from './pages/maintain/WorkRequestPage';
+import WorkRequestDetailPage from './pages/maintain/WorkRequestDetailPage';
 
 // Measure pages
 import AssetPerformancePage from './pages/measure/AssetPerformancePage';
@@ -88,23 +98,34 @@ function App() {
         <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
         <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
+        <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
         <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
         <Route path="/manage/facilities" element={<Layout><FacilitiesPage /></Layout>} />
         <Route path="/manage/facilities/:id" element={<Layout><FacilityDetailPage /></Layout>} />
         <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
+        <Route path="/manage/inventory/:id" element={<Layout><InventoryDetailPage /></Layout>} />
         <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
+        <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
         <Route path="/manage/material" element={<Layout><MaterialPage /></Layout>} />
+        <Route path="/manage/material/:id" element={<Layout><MaterialDetailPage /></Layout>} />
         <Route path="/manage/package" element={<Layout><PackagePage /></Layout>} />
+        <Route path="/manage/package/:id" element={<Layout><PackageDetailPage /></Layout>} />
         <Route path="/manage/parts-inventory" element={<Layout><PartsInventoryPage /></Layout>} />
         <Route path="/manage/parts-inventory/:id" element={<Layout><PartsInventoryDetailPage /></Layout>} />
         <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
+        <Route path="/manage/system/:id" element={<Layout><SystemDetailPage /></Layout>} />
         
         {/* Maintain routes */}
         <Route path="/maintain/pm-schedule" element={<Layout><PMSchedulePage /></Layout>} />
+        <Route path="/maintain/pm-schedule/:id" element={<Layout><PMScheduleDetailPage /></Layout>} />
         <Route path="/maintain/task-library" element={<Layout><TaskLibraryPage /></Layout>} />
+        <Route path="/maintain/task-library/:id" element={<Layout><TaskLibraryDetailPage /></Layout>} />
         <Route path="/maintain/wo-history" element={<Layout><WOHistoryPage /></Layout>} />
+        <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
         <Route path="/maintain/work-order-list" element={<Layout><WorkOrderListPage /></Layout>} />
+        <Route path="/maintain/work-order-list/:id" element={<Layout><WorkOrderDetailPage /></Layout>} />
         <Route path="/maintain/work-request" element={<Layout><WorkRequestPage /></Layout>} />
+        <Route path="/maintain/work-request/:id" element={<Layout><WorkRequestDetailPage /></Layout>} />
         
         {/* Measure routes */}
         <Route path="/measure/asset-performance" element={<Layout><AssetPerformancePage /></Layout>} />

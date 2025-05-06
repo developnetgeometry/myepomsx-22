@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -75,6 +75,7 @@ const initialTasks = [
 ];
 
 const TaskLibraryPage: React.FC = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState(initialTasks);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -129,6 +130,10 @@ const TaskLibraryPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/maintain/task-library/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'taskCode', header: 'Task Code', accessorKey: 'taskCode' },
     { id: 'taskName', header: 'Task Name', accessorKey: 'taskName' },
@@ -149,6 +154,7 @@ const TaskLibraryPage: React.FC = () => {
         columns={columns}
         data={tasks}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

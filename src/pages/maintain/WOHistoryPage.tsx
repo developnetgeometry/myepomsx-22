@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import {
@@ -88,6 +89,7 @@ const initialHistory = [
 ];
 
 const WOHistoryPage: React.FC = () => {
+  const navigate = useNavigate();
   const [history, setHistory] = useState(initialHistory);
 
   const columns: Column[] = [
@@ -104,6 +106,10 @@ const WOHistoryPage: React.FC = () => {
   const totalPMSchedules = history.reduce((sum, item) => sum + item.totalPMSchedule, 0);
   const totalWOGenerated = history.reduce((sum, item) => sum + item.totalWOGenerated, 0);
   const totalProblems = history.reduce((sum, item) => sum + item.totalProblem, 0);
+  
+  const handleRowClick = (row: any) => {
+    navigate(`/maintain/wo-history/${row.id}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -150,6 +156,7 @@ const WOHistoryPage: React.FC = () => {
       <DataTable 
         columns={columns}
         data={history}
+        onRowClick={handleRowClick}
       />
     </div>
   );

@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import StatusBadge from '@/components/shared/StatusBadge';
@@ -118,6 +118,7 @@ const initialWorkOrders = [
 ];
 
 const WorkOrderListPage: React.FC = () => {
+  const navigate = useNavigate();
   const [workOrders, setWorkOrders] = useState(initialWorkOrders);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -188,6 +189,10 @@ const WorkOrderListPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/maintain/work-order-list/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'sl', header: 'SL#', accessorKey: 'sl' },
     { id: 'workOrderNo', header: 'Work Order No', accessorKey: 'workOrderNo' },
@@ -221,6 +226,7 @@ const WorkOrderListPage: React.FC = () => {
         columns={columns}
         data={workOrders}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

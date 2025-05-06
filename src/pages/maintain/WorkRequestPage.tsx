@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import StatusBadge from '@/components/shared/StatusBadge';
@@ -126,6 +126,7 @@ const initialWorkRequests = [
 ];
 
 const WorkRequestPage: React.FC = () => {
+  const navigate = useNavigate();
   const [workRequests, setWorkRequests] = useState(initialWorkRequests);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -194,6 +195,10 @@ const WorkRequestPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/maintain/work-request/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'noWorkRequest', header: 'Work Request No', accessorKey: 'noWorkRequest' },
     { id: 'description', header: 'Description', accessorKey: 'description' },
@@ -231,6 +236,7 @@ const WorkRequestPage: React.FC = () => {
         columns={columns}
         data={workRequests}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -38,6 +38,7 @@ interface PMSchedule {
 }
 
 const PMSchedulePage: React.FC = () => {
+  const navigate = useNavigate();
   // State management
   const [pmSchedules, setPmSchedules] = useState<PMSchedule[]>([]);
   const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -165,6 +166,10 @@ const PMSchedulePage: React.FC = () => {
     // In a real app, this would generate and download a CSV file
   };
 
+  const handleRowClick = (row: PMSchedule) => {
+    navigate(`/maintain/pm-schedule/${row.id}`);
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader 
@@ -290,6 +295,7 @@ const PMSchedulePage: React.FC = () => {
         data={pmSchedules}
         onDelete={handleDelete}
         onExport={pmSchedules.length > 0 ? handleExport : undefined}
+        onRowClick={handleRowClick}
       />
       
       {pmSchedules.length === 0 && (
