@@ -53,6 +53,22 @@ const ManageDialog = ({
     }
   }, [open]);
 
+  // Validate formFields to ensure all select options have non-empty values
+  const validatedFormFields = formFields.map(field => {
+    if (field.type === "select" && field.options) {
+      // Filter out any options with empty string values
+      const validOptions = field.options.filter(option => option.value !== "");
+      
+      // If no valid options remain, add a placeholder option
+      if (validOptions.length === 0) {
+        validOptions.push({ value: "no_options", label: "No options available" });
+      }
+      
+      return { ...field, options: validOptions };
+    }
+    return field;
+  });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
@@ -65,7 +81,7 @@ const ManageDialog = ({
         <ManageForm 
           schema={formSchema} 
           defaultValues={defaultValues} 
-          fields={formFields} 
+          fields={validatedFormFields} 
           onSubmit={values => {
             onSubmit(values);
           }} 
