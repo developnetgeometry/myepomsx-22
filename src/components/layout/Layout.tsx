@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [isMobile]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-background flex">
       <AppSidebar 
         isCollapsed={isSidebarCollapsed} 
         onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
@@ -51,7 +51,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
         
-        <main className="p-4 md:p-6 flex-1">
+        <main className="p-4 md:p-6 flex-1 animate-fade-in">
           {children}
         </main>
       </div>

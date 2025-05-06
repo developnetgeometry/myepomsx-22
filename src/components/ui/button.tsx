@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -18,6 +19,22 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        success: "bg-epomsx-success text-white hover:bg-epomsx-success/90",
+        info: "bg-epomsx-info text-white hover:bg-epomsx-info/90",
+        warning: "bg-epomsx-warning text-white hover:bg-epomsx-warning/90",
+        danger: "bg-epomsx-danger text-white hover:bg-epomsx-danger/90",
+        purple: "bg-epomsx-purple text-white hover:bg-epomsx-purple/90",
+        teal: "bg-epomsx-teal text-white hover:bg-epomsx-teal/90",
+        amber: "bg-epomsx-amber text-black hover:bg-epomsx-amber/90",
+        indigo: "bg-epomsx-indigo text-white hover:bg-epomsx-indigo/90",
+        "outline-success": "border border-epomsx-success text-epomsx-success hover:bg-epomsx-success/10",
+        "outline-info": "border border-epomsx-info text-epomsx-info hover:bg-epomsx-info/10",
+        "outline-warning": "border border-epomsx-warning text-epomsx-warning hover:bg-epomsx-warning/10",
+        "outline-danger": "border border-epomsx-danger text-epomsx-danger hover:bg-epomsx-danger/10",
+        "outline-purple": "border border-epomsx-purple text-epomsx-purple hover:bg-epomsx-purple/10",
+        "outline-teal": "border border-epomsx-teal text-epomsx-teal hover:bg-epomsx-teal/10",
+        "outline-amber": "border border-epomsx-amber text-epomsx-amber hover:bg-epomsx-amber/10",
+        "outline-indigo": "border border-epomsx-indigo text-epomsx-indigo hover:bg-epomsx-indigo/10",
       },
       size: {
         default: "h-10 px-4 py-2",

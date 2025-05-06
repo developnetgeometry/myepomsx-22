@@ -76,6 +76,18 @@ export default {
 					gray: '#757575',
 					'gray-light': '#e0e0e0',
 					'gray-dark': '#424242',
+					purple: '#7e57c2',
+					'purple-light': '#b085f5',
+					'purple-dark': '#4d2c91',
+					teal: '#009688',
+					'teal-light': '#52c7b8',
+					'teal-dark': '#00675b',
+					amber: '#ffc107',
+					'amber-light': '#fff350',
+					'amber-dark': '#c79100',
+					indigo: '#3f51b5',
+					'indigo-light': '#757de8',
+					'indigo-dark': '#002984',
 				}
 			},
 			borderRadius: {

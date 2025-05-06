@@ -12,6 +12,7 @@ body {
   padding: 0;
 }
 
+/* Keep the original sidebar styling */
 .epomsx-sidebar {
   background-color: #1A1F2C;
   color: #fff;
@@ -30,13 +31,13 @@ body {
   transition: margin-left 0.3s ease-in-out;
 }
 
-/* Table styles */
+/* Enhanced table styles */
 .custom-table {
-  @apply w-full rounded-lg border border-gray-100;
+  @apply w-full rounded-lg border border-gray-100 shadow-sm;
 }
 
 .custom-table th {
-  @apply py-3 px-6 text-sm font-semibold text-gray-900 bg-gray-50;
+  @apply py-3 px-6 text-sm font-semibold text-gray-900 bg-gray-50 border-b border-gray-200;
 }
 
 .custom-table td {
@@ -48,7 +49,7 @@ body {
 }
 
 .custom-table tr:nth-child(even) {
-  @apply bg-gray-50;
+  @apply bg-blue-50/30;
 }
 
 .custom-table tr {
@@ -56,34 +57,34 @@ body {
 }
 
 .custom-table tr:hover {
-  @apply bg-gray-100;
+  @apply bg-blue-50/50;
 }
 
-/* Status badge colors */
+/* Colorful status badge colors */
 .status-operational {
-  @apply bg-green-100 text-green-800;
+  @apply bg-green-100 text-green-800 border border-green-200;
 }
 
 .status-critical {
-  @apply bg-red-100 text-red-800;
+  @apply bg-red-100 text-red-800 border border-red-200;
 }
 
 .status-maintenance {
-  @apply bg-amber-100 text-amber-800;
+  @apply bg-amber-100 text-amber-800 border border-amber-200;
 }
 
 .status-scheduled {
-  @apply bg-blue-100 text-blue-800;
+  @apply bg-blue-100 text-blue-800 border border-blue-200;
 }
 
-/* Health indicators */
+/* Colorful health indicators */
 .health-good {
   @apply flex items-center;
 }
 
 .health-good::before {
   content: "";
-  @apply h-2.5 w-2.5 rounded-full bg-green-500 mr-2;
+  @apply h-2.5 w-2.5 rounded-full bg-epomsx-success mr-2;
 }
 
 .health-fair {
@@ -92,7 +93,7 @@ body {
 
 .health-fair::before {
   content: "";
-  @apply h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2;
+  @apply h-2.5 w-2.5 rounded-full bg-epomsx-warning mr-2;
 }
 
 .health-poor {
@@ -101,7 +102,20 @@ body {
 
 .health-poor::before {
   content: "";
-  @apply h-2.5 w-2.5 rounded-full bg-red-500 mr-2;
+  @apply h-2.5 w-2.5 rounded-full bg-epomsx-danger mr-2;
+}
+
+/* Button and interactive elements with colorful gradients */
+.btn-gradient-primary {
+  @apply bg-gradient-to-r from-epomsx-primary to-epomsx-primary-light text-white hover:from-epomsx-primary-dark hover:to-epomsx-primary transition-all duration-300;
+}
+
+.btn-gradient-secondary {
+  @apply bg-gradient-to-r from-epomsx-purple to-epomsx-purple-light text-white hover:from-epomsx-purple-dark hover:to-epomsx-purple transition-all duration-300;
+}
+
+.card-gradient {
+  @apply bg-gradient-to-br from-white to-gray-50 shadow-md hover:shadow-lg transition-all duration-300;
 }
 
 /* Keep other existing styles */
@@ -139,4 +153,54 @@ body {
 
 .read-the-docs {
   color: #888;
+}
+
+/* Add colorful badges */
+.badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors;
+}
+
+.badge-primary {
+  @apply bg-epomsx-primary/20 text-epomsx-primary-dark border border-epomsx-primary-light/30;
+}
+
+.badge-info {
+  @apply bg-epomsx-info/20 text-epomsx-info border border-epomsx-info/30;
+}
+
+.badge-success {
+  @apply bg-epomsx-success/20 text-epomsx-success border border-epomsx-success/30;
+}
+
+.badge-warning {
+  @apply bg-epomsx-warning/20 text-epomsx-warning border border-epomsx-warning/30;
+}
+
+.badge-danger {
+  @apply bg-epomsx-danger/20 text-epomsx-danger border border-epomsx-danger/30;
+}
+
+/* Add card variations */
+.card-flat {
+  @apply rounded-lg border border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.card-primary {
+  @apply rounded-lg border-l-4 border-epomsx-primary border-t border-r border-b border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.card-info {
+  @apply rounded-lg border-l-4 border-epomsx-info border-t border-r border-b border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.card-success {
+  @apply rounded-lg border-l-4 border-epomsx-success border-t border-r border-b border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.card-warning {
+  @apply rounded-lg border-l-4 border-epomsx-warning border-t border-r border-b border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
+}
+
+.card-danger {
+  @apply rounded-lg border-l-4 border-epomsx-danger border-t border-r border-b border-gray-200 bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300;
 }

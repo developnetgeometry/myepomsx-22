@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
@@ -13,7 +14,7 @@ type SidebarItemType = {
   }[];
 };
 
-// Map our existing sidebar structure to the new design
+// Sidebar structure
 const sidebarItems: SidebarItemType[] = [
   {
     name: 'Dashboard',
@@ -172,42 +173,80 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     }
   };
 
-  return <li className="w-full">
-      {item.path ? <Link to={item.path} className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full', {
-      'bg-[#2a314a]': isActive,
-      'justify-center': isCollapsed
-    })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className="flex-shrink-0 mr-3" />
-          {!isCollapsed && <>
-              <span className="flex-1">{item.name}</span>
-              {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} />
-                </div>}
-            </>}
-        </Link> : <button className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a]', {
-      'bg-[#2a314a]': isActive,
-      'justify-center': isCollapsed
-    })} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className="flex-shrink-0 mr-3" />
-          {!isCollapsed && <>
-              <span className="flex-1">{item.name}</span>
-              {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} className={cn('transition-transform duration-200', {
-            'rotate-90': isSubmenuOpen
+  return (
+    <li className="w-full">
+      {item.path ? (
+        <Link 
+          to={item.path} 
+          className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full transition-colors duration-200', {
+            'bg-[#2a314a]': isActive,
+            'justify-center': isCollapsed
+          })} 
+          onClick={handleClick} 
+          title={isCollapsed ? item.name : undefined}
+        >
+          <item.icon size={20} className={cn("flex-shrink-0 mr-3", {
+            "mr-0": isCollapsed
           })} />
-                </div>}
-            </>}
-        </button>}
-      {isSubmenuOpen && item.children && !isCollapsed && <ul className="bg-[#242b3d] py-1">
-          {item.children.map(child => <li key={child.name}>
-              <Link to={child.path} className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white', {
-          'bg-[#2a314a] text-white': location.pathname === child.path
-        })}>
+          {!isCollapsed && (
+            <>
+              <span className="flex-1">{item.name}</span>
+              {item.children && (
+                <div className="ml-auto">
+                  <ChevronRight size={16} />
+                </div>
+              )}
+            </>
+          )}
+        </Link>
+      ) : (
+        <button 
+          className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a] transition-colors duration-200', {
+            'bg-[#2a314a]': isActive,
+            'justify-center': isCollapsed
+          })} 
+          onClick={handleClick} 
+          title={isCollapsed ? item.name : undefined}
+        >
+          <item.icon size={20} className={cn("flex-shrink-0 mr-3", {
+            "mr-0": isCollapsed
+          })} />
+          {!isCollapsed && (
+            <>
+              <span className="flex-1">{item.name}</span>
+              {item.children && (
+                <div className="ml-auto">
+                  <ChevronRight 
+                    size={16} 
+                    className={cn('transition-transform duration-200', {
+                      'rotate-90': isSubmenuOpen
+                    })} 
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </button>
+      )}
+
+      {isSubmenuOpen && item.children && !isCollapsed && (
+        <ul className="bg-[#242b3d] py-1">
+          {item.children.map(child => (
+            <li key={child.name}>
+              <Link 
+                to={child.path} 
+                className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
+                  'bg-[#2a314a] text-white': location.pathname === child.path
+                })}
+              >
                 <span className="flex-1">{child.name}</span>
               </Link>
-            </li>)}
-        </ul>}
-    </li>;
+            </li>
+          ))}
+        </ul>
+      )}
+    </li>
+  );
 };
 
 type AppSidebarProps = {
@@ -235,7 +274,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       {isMobile && (
         <button 
           onClick={onToggle} 
-          className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white"
+          className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white hover:bg-[#2a314a] transition-colors duration-200"
         >
           {!isCollapsed ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -270,7 +309,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <button 
                 onClick={onToggle} 
                 className={cn(
-                  "ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none", 
+                  "ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none transition-colors duration-200", 
                   { "mr-auto ml-0": isCollapsed }
                 )}
               >
