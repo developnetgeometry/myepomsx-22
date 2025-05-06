@@ -45,7 +45,6 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
     }
   };
   
-  // Define the handleSubmit function that was missing
   const handleSubmit = (values: any) => {
     if (isEditMode && currentItem) {
       // Update existing item
