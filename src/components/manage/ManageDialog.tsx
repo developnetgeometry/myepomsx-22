@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import ManageForm from "./ManageForm";
 import * as z from "zod";
 import { useEffect } from "react";
+
 interface ManageDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,6 +25,7 @@ interface ManageDialogProps {
   isEdit?: boolean;
   isProcessing?: boolean;
 }
+
 const ManageDialog = ({
   open,
   onOpenChange,
@@ -41,7 +43,9 @@ const ManageDialog = ({
       // Form will be reset when dialog reopens with new defaultValues
     }
   }, [open]);
-  return <Dialog open={open} onOpenChange={onOpenChange}>
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle>{title}</DialogTitle>
@@ -49,10 +53,20 @@ const ManageDialog = ({
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>
-        <ManageForm schema={formSchema} defaultValues={defaultValues} fields={formFields} onSubmit={values => {
-        onSubmit(values);
-      }} onCancel={() => onOpenChange(false)} isEdit={isEdit} isSubmitting={isProcessing} />
+        <ManageForm 
+          schema={formSchema} 
+          defaultValues={defaultValues} 
+          fields={formFields} 
+          onSubmit={values => {
+            onSubmit(values);
+          }} 
+          onCancel={() => onOpenChange(false)} 
+          isEdit={isEdit} 
+          isSubmitting={isProcessing} 
+        />
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default ManageDialog;
