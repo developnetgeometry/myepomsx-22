@@ -26,11 +26,11 @@ const getPageTitle = (pathname: string): string => {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const isMobile = useIsMobile();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const pageTitle = getPageTitle(location.pathname);
 
   useEffect(() => {
-    setIsSidebarOpen(!isMobile);
+    setIsSidebarCollapsed(isMobile);
   }, [isMobile]);
 
   return (
@@ -39,9 +39,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       <div className={cn(
         "transition-all duration-300 min-h-screen",
-        isMobile ? "ml-0" : (isSidebarOpen ? "ml-60" : "ml-0")
+        isMobile ? "ml-0" : (isSidebarCollapsed ? "ml-16" : "ml-60")
       )}>
-        <Header title={pageTitle} isSidebarOpen={isSidebarOpen} />
+        <Header 
+          title={pageTitle} 
+          isSidebarOpen={!isSidebarCollapsed} 
+          toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        />
         
         <main className="p-4 md:p-6">
           {children}

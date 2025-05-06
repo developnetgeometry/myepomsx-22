@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   BarChart4,
@@ -17,6 +17,7 @@ import {
   ListOrdered,
   Calendar,
   Users,
+  ChevronLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -123,14 +124,14 @@ const sidebarItems: SidebarItemType[] = [
 
 type SidebarItemProps = {
   item: SidebarItemType;
-  isOpen: boolean;
+  isCollapsed: boolean;
   activeItem: string;
   onActiveItemChange: (item: string) => void;
 };
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ 
   item, 
-  isOpen, 
+  isCollapsed, 
   activeItem, 
   onActiveItemChange 
 }) => {
@@ -140,17 +141,20 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                    (item.children?.some(child => location.pathname === child.path));
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
 
-  React.useEffect(() => {
-    if (isActive && isOpen) {
+  useEffect(() => {
+    // Only auto-expand menus when sidebar is not collapsed
+    if (isActive && !isCollapsed) {
       setIsSubmenuOpen(true);
-    } else if (!isOpen) {
+    } else if (isCollapsed) {
       setIsSubmenuOpen(false);
     }
-  }, [isActive, isOpen]);
+  }, [isActive, isCollapsed]);
 
   const handleClick = () => {
     if (item.children) {
-      setIsSubmenuOpen(!isSubmenuOpen);
+      if (!isCollapsed) {
+        setIsSubmenuOpen(!isSubmenuOpen);
+      }
       onActiveItemChange(item.name);
     } else if (item.path) {
       onActiveItemChange(item.name);
@@ -166,16 +170,22 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
             'flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full',
             {
               'bg-[#2a314a]': isActive,
+              'justify-center': isCollapsed,
             }
           )}
           onClick={handleClick}
+          title={isCollapsed ? item.name : undefined}
         >
           <item.icon size={20} className="flex-shrink-0 mr-3" />
-          <span className="flex-1">{item.name}</span>
-          {item.children && (
-            <div className="ml-auto">
-              <ChevronRight size={16} />
-            </div>
+          {!isCollapsed && (
+            <>
+              <span className="flex-1">{item.name}</span>
+              {item.children && (
+                <div className="ml-auto">
+                  <ChevronRight size={16} />
+                </div>
+              )}
+            </>
           )}
         </Link>
       ) : (
@@ -184,20 +194,29 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
             'flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a]',
             {
               'bg-[#2a314a]': isActive,
+              'justify-center': isCollapsed,
             }
           )}
           onClick={handleClick}
+          title={isCollapsed ? item.name : undefined}
         >
           <item.icon size={20} className="flex-shrink-0 mr-3" />
-          <span className="flex-1">{item.name}</span>
-          {item.children && (
-            <div className="ml-auto">
-              <ChevronRight size={16} />
-            </div>
+          {!isCollapsed && (
+            <>
+              <span className="flex-1">{item.name}</span>
+              {item.children && (
+                <div className="ml-auto">
+                  <ChevronRight size={16} className={cn(
+                    'transition-transform duration-200',
+                    { 'rotate-90': isSubmenuOpen }
+                  )} />
+                </div>
+              )}
+            </>
           )}
         </button>
       )}
-      {isSubmenuOpen && item.children && isOpen && (
+      {isSubmenuOpen && item.children && !isCollapsed && (
         <ul className="bg-[#242b3d] py-1">
           {item.children.map((child) => (
             <li key={child.name}>
@@ -225,13 +244,13 @@ type AppSidebarProps = {
 };
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ isMobile }) => {
-  const [isOpen, setIsOpen] = useState(!isMobile);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('Dashboard');
   
   const handleActiveItemChange = (item: string) => {
     setActiveItem(item);
     if (isMobile) {
-      setIsOpen(false);
+      setIsCollapsed(true);
     }
   };
 
@@ -239,32 +258,41 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isMobile }) => {
     <>
       {isMobile && (
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsCollapsed(!isCollapsed)}
           className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white"
         >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
+          {!isCollapsed ? <X size={20} /> : <Menu size={20} />}
         </button>
       )}
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-40 bg-[#1A1F2C] transition-all duration-300 ease-in-out transform w-60',
+          'fixed inset-y-0 left-0 z-40 bg-[#1A1F2C] transition-all duration-300 ease-in-out transform',
           {
-            'translate-x-0': isOpen,
-            '-translate-x-full': !isOpen && isMobile,
+            'w-60': !isCollapsed,
+            'w-16': isCollapsed && !isMobile,
+            'translate-x-0': !isCollapsed || !isMobile,
+            '-translate-x-full': isCollapsed && isMobile,
           }
         )}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center h-16 px-4 border-b border-white/10">
-            <div className="flex items-center">
-              <span className="text-xl font-bold text-white">iWorx</span>
+          <div className={cn(
+            "flex items-center h-16 px-4 border-b border-white/10",
+            { "justify-center": isCollapsed }
+          )}>
+            <div className={cn("flex items-center", { "justify-center": isCollapsed })}>
+              <span className={cn("text-xl font-bold text-white", { "sr-only": isCollapsed })}>iWorx</span>
+              {isCollapsed && <span className="text-xl font-bold text-white">i</span>}
             </div>
-            {isOpen && !isMobile && (
+            {!isMobile && (
               <button
-                onClick={() => setIsOpen(false)}
-                className="ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className={cn(
+                  "ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none",
+                  { "mr-auto ml-0": isCollapsed }
+                )}
               >
-                <Menu size={20} />
+                {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
               </button>
             )}
           </div>
@@ -274,7 +302,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isMobile }) => {
                 <React.Fragment key={item.name}>
                   <SidebarItem
                     item={item}
-                    isOpen={isOpen}
+                    isCollapsed={isCollapsed}
                     activeItem={activeItem}
                     onActiveItemChange={handleActiveItemChange}
                   />

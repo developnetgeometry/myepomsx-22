@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Bell, Settings, User, Search } from 'lucide-react';
+import { Bell, Settings, User, Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -15,9 +15,10 @@ import {
 interface HeaderProps {
   title?: string;
   isSidebarOpen: boolean;
+  toggleSidebar?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen }) => {
+const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) => {
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'Work order WO-2023-4582 is overdue', time: '10 min ago' },
     { id: 2, text: 'Asset PM-102 requires maintenance', time: '1 hour ago' },
@@ -28,6 +29,14 @@ const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen }) => {
     <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 flex items-center px-4 transition-all duration-300">
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={toggleSidebar}
+            className="mr-2 md:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           {title && (
             <h1 className="text-xl font-semibold text-gray-800 ml-2">{title}</h1>
           )}
