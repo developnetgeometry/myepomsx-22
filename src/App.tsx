@@ -133,6 +133,7 @@ function App() {
             <Route path="/monitor/inventory-groups" element={<InventoryGroupsPage />} />
             <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
             <Route path="/monitor/rms-asset-list" element={<RMSAssetListPage />} />
+            <Route path="/monitor/rms-asset-list/:id" element={<RMSAssetListPage />} />
             <Route path="/monitor/rms-dashboard" element={<RMSDashboardPage />} />
             
             {/* Integrity routes */}
