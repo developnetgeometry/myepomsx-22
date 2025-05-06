@@ -69,7 +69,12 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true }) => {
   const breadcrumbItems = pathSegments.map((segment, index) => {
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
     const isLast = index === pathSegments.length - 1;
-    const displayName = formatSegment(segment);
+    let displayName = formatSegment(segment);
+    
+    // Special handling for detail pages (when the last segment is an ID)
+    if (isLast && /^\d+$/.test(segment)) {
+      displayName = "Details";
+    }
     
     return (
       <React.Fragment key={path}>

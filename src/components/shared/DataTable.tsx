@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
@@ -142,7 +143,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 currentData.map((row, rowIndex) => (
                   <TableRow 
                     key={rowIndex} 
-                    className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${onRowClick ? "cursor-pointer hover:bg-blue-50/50 transition-colors duration-150" : ""}`}
+                    className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors duration-150 ${onRowClick ? "cursor-pointer" : ""}`}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((column) => (
