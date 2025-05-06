@@ -1,15 +1,8 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Download, Filter } from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuTrigger, 
-  DropdownMenuContent,
-  DropdownMenuItem
-} from '@/components/ui/dropdown-menu';
-
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
@@ -22,7 +15,6 @@ interface PageHeaderProps {
   filterOptions?: string[];
   onFilterSelect?: (filter: string) => void;
 }
-
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,
@@ -36,20 +28,16 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   onFilterSelect
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearch) {
       onSearch(searchQuery);
     }
   };
-
-  return (
-    <div className="page-header space-y-4 mb-6">
+  return <div className="page-header space-y-4 mb-6">
       <div className="flex items-center gap-3">
         {icon && <div className="text-epomsx-primary">{icon}</div>}
         <div>
@@ -59,25 +47,10 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       </div>
       
       <div className="flex flex-col md:flex-row gap-3">
-        <form onSubmit={handleSearchSubmit} className="search-bar flex gap-2 flex-1">
-          <div className="relative w-full">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search..."
-              className="pl-9 h-10 w-full"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <Button type="submit" variant="default" className="h-10 px-4">
-            Go
-          </Button>
-        </form>
+        
         
         <div className="flex items-center gap-2">
-          {showFilter && (
-            <DropdownMenu>
+          {showFilter && <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="h-10">
                   <Filter className="h-4 w-4 mr-2" />
@@ -85,35 +58,23 @@ const PageHeader: React.FC<PageHeaderProps> = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {filterOptions.map((option) => (
-                  <DropdownMenuItem 
-                    key={option}
-                    onClick={() => onFilterSelect && onFilterSelect(option)}
-                  >
+                {filterOptions.map(option => <DropdownMenuItem key={option} onClick={() => onFilterSelect && onFilterSelect(option)}>
                     {option}
-                  </DropdownMenuItem>
-                ))}
+                  </DropdownMenuItem>)}
               </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+            </DropdownMenu>}
           
-          {showExport && (
-            <Button variant="outline" className="h-10">
+          {showExport && <Button variant="outline" className="h-10">
               <Download className="h-4 w-4 mr-2" />
               Export
-            </Button>
-          )}
+            </Button>}
           
-          {onAddNew && (
-            <Button variant="default" className="h-10" onClick={onAddNew}>
+          {onAddNew && <Button variant="default" className="h-10" onClick={onAddNew}>
               <Plus className="h-4 w-4 mr-2" />
               {addNewLabel}
-            </Button>
-          )}
+            </Button>}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default PageHeader;
