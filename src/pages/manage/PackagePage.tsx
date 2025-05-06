@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,7 +16,6 @@ const PackagePage: React.FC = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<PackageType | null>(null);
   const [data, setData] = useState<PackageType[]>(packages);
-  const navigate = useNavigate();
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -29,10 +27,6 @@ const PackagePage: React.FC = () => {
     setIsEditMode(true);
     setCurrentItem(item);
     setIsDialogOpen(true);
-  };
-
-  const handleRowClick = (row: PackageType) => {
-    navigate(`/manage/package/${row.id}`);
   };
 
   const handleSubmit = (values: any) => {
@@ -129,8 +123,7 @@ const PackagePage: React.FC = () => {
               <DataTable 
                 data={data} 
                 columns={columns} 
-                onEdit={handleEdit}
-                onRowClick={handleRowClick}
+                onEdit={handleEdit} 
               />
             </TabsContent>
             <TabsContent value="details" className="pt-4">

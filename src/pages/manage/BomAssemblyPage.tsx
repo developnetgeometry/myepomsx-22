@@ -1,5 +1,5 @@
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Layers, Plus } from 'lucide-react';
@@ -19,7 +19,6 @@ const BomAssemblyPage: React.FC = () => {
   const [data, setData] = useState<BomAssembly[]>(bomAssemblies);
   const [sparePartsData, setSparePartsData] = useState<SparePart[]>(spareParts);
   const [selectedAssembly, setSelectedAssembly] = useState<string | null>(null);
-  const navigate = useNavigate();
   
   // Dialog states
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -50,10 +49,6 @@ const BomAssemblyPage: React.FC = () => {
     setIsEditMode(true);
     setCurrentItem(item);
     setIsDialogOpen(true);
-  };
-
-  const handleBomAssemblyRowClick = (row: BomAssembly) => {
-    navigate(`/manage/bom-assembly/${row.id}`);
   };
 
   const handleDelete = (item: BomAssembly) => {
@@ -164,12 +159,6 @@ const BomAssemblyPage: React.FC = () => {
       
       setIsSparePartDialogOpen(false);
     });
-  };
-
-  // Add the missing handleSparePartRowClick function
-  const handleSparePartRowClick = (row: SparePart) => {
-    // Navigate to the spare part detail page
-    navigate(`/manage/spare-part/${row.id}`);
   };
 
   // Search handlers
@@ -295,7 +284,7 @@ const BomAssemblyPage: React.FC = () => {
               onEdit={handleEdit}
               onDelete={handleDelete}
               pageSize={5}
-              onRowClick={handleBomAssemblyRowClick}
+              onRowClick={handleAssemblySelect}
             />
           </CardContent>
         </Card>
@@ -326,7 +315,6 @@ const BomAssemblyPage: React.FC = () => {
                 columns={sparePartColumns} 
                 onEdit={handleEditSparePart}
                 onDelete={handleDeleteSparePart}
-                onRowClick={handleSparePartRowClick}
                 pageSize={5}
               />
             ) : (

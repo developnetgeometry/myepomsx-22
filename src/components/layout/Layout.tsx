@@ -16,12 +16,6 @@ const getPageTitle = (pathname: string): string => {
   
   if (paths.length === 0) return 'Dashboard';
   
-  // Handle detail pages with IDs
-  if (paths.length > 1 && /^\d+$/.test(paths[paths.length - 1])) {
-    const pageType = paths[paths.length - 2]; // Get the page type before the ID
-    return `${pageType.charAt(0).toUpperCase() + pageType.slice(1).replace(/-/g, ' ')} Details`;
-  }
-  
   // Extract the last segment and format it
   const lastSegment = paths[paths.length - 1];
   return lastSegment
@@ -59,9 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
         
         <main className="p-4 md:p-6 flex-1 animate-fade-in">
-          <div className="mb-4">
-            <Breadcrumbs />
-          </div>
+          <Breadcrumbs />
           {children}
         </main>
       </div>

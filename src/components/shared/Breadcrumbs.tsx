@@ -31,7 +31,6 @@ const pathMap: Record<string, string> = {
   "material": "Material",
   "package": "Package",
   "parts-inventory": "Parts Inventory",
-  "spare-part": "Spare Part", 
   "system": "System",
   "rms-asset-list": "RMS Asset List",
   // Add more mappings as needed
@@ -66,12 +65,34 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true }) => {
     return null;
   }
   
+  // Build breadcrumb items
+  const breadcrumbItems = pathSegments.map((segment, index) => {
+    const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
+    const isLast = index === pathSegments.length - 1;
+    const displayName = formatSegment(segment);
+    
+    return (
+      <React.Fragment key={path}>
+        <BreadcrumbItem>
+          {isLast ? (
+            <BreadcrumbPage>{displayName}</BreadcrumbPage>
+          ) : (
+            <BreadcrumbLink asChild>
+              <Link to={path}>{displayName}</Link>
+            </BreadcrumbLink>
+          )}
+        </BreadcrumbItem>
+        {!isLast && <BreadcrumbSeparator />}
+      </React.Fragment>
+    );
+  });
+  
   return (
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
         {showHome && (
           <>
-            <BreadcrumbItem key="home">
+            <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link to="/">Home</Link>
               </BreadcrumbLink>
@@ -79,32 +100,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true }) => {
             <BreadcrumbSeparator />
           </>
         )}
-        
-        {pathSegments.map((segment, index) => {
-          const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
-          const isLast = index === pathSegments.length - 1;
-          let displayName = formatSegment(segment);
-          
-          // Special handling for detail pages (when the last segment is an ID)
-          if (isLast && /^\d+$/.test(segment)) {
-            displayName = "Details";
-          }
-          
-          return (
-            <React.Fragment key={path}>
-              <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{displayName}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link to={path}>{displayName}</Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-              {!isLast && <BreadcrumbSeparator />}
-            </React.Fragment>
-          );
-        })}
+        {breadcrumbItems}
       </BreadcrumbList>
     </Breadcrumb>
   );
