@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -103,6 +103,7 @@ const AssetsPage: React.FC = () => {
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const navigate = useNavigate();
 
   const handleNodeSelect = (node: any) => {
     setSelectedNode(node);
@@ -131,8 +132,7 @@ const AssetsPage: React.FC = () => {
   };
 
   const handleRowClick = (row: Asset) => {
-    setSelectedAsset(row);
-    setIsDrawerOpen(true);
+    navigate(`/manage/assets/${row.id}`);
   };
 
   const handleSubmit = (values: any) => {
