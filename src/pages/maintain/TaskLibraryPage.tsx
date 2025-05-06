@@ -402,7 +402,7 @@ const TaskLibraryPage: React.FC = () => {
                 <Button type="button" variant="outline" size="sm" onClick={() => console.log("Edit clicked")}>
                   <Pencil className="h-4 w-4 mr-2" /> Edit
                 </Button>
-                <Button type="button" variant="primary" size="sm" className="bg-blue-600">
+                <Button type="button" variant="default" size="sm" className="bg-blue-600">
                   <Save className="h-4 w-4 mr-2" /> Save
                 </Button>
                 <Button type="button" variant="outline" size="sm" onClick={handleAddTaskListRow}>
