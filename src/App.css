@@ -1,5 +1,3 @@
-
-
 /* Removing constraints that could interfere with the layout */
 #root {
   width: 100%;
@@ -20,6 +18,23 @@ body {
 
 .epomsx-sidebar-item-active {
   background-color: #2a314a;
+}
+
+/* Logo styles */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-full {
+  height: 30px;
+  width: auto;
+}
+
+.logo-small {
+  height: 30px;
+  width: 30px;
 }
 
 /* Table styles */
@@ -103,9 +118,11 @@ body {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }

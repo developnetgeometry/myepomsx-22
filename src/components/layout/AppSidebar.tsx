@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
 type SidebarItemType = {
   name: string;
   icon: React.ElementType;
@@ -251,12 +252,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('Dashboard');
+  
   const handleActiveItemChange = (item: string) => {
     setActiveItem(item);
     if (isMobile) {
       setIsCollapsed(true);
     }
   };
+
   return <>
       {isMobile && <button onClick={() => setIsCollapsed(!isCollapsed)} className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white">
           {!isCollapsed ? <X size={20} /> : <Menu size={20} />}
@@ -274,10 +277,19 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             <div className={cn("flex items-center", {
             "justify-center": isCollapsed
           })}>
-              <span className={cn("text-xl font-bold text-white", {
-              "sr-only": isCollapsed
-            })}>MyEPOMSX</span>
-              {isCollapsed && <span className="text-xl font-bold text-white">i</span>}
+              {isCollapsed ? (
+                <div className="w-8 h-8 bg-blue-500 flex items-center justify-center text-white font-bold text-xl rounded">
+                  <span>E</span>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <img 
+                    src="/lovable-uploads/0c807c0e-1745-4cb5-9bda-785e07fbba43.png" 
+                    alt="EPOMS Logo" 
+                    className="h-8 object-contain" 
+                  />
+                </div>
+              )}
             </div>
             {!isMobile && <button onClick={() => setIsCollapsed(!isCollapsed)} className={cn("ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none", {
             "mr-auto ml-0": isCollapsed
@@ -298,4 +310,5 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       </div>
     </>;
 };
+
 export default AppSidebar;
