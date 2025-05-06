@@ -1,5 +1,4 @@
 
-
 /* Removing constraints that could interfere with the layout */
 #root {
   width: 100%;
@@ -20,6 +19,15 @@ body {
 
 .epomsx-sidebar-item-active {
   background-color: #2a314a;
+}
+
+/* Sidebar transitions */
+.sidebar-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+.content-transition {
+  transition: margin-left 0.3s ease-in-out;
 }
 
 /* Table styles */

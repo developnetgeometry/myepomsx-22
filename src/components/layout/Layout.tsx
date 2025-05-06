@@ -34,11 +34,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [isMobile]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       <AppSidebar isMobile={isMobile} />
       
       <div className={cn(
-        "transition-all duration-300 min-h-screen",
+        "flex-1 transition-all duration-300 ease-in-out min-h-screen",
         isMobile ? "ml-0" : (isSidebarCollapsed ? "ml-16" : "ml-60")
       )}>
         <Header 
