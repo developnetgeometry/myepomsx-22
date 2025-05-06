@@ -31,6 +31,7 @@ const pathMap: Record<string, string> = {
   "material": "Material",
   "package": "Package",
   "parts-inventory": "Parts Inventory",
+  "spare-part": "Spare Part", 
   "system": "System",
   "rms-asset-list": "RMS Asset List",
   // Add more mappings as needed
