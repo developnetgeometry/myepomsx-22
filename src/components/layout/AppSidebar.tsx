@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -20,11 +19,11 @@ type SidebarItemType = {
   children?: {
     name: string;
     path?: string;
-    icon?: React.ElementType;
+    icon: React.ElementType; // Making icon required here to match the type definition
     children?: {
       name: string;
       path: string;
-      icon?: React.ElementType;
+      icon: React.ElementType; // Making icon required here as well
     }[];
   }[];
 };
@@ -40,37 +39,37 @@ const sidebarItems: SidebarItemType[] = [
     name: 'Asset Management',
     icon: Database,
     children: [
-      { name: 'Facilities', path: '/manage/facilities' },
-      { name: 'System', path: '/manage/system' },
-      { name: 'Package', path: '/manage/package' },
-      { name: 'Assets', path: '/manage/assets' }
+      { name: 'Facilities', path: '/manage/facilities', icon: Database },
+      { name: 'System', path: '/manage/system', icon: Database },
+      { name: 'Package', path: '/manage/package', icon: Database },
+      { name: 'Assets', path: '/manage/assets', icon: Database }
     ]
   },
   {
     name: 'Inventory',
     icon: Box,
     children: [
-      { name: 'Material', path: '/manage/material' },
-      { name: 'Items Master', path: '/manage/items-master' },
-      { name: 'Inventory', path: '/manage/inventory' },
-      { name: 'BOM Assembly', path: '/manage/bom-assembly' }
+      { name: 'Material', path: '/manage/material', icon: Box },
+      { name: 'Items Master', path: '/manage/items-master', icon: Box },
+      { name: 'Inventory', path: '/manage/inventory', icon: Box },
+      { name: 'BOM Assembly', path: '/manage/bom-assembly', icon: Box }
     ]
   },
   {
     name: 'Work Orders',
     icon: ListOrdered,
     children: [
-      { name: 'Work Request', path: '/maintain/work-request' },
-      { name: 'Work Order List', path: '/maintain/work-order-list' },
-      { name: 'WO History', path: '/maintain/wo-history' }
+      { name: 'Work Request', path: '/maintain/work-request', icon: ClipboardList },
+      { name: 'Work Order List', path: '/maintain/work-order-list', icon: ClipboardList },
+      { name: 'WO History', path: '/maintain/wo-history', icon: ClipboardList }
     ]
   },
   {
     name: 'Maintenance Planning',
     icon: Calendar,
     children: [
-      { name: 'PM Schedule', path: '/maintain/pm-schedule' },
-      { name: 'Task Library', path: '/maintain/task-library' }
+      { name: 'PM Schedule', path: '/maintain/pm-schedule', icon: Calendar },
+      { name: 'Task Library', path: '/maintain/task-library', icon: Wrench }
     ]
   },
   // Updated Monitor section with IMS and RMS as children
@@ -105,10 +104,10 @@ const sidebarItems: SidebarItemType[] = [
     name: 'Reports & Analytics',
     icon: BarChart4,
     children: [
-      { name: 'Asset Performance', path: '/measure/asset-performance' },
-      { name: 'Work Analytics', path: '/measure/work-analytics' },
-      { name: 'Cost Analysis', path: '/measure/cost-analysis' },
-      { name: 'KPI Dashboard', path: '/measure/kpi-dashboard' }
+      { name: 'Asset Performance', path: '/measure/asset-performance', icon: BarChart4 },
+      { name: 'Work Analytics', path: '/measure/work-analytics', icon: BarChart4 },
+      { name: 'Cost Analysis', path: '/measure/cost-analysis', icon: BarChart4 },
+      { name: 'KPI Dashboard', path: '/measure/kpi-dashboard', icon: BarChart4 }
     ]
   },
   {
@@ -118,48 +117,62 @@ const sidebarItems: SidebarItemType[] = [
       // Admin setup items
       {
         name: 'Company',
-        path: '/admin/setup/company'
+        path: '/admin/setup/company',
+        icon: Settings
       }, {
         name: 'Client',
-        path: '/admin/setup/client'
+        path: '/admin/setup/client',
+        icon: Settings
       }, {
         name: 'Project',
-        path: '/admin/setup/project'
+        path: '/admin/setup/project',
+        icon: Settings
       }, {
         name: 'Vendor',
-        path: '/admin/setup/vendor'
+        path: '/admin/setup/vendor',
+        icon: Settings
       }, {
         name: 'Sensor',
-        path: '/admin/setup/sensor'
+        path: '/admin/setup/sensor',
+        icon: Settings
       }, {
         name: 'Work Center',
-        path: '/admin/setup/work-center'
+        path: '/admin/setup/work-center',
+        icon: Settings
       },
       // Admin settings items
       {
         name: 'Data Category',
-        path: '/admin/settings/data-category'
+        path: '/admin/settings/data-category',
+        icon: Settings
       }, {
         name: 'Asset Tag',
-        path: '/admin/settings/asset-tag'
+        path: '/admin/settings/asset-tag',
+        icon: Settings
       }, {
         name: 'Asset Class',
-        path: '/admin/settings/asset-class'
+        path: '/admin/settings/asset-class',
+        icon: Settings
       }, {
         name: 'Discipline',
-        path: '/admin/settings/discipline'
+        path: '/admin/settings/discipline',
+        icon: Settings
       }, {
         name: 'Maintenance Type',
-        path: '/admin/settings/maintenance-type'
+        path: '/admin/settings/maintenance-type',
+        icon: Settings
       }, {
         name: 'Frequency Setup',
-        path: '/admin/settings/frequency-setup'
+        path: '/admin/settings/frequency-setup',
+        icon: Settings
       }, {
         name: 'Average UARS',
-        path: '/admin/settings/average-uars'
+        path: '/admin/settings/average-uars',
+        icon: Settings
       }, {
         name: 'Corrosion Group',
-        path: '/admin/settings/corrosion-group'
+        path: '/admin/settings/corrosion-group',
+        icon: Settings
       }]
   }
 ];
@@ -294,9 +307,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
               );
             }
             
-            // For IMS and RMS child items, use specific icons
-            let ChildIcon = child.icon || null;
-            
             return (
               <li key={child.name}>
                 <Link 
@@ -308,8 +318,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                     'pl-16': depth === 2
                   })}
                 >
-                  {ChildIcon && (
-                    <ChildIcon size={16} className="mr-3 flex-shrink-0" />
+                  {child.icon && (
+                    <child.icon size={16} className="mr-3 flex-shrink-0" />
                   )}
                   <span className="flex-1">{child.name}</span>
                   {child.children && (
