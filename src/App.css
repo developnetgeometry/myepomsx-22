@@ -1,10 +1,27 @@
+
+/* Removing constraints that could interfere with the layout */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.epomsx-sidebar {
+  background-color: #1A1F2C;
+  color: #fff;
+}
+
+.epomsx-sidebar-item-active {
+  background-color: #2a314a;
+}
+
+/* Keep other existing styles */
 .logo {
   height: 6em;
   padding: 1.5em;

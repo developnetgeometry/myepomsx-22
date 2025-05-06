@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       <div className={cn(
         "transition-all duration-300 min-h-screen",
-        isMobile ? "ml-0" : (isSidebarOpen ? "ml-64" : "ml-[4.5rem]")
+        isMobile ? "ml-0" : (isSidebarOpen ? "ml-60" : "ml-0")
       )}>
         <Header title={pageTitle} isSidebarOpen={isSidebarOpen} />
         

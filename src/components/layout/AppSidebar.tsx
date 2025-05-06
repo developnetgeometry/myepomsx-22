@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -7,16 +8,15 @@ import {
   Wrench,
   LineChart,
   Gauge,
-  ChevronDown,
   ChevronRight,
   Menu,
   X,
-  Building,
-  Package,
-  Archive,
-  Layers,
+  Home,
+  Database,
   Box,
-  List,
+  ListOrdered,
+  Calendar,
+  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -27,15 +27,16 @@ type SidebarItemType = {
   children?: { name: string; path: string }[];
 };
 
+// Map our existing sidebar structure to the new design
 const sidebarItems: SidebarItemType[] = [
   {
-    name: 'Overview',
-    icon: BarChart4,
+    name: 'Dashboard',
+    icon: Home,
     path: '/',
   },
   {
-    name: 'Manage',
-    icon: ClipboardList,
+    name: 'Asset Management',
+    icon: Database,
     children: [
       { name: 'Facilities', path: '/manage/facilities' },
       { name: 'System', path: '/manage/system' },
@@ -43,25 +44,38 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'Assets', path: '/manage/assets' },
       { name: 'BOM Assembly', path: '/manage/bom-assembly' },
       { name: 'Asset Hierarchy', path: '/manage/asset-hierarchy' },
+      { name: 'Asset Register', path: '/manage/asset-register' },
+    ],
+  },
+  {
+    name: 'Inventory',
+    icon: Box,
+    children: [
       { name: 'Material', path: '/manage/material' },
       { name: 'Items Master', path: '/manage/items-master' },
       { name: 'Inventory', path: '/manage/inventory' },
     ],
   },
   {
-    name: 'Maintain',
-    icon: Wrench,
+    name: 'Work Orders',
+    icon: ListOrdered,
     children: [
-      { name: 'PM Schedule', path: '/maintain/pm-schedule' },
       { name: 'Work Request', path: '/maintain/work-request' },
       { name: 'Work Order List', path: '/maintain/work-order-list' },
-      { name: 'Task Library', path: '/maintain/task-library' },
       { name: 'WO History', path: '/maintain/wo-history' },
     ],
   },
   {
-    name: 'Monitor',
-    icon: Gauge,
+    name: 'Maintenance Planning',
+    icon: Calendar,
+    children: [
+      { name: 'PM Schedule', path: '/maintain/pm-schedule' },
+      { name: 'Task Library', path: '/maintain/task-library' },
+    ],
+  },
+  {
+    name: 'Field Operations',
+    icon: Users,
     children: [
       { name: 'IMS Dashboard', path: '/monitor/ims-dashboard' },
       { name: 'RBI Assessment', path: '/monitor/rbi-assessment' },
@@ -74,8 +88,8 @@ const sidebarItems: SidebarItemType[] = [
     ],
   },
   {
-    name: 'Measure',
-    icon: LineChart,
+    name: 'Reports & Analytics',
+    icon: BarChart4,
     children: [
       { name: 'Asset Performance', path: '/measure/asset-performance' },
       { name: 'Work Analytics', path: '/measure/work-analytics' },
@@ -84,15 +98,17 @@ const sidebarItems: SidebarItemType[] = [
     ],
   },
   {
-    name: 'Admin',
+    name: 'Setup',
     icon: Settings,
     children: [
+      // Admin setup items
       { name: 'Company', path: '/admin/setup/company' },
       { name: 'Client', path: '/admin/setup/client' },
       { name: 'Project', path: '/admin/setup/project' },
       { name: 'Vendor', path: '/admin/setup/vendor' },
       { name: 'Sensor', path: '/admin/setup/sensor' },
       { name: 'Work Center', path: '/admin/setup/work-center' },
+      // Admin settings items
       { name: 'Data Category', path: '/admin/settings/data-category' },
       { name: 'Asset Tag', path: '/admin/settings/asset-tag' },
       { name: 'Asset Class', path: '/admin/settings/asset-class' },
@@ -107,7 +123,6 @@ const sidebarItems: SidebarItemType[] = [
 
 type SidebarItemProps = {
   item: SidebarItemType;
-  expanded: boolean;
   isOpen: boolean;
   activeItem: string;
   onActiveItemChange: (item: string) => void;
@@ -115,7 +130,6 @@ type SidebarItemProps = {
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ 
   item, 
-  expanded, 
   isOpen, 
   activeItem, 
   onActiveItemChange 
@@ -124,16 +138,15 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const isActive = activeItem === item.name || 
                    location.pathname === item.path || 
                    (item.children?.some(child => location.pathname === child.path));
-  const isExpanded = isActive && expanded;
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState(isExpanded);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
 
   React.useEffect(() => {
-    if (isActive && expanded) {
+    if (isActive && isOpen) {
       setIsSubmenuOpen(true);
-    } else if (!expanded) {
+    } else if (!isOpen) {
       setIsSubmenuOpen(false);
     }
-  }, [isActive, expanded]);
+  }, [isActive, isOpen]);
 
   const handleClick = () => {
     if (item.children) {
@@ -145,67 +158,59 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   };
 
   return (
-    <li>
+    <li className="w-full">
       {item.path ? (
         <Link
           to={item.path}
           className={cn(
-            'flex items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 group transition-all duration-200',
+            'flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full',
             {
-              'bg-epomsx-primary text-white hover:bg-epomsx-primary-dark': isActive,
-              'justify-center': !isOpen,
-              'justify-start': isOpen,
+              'bg-[#2a314a]': isActive,
             }
           )}
           onClick={handleClick}
         >
-          <div className={cn('flex items-center', {'justify-center w-full': !isOpen})}>
-            <item.icon size={20} className={cn('flex-shrink-0', {'mr-3': isOpen})} />
-            {isOpen && <span className="whitespace-nowrap">{item.name}</span>}
-          </div>
-          {isOpen && item.children && (
+          <item.icon size={20} className="flex-shrink-0 mr-3" />
+          <span className="flex-1">{item.name}</span>
+          {item.children && (
             <div className="ml-auto">
-              {isSubmenuOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              <ChevronRight size={16} />
             </div>
           )}
         </Link>
       ) : (
         <button
           className={cn(
-            'flex w-full items-center p-2 text-gray-600 rounded-lg hover:bg-gray-100 group transition-all duration-200',
+            'flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a]',
             {
-              'bg-epomsx-primary text-white hover:bg-epomsx-primary-dark': isActive,
-              'justify-center': !isOpen,
-              'justify-start': isOpen,
+              'bg-[#2a314a]': isActive,
             }
           )}
           onClick={handleClick}
         >
-          <div className={cn('flex items-center', {'justify-center w-full': !isOpen})}>
-            <item.icon size={20} className={cn('flex-shrink-0', {'mr-3': isOpen})} />
-            {isOpen && <span className="whitespace-nowrap">{item.name}</span>}
-          </div>
-          {isOpen && item.children && (
+          <item.icon size={20} className="flex-shrink-0 mr-3" />
+          <span className="flex-1">{item.name}</span>
+          {item.children && (
             <div className="ml-auto">
-              {isSubmenuOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              <ChevronRight size={16} />
             </div>
           )}
         </button>
       )}
       {isSubmenuOpen && item.children && isOpen && (
-        <ul className="py-2 space-y-1 pl-8">
+        <ul className="bg-[#242b3d] py-1">
           {item.children.map((child) => (
             <li key={child.name}>
               <Link
                 to={child.path}
                 className={cn(
-                  'flex items-center p-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100',
+                  'flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white',
                   {
-                    'bg-gray-100 text-epomsx-primary': location.pathname === child.path,
+                    'bg-[#2a314a] text-white': location.pathname === child.path,
                   }
                 )}
               >
-                <span className="flex-1 whitespace-nowrap">{child.name}</span>
+                <span className="flex-1">{child.name}</span>
               </Link>
             </li>
           ))}
@@ -221,7 +226,7 @@ type AppSidebarProps = {
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ isMobile }) => {
   const [isOpen, setIsOpen] = useState(!isMobile);
-  const [activeItem, setActiveItem] = useState('Overview');
+  const [activeItem, setActiveItem] = useState('Dashboard');
   
   const handleActiveItemChange = (item: string) => {
     setActiveItem(item);
@@ -235,71 +240,51 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isMobile }) => {
       {isMobile && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg border border-gray-200"
+          className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white"
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       )}
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200 transition-all duration-300 ease-in-out transform',
+          'fixed inset-y-0 left-0 z-40 bg-[#1A1F2C] transition-all duration-300 ease-in-out transform w-60',
           {
             'translate-x-0': isOpen,
             '-translate-x-full': !isOpen && isMobile,
-            'w-64': isOpen,
-            'w-[4.5rem]': !isOpen && !isMobile,
           }
         )}
       >
         <div className="h-full flex flex-col">
-          <div className={cn('flex items-center h-16 px-4 border-b border-gray-200', {
-            'justify-center': !isOpen,
-            'justify-between': isOpen,
-          })}>
-            {isOpen ? (
-              <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-md bg-epomsx-primary flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">M</span>
-                </div>
-                <span className="text-lg font-semibold text-gray-800">MyEPOMSX</span>
-              </div>
-            ) : (
-              <div className="h-8 w-8 rounded-md bg-epomsx-primary flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-            )}
+          <div className="flex items-center h-16 px-4 border-b border-white/10">
+            <div className="flex items-center">
+              <span className="text-xl font-bold text-white">iWorx</span>
+            </div>
             {isOpen && !isMobile && (
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
+                className="ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none"
               >
-                <ChevronRight size={20} />
+                <Menu size={20} />
               </button>
             )}
           </div>
-          <div className="flex-1 overflow-y-auto py-3">
-            <ul className="space-y-2 px-3">
-              {sidebarItems.map((item) => (
-                <SidebarItem
-                  key={item.name}
-                  item={item}
-                  expanded={isOpen}
-                  isOpen={isOpen}
-                  activeItem={activeItem}
-                  onActiveItemChange={handleActiveItemChange}
-                />
+          <div className="flex-1 overflow-y-auto">
+            <ul className="space-y-0.5">
+              {sidebarItems.map((item, index) => (
+                <React.Fragment key={item.name}>
+                  <SidebarItem
+                    item={item}
+                    isOpen={isOpen}
+                    activeItem={activeItem}
+                    onActiveItemChange={handleActiveItemChange}
+                  />
+                  {/* Add horizontal separator line after Reports & Analytics */}
+                  {index === 6 && (
+                    <li className="border-b border-white/10 my-1"></li>
+                  )}
+                </React.Fragment>
               ))}
             </ul>
-          </div>
-          <div className="p-4 border-t border-gray-200 flex justify-center">
-            {!isMobile && !isOpen && (
-              <button
-                onClick={() => setIsOpen(true)}
-                className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
-              >
-                <ChevronRight size={20} />
-              </button>
-            )}
           </div>
         </div>
       </div>
