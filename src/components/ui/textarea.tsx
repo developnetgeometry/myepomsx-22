@@ -8,7 +8,7 @@ import {
   AlignCenter, 
   AlignRight, 
   ListOrdered, 
-  ListUl, 
+  List, 
   Link, 
   Image 
 } from "lucide-react"
@@ -63,7 +63,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               <ListOrdered className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-              <ListUl className="h-4 w-4" />
+              <List className="h-4 w-4" />
             </Button>
             
             <div className="h-4 mx-1 border-r border-input"></div>
