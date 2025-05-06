@@ -11,6 +11,7 @@ import { ItemsMaster } from '@/types/manage';
 import ManageDialog from '@/components/manage/ManageDialog';
 import { Column } from '@/components/shared/DataTable';
 import * as z from 'zod';
+import { toast } from 'sonner';
 
 interface ItemsMasterPageProps {
   hideHeader?: boolean;
@@ -42,6 +43,28 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
     } else {
       navigate(`/manage/items-master/${row.id}`);
     }
+  };
+  
+  // Define the handleSubmit function that was missing
+  const handleSubmit = (values: any) => {
+    if (isEditMode && currentItem) {
+      // Update existing item
+      const updatedData = data.map(item => 
+        item.id === currentItem.id ? { ...item, ...values } : item
+      );
+      setData(updatedData);
+      toast.success("Item updated successfully");
+    } else {
+      // Add new item
+      const newItem = {
+        id: `item-${Date.now()}`,
+        ...values
+      };
+      setData([...data, newItem]);
+      toast.success("New item added successfully");
+    }
+    
+    setIsDialogOpen(false);
   };
 
   const columns: Column[] = [
