@@ -59,7 +59,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
         
         <main className="p-4 md:p-6 flex-1 animate-fade-in">
-          <Breadcrumbs />
+          <div className="mb-4">
+            <Breadcrumbs />
+          </div>
           {children}
         </main>
       </div>

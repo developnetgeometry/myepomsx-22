@@ -83,6 +83,12 @@ const DataTable: React.FC<DataTableProps> = ({
       onEdit(row);
     }
   };
+
+  const handleRowClick = (row: any) => {
+    if (onRowClick) {
+      onRowClick(row);
+    }
+  };
   
   const handleExport = () => {
     if (onExport) {
@@ -144,7 +150,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   <TableRow 
                     key={rowIndex} 
                     className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors duration-150 ${onRowClick ? "cursor-pointer" : ""}`}
-                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    onClick={() => onRowClick && handleRowClick(row)}
                   >
                     {columns.map((column) => (
                       <TableCell 
