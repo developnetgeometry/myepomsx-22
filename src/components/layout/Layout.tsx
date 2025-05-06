@@ -34,11 +34,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [isMobile]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AppSidebar isMobile={isMobile} />
+    <div className="min-h-screen bg-gray-50 flex">
+      <AppSidebar 
+        isCollapsed={isSidebarCollapsed} 
+        onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
+        isMobile={isMobile} 
+      />
       
       <div className={cn(
-        "transition-all duration-300 min-h-screen",
+        "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out",
         isMobile ? "ml-0" : (isSidebarCollapsed ? "ml-16" : "ml-60")
       )}>
         <Header 
@@ -47,7 +51,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
         
-        <main className="p-4 md:p-6">
+        <main className="p-4 md:p-6 flex-1">
           {children}
         </main>
       </div>
