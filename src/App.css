@@ -1,4 +1,5 @@
 
+
 /* Removing constraints that could interfere with the layout */
 #root {
   width: 100%;
@@ -19,6 +20,80 @@ body {
 
 .epomsx-sidebar-item-active {
   background-color: #2a314a;
+}
+
+/* Table styles */
+.custom-table {
+  @apply w-full rounded-lg border border-gray-100;
+}
+
+.custom-table th {
+  @apply py-3 px-6 text-sm font-semibold text-gray-900 bg-gray-50;
+}
+
+.custom-table td {
+  @apply py-4 px-6 text-sm text-gray-900;
+}
+
+.custom-table tr:nth-child(odd) {
+  @apply bg-white;
+}
+
+.custom-table tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+.custom-table tr {
+  @apply border-t border-gray-100;
+}
+
+.custom-table tr:hover {
+  @apply bg-gray-100;
+}
+
+/* Status badge colors */
+.status-operational {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-critical {
+  @apply bg-red-100 text-red-800;
+}
+
+.status-maintenance {
+  @apply bg-amber-100 text-amber-800;
+}
+
+.status-scheduled {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Health indicators */
+.health-good {
+  @apply flex items-center;
+}
+
+.health-good::before {
+  content: "";
+  @apply h-2.5 w-2.5 rounded-full bg-green-500 mr-2;
+}
+
+.health-fair {
+  @apply flex items-center;
+}
+
+.health-fair::before {
+  content: "";
+  @apply h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2;
+}
+
+.health-poor {
+  @apply flex items-center;
+}
+
+.health-poor::before {
+  content: "";
+  @apply h-2.5 w-2.5 rounded-full bg-red-500 mr-2;
 }
 
 /* Keep other existing styles */

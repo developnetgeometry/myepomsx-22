@@ -114,21 +114,21 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className="w-full">
-      <div className="rounded-md border border-gray-200 shadow-sm bg-white overflow-hidden">
+      <div className="rounded-lg border border-gray-100 shadow-sm bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-gray-50 border-b border-gray-100">
                 {columns.map((column) => (
                   <TableHead 
                     key={column.id} 
-                    className="py-3 text-sm font-medium text-gray-700"
+                    className="py-3 px-6 text-sm font-semibold text-gray-900"
                   >
                     {column.header}
                   </TableHead>
                 ))}
                 {(onEdit || onDelete) && (
-                  <TableHead className="w-24 text-right text-sm font-medium text-gray-700">Actions</TableHead>
+                  <TableHead className="w-24 text-right px-6 text-sm font-semibold text-gray-900">Actions</TableHead>
                 )}
               </TableRow>
             </TableHeader>
@@ -143,13 +143,13 @@ const DataTable: React.FC<DataTableProps> = ({
                 currentData.map((row, rowIndex) => (
                   <TableRow 
                     key={rowIndex} 
-                    className={`border-t border-gray-200 ${onRowClick ? "cursor-pointer hover:bg-gray-50" : ""}`}
+                    className={`border-t border-gray-100 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${onRowClick ? "cursor-pointer hover:bg-gray-100" : ""}`}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((column) => (
                       <TableCell 
                         key={`${rowIndex}-${column.id}`}
-                        className="py-4 text-sm"
+                        className="py-4 px-6 text-sm text-gray-900"
                       >
                         {column.cell 
                           ? column.cell(row[column.accessorKey]) 
@@ -159,7 +159,7 @@ const DataTable: React.FC<DataTableProps> = ({
                       </TableCell>
                     ))}
                     {(onEdit || onDelete) && (
-                      <TableCell className="text-right py-2 pr-4">
+                      <TableCell className="text-right py-2 pr-6">
                         <div className="flex space-x-2 justify-end">
                           {onEdit && (
                             <TooltipProvider>
@@ -209,24 +209,24 @@ const DataTable: React.FC<DataTableProps> = ({
         </div>
         
         {data.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-white">
-            <div className="text-sm text-gray-500">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-white">
+            <div className="text-sm text-gray-600">
               Total {data.length} {data.length === 1 ? 'item' : 'items'}
             </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-3 text-gray-600 border-gray-300"
-                onClick={handleExport}
+                className="h-9 px-4 text-gray-700 border-gray-200 hover:bg-gray-50"
+                onClick={() => handleExport()}
               >
                 <FileText className="h-4 w-4 mr-1" /> Export
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 px-3 text-gray-600 border-gray-300"
-                onClick={handleExport}
+                className="h-9 px-4 text-gray-700 border-gray-200 hover:bg-gray-50"
+                onClick={() => handleExport()}
               >
                 <Download className="h-4 w-4 mr-1" /> Download
               </Button>
@@ -237,7 +237,7 @@ const DataTable: React.FC<DataTableProps> = ({
       
       {data.length > pageSize && (
         <div className="flex items-center justify-between py-4">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-600">
             Showing {startIndex + 1} to {Math.min(endIndex, data.length)} of {data.length} entries
           </div>
           <div className="flex items-center space-x-2">
@@ -246,7 +246,7 @@ const DataTable: React.FC<DataTableProps> = ({
               size="sm" 
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="h-8 w-8 p-0"
+              className="h-9 w-9 p-0 border-gray-200"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -265,12 +265,12 @@ const DataTable: React.FC<DataTableProps> = ({
                   if (index > 0 && page > array[index - 1] + 1) {
                     return (
                       <React.Fragment key={`ellipsis-${page}`}>
-                        <span className="px-2">...</span>
+                        <span className="px-2 text-gray-500">...</span>
                         <Button 
                           key={page}
                           variant={currentPage === page ? "default" : "outline"}
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className={`h-9 w-9 p-0 ${currentPage === page ? 'bg-blue-600' : 'border-gray-200'}`}
                           onClick={() => handlePageChange(page)}
                         >
                           {page}
@@ -283,7 +283,7 @@ const DataTable: React.FC<DataTableProps> = ({
                       key={page}
                       variant={currentPage === page ? "default" : "outline"}
                       size="sm"
-                      className="h-8 w-8 p-0"
+                      className={`h-9 w-9 p-0 ${currentPage === page ? 'bg-blue-600' : 'border-gray-200'}`}
                       onClick={() => handlePageChange(page)}
                     >
                       {page}
@@ -297,7 +297,7 @@ const DataTable: React.FC<DataTableProps> = ({
               size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="h-8 w-8 p-0"
+              className="h-9 w-9 p-0 border-gray-200"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
