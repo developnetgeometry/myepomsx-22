@@ -1,14 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Archive, FileText, Printer } from 'lucide-react';
+import { ArrowLeft, Archive, FileText, Printer, Search, Plus, Settings, FileUp } from 'lucide-react';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { assets } from '@/data/sampleData';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 
 const AssetDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,12 +21,71 @@ const AssetDetailPage: React.FC = () => {
   
   // Find the asset in sample data
   const asset = assets.find(asset => asset.id === id);
+
+  const [activeTab, setActiveTab] = useState('installation');
+  
+  // Mock data for demonstration
+  const assetDetails = {
+    facilityLocation: "Central Processing Process",
+    system: "Production",
+    package: "V-110 Test Separator",
+    parentAssetNo: "P-100",
+    assetNo: asset?.assetNo || "V-110",
+    assetName: asset?.name || "Test Separator",
+    assetTag: "TAG-001",
+    assetStatus: "Active",
+    commissioningDate: "01/01/2001",
+    assetGroup: "Processing Vessels",
+    
+    // Asset Details
+    category: "Equipment",
+    type: "DRUM",
+    manufacturer: "ABC Manufacturing",
+    makerNo: "MK-12345",
+    model: "Model X-900",
+    serialNumber: "SN-78601",
+    assetClass: "Vessel",
+    drawingNo: "DWG-110-001",
+    
+    // Classification & Tags
+    hCode: "HC-001",
+    axis: "Vertical",
+    specification: "ASME VIII",
+    sensor: "PRE-110",
+    ecClass: "Class 2",
+    ecCertificate: "EC-2023-001",
+    sceCode: true,
+    criticality: true,
+    active: true,
+    integrity: false,
+    reliability: true,
+    
+    // Mock subtable data
+    childAssets: [
+      { id: "1", assetNo: "V-110-1", name: "Pressure Gauge", type: "Instrument" },
+      { id: "2", assetNo: "V-110-2", name: "Level Transmitter", type: "Instrument" }
+    ],
+    workOrders: [
+      { id: "WO-001", date: "15/03/2025", type: "Corrective", status: "Completed" },
+      { id: "WO-002", date: "22/04/2025", type: "Preventive", status: "Planned" }
+    ]
+  };
+
+  const handleWorkRequest = () => {
+    // Navigate to work request page or open work request dialog
+    toast.info("Opening work request for this asset");
+    navigate(`/maintain/work-request?assetId=${id}`);
+  };
+
+  const handleApplyChanges = () => {
+    toast.success("Asset details updated successfully");
+  };
   
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <PageHeader 
-          title={`Asset: ${asset?.name || `#${id}`}`} 
+          title={`Asset: ${assetDetails.assetName || `#${id}`}`} 
           icon={<Archive className="h-6 w-6" />}
         />
         <div className="flex space-x-2">
@@ -34,152 +98,417 @@ const AssetDetailPage: React.FC = () => {
         </div>
       </div>
       
-      <Tabs defaultValue="details" className="w-full">
-        <TabsList>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="details" className="pt-4">
-          <Card>
-            <CardHeader className="border-b">
-              <div className="flex justify-between items-center">
-                <CardTitle>{asset?.name || `Asset #${id}`}</CardTitle>
-                {asset?.status && <StatusBadge status={asset.status} />}
+      <Card>
+        <CardHeader className="border-b">
+          <div className="flex justify-between items-center">
+            <CardTitle>{assetDetails.assetName} ({assetDetails.assetNo})</CardTitle>
+            <StatusBadge status={assetDetails.assetStatus} />
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* General Asset Information */}
+            <div className="lg:col-span-1 space-y-4">
+              <h3 className="text-lg font-semibold mb-2">General Asset Information</h3>
+              <Separator />
+              
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Facility Location</label>
+                  <Input value={assetDetails.facilityLocation} readOnly />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">System</label>
+                  <Input value={assetDetails.system} readOnly />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Package</label>
+                  <Input value={assetDetails.package} readOnly />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Parent Asset No</label>
+                  <Select defaultValue={assetDetails.parentAssetNo}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select parent asset" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="P-100">P-100</SelectItem>
+                      <SelectItem value="P-101">P-101</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset No</label>
+                  <Input value={assetDetails.assetNo} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset Name</label>
+                  <Input value={assetDetails.assetName} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset Tag</label>
+                  <Select defaultValue={assetDetails.assetTag}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select asset tag" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="TAG-001">TAG-001</SelectItem>
+                      <SelectItem value="TAG-002">TAG-002</SelectItem>
+                      <SelectItem value="TAG-003">TAG-003</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset Status</label>
+                  <Select defaultValue={assetDetails.assetStatus}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Active">Active</SelectItem>
+                      <SelectItem value="Inactive">Inactive</SelectItem>
+                      <SelectItem value="Maintenance">Maintenance</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Commissioning Date</label>
+                  <Input type="date" value="2001-01-01" />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset Group</label>
+                  <Input value={assetDetails.assetGroup} />
+                </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-8 pt-6">
-              <div>
-                <h3 className="text-lg font-medium mb-4">Asset Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Asset No</h3>
-                    <p className="text-base">{asset?.assetNo || "N/A"}</p>
+            </div>
+            
+            {/* Asset Details Section */}
+            <div className="lg:col-span-1 space-y-4">
+              <h3 className="text-lg font-semibold mb-2">Asset Details</h3>
+              <Separator />
+              
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">General Attributes</h4>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Category</label>
+                  <Select defaultValue={assetDetails.category}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Equipment">Equipment</SelectItem>
+                      <SelectItem value="Infrastructure">Infrastructure</SelectItem>
+                      <SelectItem value="Instrument">Instrument</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Type</label>
+                  <Select defaultValue={assetDetails.type}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DRUM">DRUM</SelectItem>
+                      <SelectItem value="VESSEL">VESSEL</SelectItem>
+                      <SelectItem value="PUMP">PUMP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Manufacturer</label>
+                  <Input value={assetDetails.manufacturer} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Maker No</label>
+                  <Input value={assetDetails.makerNo} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Model</label>
+                  <Input value={assetDetails.model} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Serial Number</label>
+                  <Input value={assetDetails.serialNumber} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Asset Class</label>
+                  <Select defaultValue={assetDetails.assetClass}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select asset class" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Vessel">Vessel</SelectItem>
+                      <SelectItem value="Rotating Equipment">Rotating Equipment</SelectItem>
+                      <SelectItem value="Piping">Piping</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Drawing No</label>
+                  <Input value={assetDetails.drawingNo} />
+                </div>
+              </div>
+            </div>
+            
+            {/* Classification & Tags + Upload */}
+            <div className="lg:col-span-1 space-y-4">
+              <h3 className="text-lg font-semibold mb-2">Classification & Tags</h3>
+              <Separator />
+              
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">HCode</label>
+                  <Input value={assetDetails.hCode} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Axis</label>
+                  <Input value={assetDetails.axis} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Specification</label>
+                  <Input value={assetDetails.specification} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Sensor</label>
+                  <Select defaultValue={assetDetails.sensor}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select sensor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PRE-110">PRE-110</SelectItem>
+                      <SelectItem value="TEMP-110">TEMP-110</SelectItem>
+                      <SelectItem value="LVL-110">LVL-110</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">EC Class</label>
+                  <Input value={assetDetails.ecClass} />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">EC Certificate</label>
+                  <Input value={assetDetails.ecCertificate} />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="sce" checked={assetDetails.sceCode} />
+                    <label htmlFor="sce" className="text-sm font-medium">SCE Code</label>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Asset Name</h3>
-                    <p className="text-base">{asset?.name || "N/A"}</p>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="criticality" checked={assetDetails.criticality} />
+                    <label htmlFor="criticality" className="text-sm font-medium">Criticality</label>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Package</h3>
-                    <p className="text-base">{asset?.package || "N/A"}</p>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="active" checked={assetDetails.active} />
+                    <label htmlFor="active" className="text-sm font-medium">Active</label>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">System</h3>
-                    <p className="text-base">{asset?.system || "N/A"}</p>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="integrity" checked={assetDetails.integrity} />
+                    <label htmlFor="integrity" className="text-sm font-medium">Integrity</label>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Facility</h3>
-                    <p className="text-base">{asset?.facility || "N/A"}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Asset Tag</h3>
-                    <p className="text-base">{asset?.assetTag || "N/A"}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Model</h3>
-                    <p className="text-base">{asset?.model || "N/A"}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
-                    {asset?.status ? <StatusBadge status={asset.status} /> : "N/A"}
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="reliability" checked={assetDetails.reliability} />
+                    <label htmlFor="reliability" className="text-sm font-medium">Reliability</label>
                   </div>
                 </div>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium mb-4">Technical Information</h3>
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">SCE Code</h3>
-                        <p className="text-base">{asset?.sceCode || "N/A"}</p>
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Criticality Code</h3>
-                        {asset?.criticalityCode && (
-                          <Badge variant={
-                            asset.criticalityCode === 'A' ? 'destructive' :
-                            asset.criticalityCode === 'B' ? 'default' : 'outline'
-                          }>
-                            {asset.criticalityCode === 'A' ? 'A - Critical' :
-                            asset.criticalityCode === 'B' ? 'B - Important' : 'C - Standard'}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="maintenance" className="pt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Maintenance History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="divide-y">
-                <div className="py-3 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Preventive Maintenance</p>
-                    <p className="text-sm text-muted-foreground">Completed on Apr 15, 2025</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant="outline">PM-2025-042</Badge>
-                  </div>
-                </div>
-                <div className="py-3 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Corrective Maintenance</p>
-                    <p className="text-sm text-muted-foreground">Completed on Mar 22, 2025</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant="outline">CM-2025-018</Badge>
-                  </div>
+              <h3 className="text-lg font-semibold mt-6 mb-2">Upload Field</h3>
+              <Separator />
+              
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium">Asset Image</label>
+                <div className="flex items-center gap-2 mt-1">
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <FileUp className="h-4 w-4" /> Choose file
+                  </Button>
+                  <span className="text-sm text-muted-foreground">No file chosen</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="documents" className="pt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Documents</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 border rounded-md flex items-center justify-between">
-                  <div className="flex items-center">
-                    <FileText className="h-6 w-6 mr-3 text-blue-500" />
-                    <div>
-                      <p className="font-medium">Maintenance Manual</p>
-                      <p className="text-sm text-muted-foreground">PDF • 2.4 MB</p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">Download</Button>
+            </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-4 mt-8">
+            <Button variant="outline" onClick={() => navigate('/manage/assets')}>Cancel</Button>
+            <Button variant="warning" onClick={handleWorkRequest}>Work Request</Button>
+            <Button onClick={handleApplyChanges}>Apply Changes</Button>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Tabs Section */}
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle>{assetDetails.assetName} Details</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full justify-start">
+              <TabsTrigger value="installation">Installation</TabsTrigger>
+              <TabsTrigger value="childAsset">Child Asset</TabsTrigger>
+              <TabsTrigger value="bom">BOM</TabsTrigger>
+              <TabsTrigger value="workOrder">Work Order</TabsTrigger>
+              <TabsTrigger value="attachment">Attachment</TabsTrigger>
+              <TabsTrigger value="integrity">Integrity</TabsTrigger>
+            </TabsList>
+            
+            {/* Installation Tab */}
+            <TabsContent value="installation" className="pt-4">
+              <div className="bg-muted/40 p-4 rounded-md text-center">
+                <p className="text-muted-foreground">Installation details will be displayed here</p>
+              </div>
+            </TabsContent>
+            
+            {/* Child Asset Tab */}
+            <TabsContent value="childAsset" className="pt-4">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex">
+                  <Input placeholder="Search..." className="w-64 mr-2" />
+                  <Button size="sm">Go</Button>
                 </div>
-                
-                <div className="p-4 border rounded-md flex items-center justify-between">
-                  <div className="flex items-center">
-                    <FileText className="h-6 w-6 mr-3 text-blue-500" />
-                    <div>
-                      <p className="font-medium">Technical Specifications</p>
-                      <p className="text-sm text-muted-foreground">PDF • 1.8 MB</p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">Download</Button>
+                <div className="flex items-center gap-2">
+                  <Select defaultValue="actions">
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Actions" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="actions">Actions</SelectItem>
+                      <SelectItem value="export">Export</SelectItem>
+                      <SelectItem value="delete">Delete Selected</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button size="icon" className="ml-2">
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              
+              <div className="border rounded-md overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-muted/50">
+                      <th className="text-left p-3 font-medium">Asset No</th>
+                      <th className="text-left p-3 font-medium">Name</th>
+                      <th className="text-left p-3 font-medium">Type</th>
+                      <th className="text-left p-3 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {assetDetails.childAssets.map(item => (
+                      <tr key={item.id} className="hover:bg-muted/30">
+                        <td className="p-3">{item.assetNo}</td>
+                        <td className="p-3">{item.name}</td>
+                        <td className="p-3">{item.type}</td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </TabsContent>
+            
+            {/* BOM Tab */}
+            <TabsContent value="bom" className="pt-4">
+              <div className="bg-muted/40 p-4 rounded-md text-center">
+                <p className="text-muted-foreground">Bill of Materials will be displayed here</p>
+              </div>
+            </TabsContent>
+            
+            {/* Work Order Tab */}
+            <TabsContent value="workOrder" className="pt-4">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex">
+                  <Input placeholder="Search..." className="w-64 mr-2" />
+                  <Button size="sm">Go</Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="icon" className="ml-2">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="border rounded-md overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-muted/50">
+                      <th className="text-left p-3 font-medium">Work Order ID</th>
+                      <th className="text-left p-3 font-medium">Date</th>
+                      <th className="text-left p-3 font-medium">Type</th>
+                      <th className="text-left p-3 font-medium">Status</th>
+                      <th className="text-left p-3 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {assetDetails.workOrders.map(item => (
+                      <tr key={item.id} className="hover:bg-muted/30">
+                        <td className="p-3">{item.id}</td>
+                        <td className="p-3">{item.date}</td>
+                        <td className="p-3">{item.type}</td>
+                        <td className="p-3">
+                          <StatusBadge status={item.status} />
+                        </td>
+                        <td className="p-3">
+                          <Button variant="ghost" size="sm">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </TabsContent>
+            
+            {/* Attachment Tab */}
+            <TabsContent value="attachment" className="pt-4">
+              <div className="bg-muted/40 p-4 rounded-md text-center">
+                <p className="text-muted-foreground">Attachments will be displayed here</p>
+              </div>
+            </TabsContent>
+            
+            {/* Integrity Tab */}
+            <TabsContent value="integrity" className="pt-4">
+              <div className="bg-muted/40 p-4 rounded-md text-center">
+                <p className="text-muted-foreground">Integrity data will be displayed here</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };
