@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft } from 'lucide-react';
@@ -29,7 +28,6 @@ const sidebarItems: SidebarItemType[] = [
       { name: 'System', path: '/manage/system' },
       { name: 'Package', path: '/manage/package' },
       { name: 'Assets', path: '/manage/assets' },
-      { name: 'Asset Hierarchy', path: '/manage/asset-hierarchy' },
       { name: 'Asset Register', path: '/manage/asset-register' }
     ]
   },
