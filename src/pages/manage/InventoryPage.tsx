@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -10,7 +11,7 @@ import { Inventory } from '@/types/manage';
 import ManageDialog from '@/components/manage/ManageDialog';
 import { Column } from '@/components/shared/DataTable';
 import * as z from 'zod';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCurrency, isMonetaryField } from '@/utils/formatters';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -90,11 +91,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       id: 'unitPrice',
       header: 'Unit Price',
       accessorKey: 'unitPrice',
+      cell: (value: number) => formatCurrency(value)
     },
     {
       id: 'totalPrice',
       header: 'Total Price',
       accessorKey: 'totalPrice',
+      cell: (value: number) => formatCurrency(value)
     },
   ];
 
