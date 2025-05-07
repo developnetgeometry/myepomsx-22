@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
@@ -480,20 +479,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           
           <div className="flex-1 overflow-y-auto">
             <ul className="space-y-0.5">
-              {sidebarItems.map((item, index) => (
-                <React.Fragment key={item.name}>
-                  <SidebarItem 
-                    item={item} 
-                    isCollapsed={isCollapsed} 
-                    activeItem={activeItem} 
-                    onActiveItemChange={handleActiveItemChange} 
-                    isSetupChild={false}
-                  />
-                  {/* Add horizontal separator line after specific sections */}
-                  {(index === 4 || index === 5 || index === 6) && 
-                    <Separator className="my-2 bg-white/10" />
-                  }
-                </React.Fragment>
+              {sidebarItems.map((item) => (
+                <SidebarItem 
+                  key={item.name} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                  activeItem={activeItem} 
+                  onActiveItemChange={handleActiveItemChange} 
+                  isSetupChild={false}
+                />
               ))}
             </ul>
           </div>
