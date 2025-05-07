@@ -6,6 +6,7 @@ import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -64,7 +65,7 @@ const SystemPage: React.FC = () => {
     systemId: '',
     name: '',
     description: '',
-    status: 'Active',
+    isActive: true,
   });
   const { toast } = useToast();
 
@@ -92,7 +93,10 @@ const SystemPage: React.FC = () => {
     // Add the new system to the list
     const systemToAdd = {
       id: newId,
-      ...newSystem
+      systemId: newSystem.systemId,
+      name: newSystem.name,
+      description: newSystem.description,
+      status: newSystem.isActive ? 'Active' : 'Inactive',
     };
     
     setSystems([...systems, systemToAdd]);
@@ -103,7 +107,7 @@ const SystemPage: React.FC = () => {
       systemId: '',
       name: '',
       description: '',
-      status: 'Active',
+      isActive: true,
     });
     
     // Show success toast
@@ -130,7 +134,7 @@ const SystemPage: React.FC = () => {
       />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Add New System</DialogTitle>
             <DialogDescription>
@@ -146,62 +150,66 @@ const SystemPage: React.FC = () => {
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </Button>
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="systemId" className="text-right">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="systemId" className="text-sm font-medium">
                   System ID
                 </Label>
                 <Input
                   id="systemId"
                   value={newSystem.systemId}
                   onChange={(e) => setNewSystem({...newSystem, systemId: e.target.value})}
-                  className="col-span-3"
+                  className="w-full mt-1"
                   required
                   placeholder="e.g. SYS006"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
+              
+              <div>
+                <Label htmlFor="name" className="text-sm font-medium">
+                  System Name
                 </Label>
                 <Input
                   id="name"
                   value={newSystem.name}
                   onChange={(e) => setNewSystem({...newSystem, name: e.target.value})}
-                  className="col-span-3"
+                  className="w-full mt-1"
                   required
                   placeholder="System name"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">
+              
+              <div>
+                <Label htmlFor="description" className="text-sm font-medium">
                   Description
                 </Label>
                 <Input
                   id="description"
                   value={newSystem.description}
                   onChange={(e) => setNewSystem({...newSystem, description: e.target.value})}
-                  className="col-span-3"
+                  className="w-full mt-1"
                   placeholder="System description"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="status" className="text-right">
-                  Status
-                </Label>
-                <select
-                  id="status"
-                  value={newSystem.status}
-                  onChange={(e) => setNewSystem({...newSystem, status: e.target.value})}
-                  className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                  required
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="isActive" 
+                  checked={newSystem.isActive}
+                  onCheckedChange={(checked) => 
+                    setNewSystem({...newSystem, isActive: checked === true})
+                  }
+                />
+                <Label 
+                  htmlFor="isActive" 
+                  className="text-sm font-medium cursor-pointer"
                 >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
+                  Active
+                </Label>
               </div>
             </div>
+            
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
