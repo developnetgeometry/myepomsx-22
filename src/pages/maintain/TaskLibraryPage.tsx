@@ -358,7 +358,7 @@ const TaskLibraryPage: React.FC = () => {
           
           <Button onClick={handleAddNew} className="whitespace-nowrap">
             <Plus className="mr-2 h-4 w-4" />
-            Create Checklist
+            Create Tasklist
           </Button>
         </div>
       </div>
