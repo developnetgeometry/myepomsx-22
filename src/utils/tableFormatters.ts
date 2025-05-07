@@ -57,4 +57,3 @@ export const formatLinkedEntity = (value: any, label: string | null | undefined)
     hasRelation: !!label
   };
 };
-

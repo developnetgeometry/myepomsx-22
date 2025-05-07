@@ -55,6 +55,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({
     if (externalRowClick) {
       externalRowClick(row);
     } else {
+      // Update to use InventoryItemDetailPage instead of InventoryDetailPage
       navigate(`/manage/inventory/${row.id}`);
     }
   };
