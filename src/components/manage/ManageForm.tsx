@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Form,
@@ -349,7 +348,7 @@ const ManageForm = ({
                 {isEdit ? "Updating..." : "Creating..."}
               </>
             ) : (
-              isEdit ? "Update" : "WR Generate"
+              isEdit ? "Update" : "Add Facilities"
             )}
           </Button>
         </div>
