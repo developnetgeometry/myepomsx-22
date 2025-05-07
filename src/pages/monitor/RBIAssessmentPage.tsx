@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -172,6 +173,7 @@ const RBIAssessmentPage: React.FC = () => {
   };
 
   const handleRowClick = (row: any) => {
+    console.log('Row clicked:', row);
     navigate(`/monitor/rbi-assessment/${row.id}`);
   };
 
