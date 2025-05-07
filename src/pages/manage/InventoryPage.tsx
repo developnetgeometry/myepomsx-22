@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -39,6 +40,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
     if (onRowClick) {
       onRowClick(row);
     } else {
+      // Navigate to the inventory item detail page
       navigate(`/manage/inventory/${row.id}`);
     }
   };

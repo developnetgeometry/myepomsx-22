@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { toast } from 'sonner';
 
-const InventoryDetailPage: React.FC = () => {
+const InventoryItemDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('inventory');
@@ -457,6 +457,7 @@ const InventoryDetailPage: React.FC = () => {
         <Button 
           variant="outline" 
           onClick={() => navigate('/manage/inventory')}
+          className="mr-2"
         >
           Cancel
         </Button>
@@ -465,4 +466,4 @@ const InventoryDetailPage: React.FC = () => {
   );
 };
 
-export default InventoryDetailPage;
+export default InventoryItemDetailPage;
