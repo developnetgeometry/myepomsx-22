@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor } from 'lucide-react';
@@ -169,31 +168,73 @@ const sidebarItems: SidebarItemType[] = [{
   name: 'Setup',
   icon: Settings,
   children: [
-  // Admin setup items - these will be styled to match the image
+  // Updated Setup items with specific icons matching the image
   {
     name: 'Company',
     path: '/admin/setup/company',
-    icon: Settings
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 22h20"></path>
+        <path d="M6 18V2h12v16"></path>
+        <path d="M9 10h1"></path>
+        <path d="M9 6h1"></path>
+        <path d="M9 14h1"></path>
+        <path d="M14 10h1"></path>
+        <path d="M14 6h1"></path>
+        <path d="M14 14h1"></path>
+      </svg>
+    )
   }, {
     name: 'Client',
     path: '/admin/setup/client',
-    icon: Users
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
+        <circle cx="13" cy="7" r="3"></circle>
+        <path d="M22 10c0 4-3.5 7-8 8"></path>
+      </svg>
+    )
   }, {
     name: 'Project',
     path: '/admin/setup/project',
-    icon: Calendar
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
+        <path d="M16 12h-5a2 2 0 1 0 0 4h5"></path>
+        <path d="M22 15h-5a2 2 0 1 0 0 4h5"></path>
+      </svg>
+    )
   }, {
     name: 'Vendor',
     path: '/admin/setup/vendor',
-    icon: Settings
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m7 9 4-6 4 6"></path>
+        <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
+        <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
+      </svg>
+    )
   }, {
     name: 'Sensor',
     path: '/admin/setup/sensor',
-    icon: Settings
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="16" height="8" x="4" y="8" rx="2"></rect>
+        <path d="M8 8v8"></path>
+        <path d="M16 8v8"></path>
+      </svg>
+    )
   }, {
     name: 'Work Center',
     path: '/admin/setup/work-center',
-    icon: Settings
+    icon: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="5" r="1"></circle>
+        <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
+        <path d="m7 14 3-3 2 2 3-3 2 2"></path>
+        <circle cx="12" cy="17" r="3"></circle>
+      </svg>
+    )
   },
   // Admin settings items
   {
@@ -280,7 +321,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const specialSectionClass = isSpecialSection ? 'bg-[#1A1F2C] hover:bg-[#2a314a]' : '';
   
   // Special styling for Setup child items based on the image provided
-  const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white/90' : '';
+  const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white' : '';
   
   return <li className="w-full">
       {item.path ? 
@@ -353,7 +394,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
               <li key={child.name}>
                 <Link 
                   to={child.path || '#'} 
-                  className="flex items-center py-2.5 px-8 text-sm text-white/90 hover:bg-[#2a314a] hover:text-white transition-colors duration-200"
+                  className="flex items-center py-2.5 px-4 text-white hover:bg-[#2a314a] hover:text-white transition-colors duration-200"
                 >
                   {child.icon && <child.icon size={16} className="mr-3 flex-shrink-0" />}
                   <span className="flex-1">{child.name}</span>
