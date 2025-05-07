@@ -41,6 +41,7 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
     if (onRowClick) {
       onRowClick(row);
     } else {
+      // Navigate to the items master detail page
       navigate(`/manage/items-master/${row.id}`);
     }
   };
