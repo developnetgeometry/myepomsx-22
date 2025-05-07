@@ -47,12 +47,14 @@ import WorkAnalyticsPage from './pages/measure/WorkAnalyticsPage';
 
 // Monitor pages
 import CorrosionStudiesPage from './pages/monitor/CorrosionStudiesPage';
+import CorrosionStudiesDetailPage from './pages/monitor/CorrosionStudiesDetailPage';
 import CriticalAssetsPage from './pages/monitor/CriticalAssetsPage';
 import IMSDashboardPage from './pages/monitor/IMSDashboardPage';
 import InspectionDataPage from './pages/monitor/InspectionDataPage';
 import IntegrityPage from './pages/monitor/IntegrityPage';
 import InventoryGroupsPage from './pages/monitor/InventoryGroupsPage';
 import RBIAssessmentPage from './pages/monitor/RBIAssessmentPage';
+import RBIAssessmentDetailPage from './pages/monitor/RBIAssessmentDetailPage';
 import RMSAssetListPage from './pages/monitor/RMSAssetListPage';
 import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
 
@@ -142,12 +144,14 @@ function App() {
         
         {/* Monitor routes */}
         <Route path="/monitor/corrosion-studies" element={<Layout><CorrosionStudiesPage /></Layout>} />
+        <Route path="/monitor/corrosion-studies/:id" element={<Layout><CorrosionStudiesDetailPage /></Layout>} />
         <Route path="/monitor/critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="/monitor/ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
         <Route path="/monitor/inspection-data" element={<Layout><InspectionDataPage /></Layout>} />
         <Route path="/monitor/integrity" element={<Layout><IntegrityPage /></Layout>} />
         <Route path="/monitor/inventory-groups" element={<Layout><InventoryGroupsPage /></Layout>} />
         <Route path="/monitor/rbi-assessment" element={<Layout><RBIAssessmentPage /></Layout>} />
+        <Route path="/monitor/rbi-assessment/:id" element={<Layout><RBIAssessmentDetailPage /></Layout>} />
         <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
         <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
         
