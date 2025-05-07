@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor } from 'lucide-react';
@@ -168,108 +169,111 @@ const sidebarItems: SidebarItemType[] = [{
   name: 'Setup',
   icon: Settings,
   children: [
-  // Updated Setup items with specific icons matching the image
-  {
-    name: 'Company',
-    path: '/admin/setup/company',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 22h20"></path>
-        <path d="M6 18V2h12v16"></path>
-        <path d="M9 10h1"></path>
-        <path d="M9 6h1"></path>
-        <path d="M9 14h1"></path>
-        <path d="M14 10h1"></path>
-        <path d="M14 6h1"></path>
-        <path d="M14 14h1"></path>
-      </svg>
-    )
-  }, {
-    name: 'Client',
-    path: '/admin/setup/client',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
-        <circle cx="13" cy="7" r="3"></circle>
-        <path d="M22 10c0 4-3.5 7-8 8"></path>
-      </svg>
-    )
-  }, {
-    name: 'Project',
-    path: '/admin/setup/project',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
-        <path d="M16 12h-5a2 2 0 1 0 0 4h5"></path>
-        <path d="M22 15h-5a2 2 0 1 0 0 4h5"></path>
-      </svg>
-    )
-  }, {
-    name: 'Vendor',
-    path: '/admin/setup/vendor',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m7 9 4-6 4 6"></path>
-        <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
-        <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
-      </svg>
-    )
-  }, {
-    name: 'Sensor',
-    path: '/admin/setup/sensor',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect width="16" height="8" x="4" y="8" rx="2"></rect>
-        <path d="M8 8v8"></path>
-        <path d="M16 8v8"></path>
-      </svg>
-    )
-  }, {
-    name: 'Work Center',
-    path: '/admin/setup/work-center',
-    icon: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="5" r="1"></circle>
-        <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
-        <path d="m7 14 3-3 2 2 3-3 2 2"></path>
-        <circle cx="12" cy="17" r="3"></circle>
-      </svg>
-    )
-  },
-  // Admin settings items
-  {
-    name: 'Data Category',
-    path: '/admin/settings/data-category',
-    icon: Settings
-  }, {
-    name: 'Asset Tag',
-    path: '/admin/settings/asset-tag',
-    icon: Settings
-  }, {
-    name: 'Asset Class',
-    path: '/admin/settings/asset-class',
-    icon: Settings
-  }, {
-    name: 'Discipline',
-    path: '/admin/settings/discipline',
-    icon: Settings
-  }, {
-    name: 'Maintenance Type',
-    path: '/admin/settings/maintenance-type',
-    icon: Settings
-  }, {
-    name: 'Frequency Setup',
-    path: '/admin/settings/frequency-setup',
-    icon: Settings
-  }, {
-    name: 'Average UARS',
-    path: '/admin/settings/average-uars',
-    icon: Settings
-  }, {
-    name: 'Corrosion Group',
-    path: '/admin/settings/corrosion-group',
-    icon: Settings
-  }]
+    {
+      name: 'Company',
+      path: '/admin/setup/company',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M2 22h20"></path>
+          <path d="M6 18V2h12v16"></path>
+          <path d="M9 10h1"></path>
+          <path d="M9 6h1"></path>
+          <path d="M9 14h1"></path>
+          <path d="M14 10h1"></path>
+          <path d="M14 6h1"></path>
+          <path d="M14 14h1"></path>
+        </svg>
+      )
+    }, 
+    {
+      name: 'Client',
+      path: '/admin/setup/client',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
+          <circle cx="13" cy="7" r="3"></circle>
+          <path d="M22 10c0 4-3.5 7-8 8"></path>
+        </svg>
+      )
+    }, 
+    {
+      name: 'Project',
+      path: '/admin/setup/project',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
+          <path d="M16 12h-5a2 2 0 1 0 0 4h5"></path>
+          <path d="M22 15h-5a2 2 0 1 0 0 4h5"></path>
+        </svg>
+      )
+    }, 
+    {
+      name: 'Vendor',
+      path: '/admin/setup/vendor',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m7 9 4-6 4 6"></path>
+          <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
+          <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
+        </svg>
+      )
+    }, 
+    {
+      name: 'Sensor',
+      path: '/admin/setup/sensor',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="16" height="8" x="4" y="8" rx="2"></rect>
+          <path d="M8 8v8"></path>
+          <path d="M16 8v8"></path>
+        </svg>
+      )
+    }, 
+    {
+      name: 'Work Center',
+      path: '/admin/setup/work-center',
+      icon: () => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="5" r="1"></circle>
+          <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
+          <path d="m7 14 3-3 2 2 3-3 2 2"></path>
+          <circle cx="12" cy="17" r="3"></circle>
+        </svg>
+      )
+    },
+    {
+      name: 'Data Category',
+      path: '/admin/settings/data-category',
+      icon: Settings
+    }, {
+      name: 'Asset Tag',
+      path: '/admin/settings/asset-tag',
+      icon: Settings
+    }, {
+      name: 'Asset Class',
+      path: '/admin/settings/asset-class',
+      icon: Settings
+    }, {
+      name: 'Discipline',
+      path: '/admin/settings/discipline',
+      icon: Settings
+    }, {
+      name: 'Maintenance Type',
+      path: '/admin/settings/maintenance-type',
+      icon: Settings
+    }, {
+      name: 'Frequency Setup',
+      path: '/admin/settings/frequency-setup',
+      icon: Settings
+    }, {
+      name: 'Average UARS',
+      path: '/admin/settings/average-uars',
+      icon: Settings
+    }, {
+      name: 'Corrosion Group',
+      path: '/admin/settings/corrosion-group',
+      icon: Settings
+    }]
 }];
 
 type SidebarItemProps = {
