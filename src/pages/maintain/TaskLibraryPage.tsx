@@ -21,7 +21,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Check, List, Save, Plus, Pencil, X } from "lucide-react";
+import { Check, List, Save, Plus, Pencil, X, Search, Filter, Copy } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 // Sample data
 const initialTasks = [
@@ -35,7 +37,9 @@ const initialTasks = [
     manHour: 4,
     totalHourRequire: 8,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-04-10',
+    itemCount: 24,
   },
   {
     id: '2',
@@ -47,7 +51,9 @@ const initialTasks = [
     manHour: 2,
     totalHourRequire: 2,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-03-22',
+    itemCount: 18,
   },
   {
     id: '3',
@@ -59,7 +65,9 @@ const initialTasks = [
     manHour: 3,
     totalHourRequire: 6,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-04-05',
+    itemCount: 12,
   },
   {
     id: '4',
@@ -71,7 +79,9 @@ const initialTasks = [
     manHour: 4,
     totalHourRequire: 4,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-02-18',
+    itemCount: 20,
   },
   {
     id: '5',
@@ -83,7 +93,9 @@ const initialTasks = [
     manHour: 2,
     totalHourRequire: 2,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-04-15',
+    itemCount: 16,
   },
   {
     id: '6',
@@ -95,7 +107,9 @@ const initialTasks = [
     manHour: 1,
     totalHourRequire: 2,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-03-10',
+    itemCount: 15,
   },
   {
     id: '7',
@@ -107,7 +121,9 @@ const initialTasks = [
     manHour: 3,
     totalHourRequire: 3,
     active: true,
-    taskList: []
+    taskList: [],
+    updatedAt: '2025-02-25',
+    itemCount: 22,
   },
 ];
 
@@ -130,6 +146,8 @@ interface Task {
   totalHourRequire: number;
   active: boolean;
   taskList: TaskListItem[];
+  updatedAt?: string;
+  itemCount?: number;
 }
 
 const TaskLibraryPage: React.FC = () => {
@@ -156,6 +174,7 @@ const TaskLibraryPage: React.FC = () => {
     seq: 1,
     description: ""
   });
+  const [activeTab, setActiveTab] = useState("templates");
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -249,28 +268,134 @@ const TaskLibraryPage: React.FC = () => {
     );
   };
 
-  const columns: Column[] = [
-    { id: 'taskCode', header: 'Task Code', accessorKey: 'taskCode' },
-    { id: 'taskName', header: 'Task Name', accessorKey: 'taskName' },
-    { id: 'discipline', header: 'Discipline', accessorKey: 'discipline' },
-    { id: 'counter', header: 'Counter', accessorKey: 'counter' },
-  ];
+  const renderTaskCard = (task: Task) => (
+    <Card key={task.id} className="w-full hover:shadow-md transition-shadow duration-300">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="text-sm text-gray-500 mb-1">{task.discipline}</div>
+            <CardTitle className="text-lg font-medium">{task.taskName}</CardTitle>
+          </div>
+          <div className="bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded">
+            {task.taskCode}
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="text-sm text-gray-600 mb-3">
+          {task.itemCount} items
+        </div>
+        <div className="text-xs text-gray-400">
+          Last updated: {task.updatedAt}
+        </div>
+        <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-gray-600 hover:text-gray-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(task);
+            }}
+          >
+            <Pencil className="h-4 w-4 mr-1" />
+            Edit
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 text-gray-600 hover:text-gray-900"
+            >
+              <Copy className="h-4 w-4 mr-1" />
+              Duplicate
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 text-red-600 hover:text-red-800 hover:bg-red-50"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Task Library" 
-        onAddNew={handleAddNew}
-        addNewLabel="+ New Task"
-        onSearch={(query) => console.log('Search:', query)}
-      />
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight mb-2">Maintenance Tasklist</h1>
+        <p className="text-muted-foreground">Standard procedures and inspection checklists</p>
+      </div>
       
-      <DataTable 
-        columns={columns}
-        data={tasks}
-        onEdit={handleEdit}
-        onRowClick={handleRowClick}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input placeholder="Search checklists..." className="pl-9 w-full" />
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <Select defaultValue="all">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Asset Types" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Asset Types</SelectItem>
+              <SelectItem value="mechanical">Mechanical</SelectItem>
+              <SelectItem value="electrical">Electrical</SelectItem>
+              <SelectItem value="instrumentation">Instrumentation</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button onClick={handleAddNew} className="whitespace-nowrap">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Checklist
+          </Button>
+        </div>
+      </div>
+      
+      <Tabs defaultValue="templates" value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="mb-6">
+          <TabsTrigger value="templates" className="flex items-center">
+            <List className="mr-2 h-4 w-4" />
+            Checklist Templates
+          </TabsTrigger>
+          <TabsTrigger value="active" className="flex items-center">
+            <Check className="mr-2 h-4 w-4" />
+            Active Checklists
+          </TabsTrigger>
+          <TabsTrigger value="completed" className="flex items-center">
+            <Check className="mr-2 h-4 w-4" />
+            Completed
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="templates" className="mt-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tasks.map((task) => (
+              <div key={task.id} onClick={() => handleRowClick(task)} className="cursor-pointer">
+                {renderTaskCard(task)}
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="active" className="mt-0">
+          <div className="text-center py-10 text-gray-500">
+            No active checklists found.
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="completed" className="mt-0">
+          <div className="text-center py-10 text-gray-500">
+            No completed checklists found.
+          </div>
+        </TabsContent>
+      </Tabs>
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[700px]">
