@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -72,6 +72,7 @@ const initialRbiData = [
 ];
 
 const RBIAssessmentPage: React.FC = () => {
+  const navigate = useNavigate();
   const [rbiData, setRbiData] = useState(initialRbiData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -170,6 +171,10 @@ const RBIAssessmentPage: React.FC = () => {
     }
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/monitor/rbi-assessment/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'rbiId', header: 'RBI ID', accessorKey: 'rbiId' },
     { id: 'asset', header: 'Asset', accessorKey: 'asset' },
@@ -237,6 +242,7 @@ const RBIAssessmentPage: React.FC = () => {
             columns={columns}
             data={rbiData}
             onEdit={handleEdit}
+            onRowClick={handleRowClick}
           />
         </CardContent>
       </Card>
