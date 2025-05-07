@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -14,16 +13,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-
 const AssetDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
   const navigate = useNavigate();
-  
+
   // Find the asset in sample data
   const asset = assets.find(asset => asset.id === id);
-
   const [activeTab, setActiveTab] = useState('installation');
-  
+
   // Mock data for demonstration
   const assetDetails = {
     facilityLocation: "Central Processing Process",
@@ -36,7 +37,6 @@ const AssetDetailPage: React.FC = () => {
     assetStatus: "Active",
     commissioningDate: "01/01/2001",
     assetGroup: "Processing Vessels",
-    
     // Asset Details
     category: "Equipment",
     type: "DRUM",
@@ -46,7 +46,6 @@ const AssetDetailPage: React.FC = () => {
     serialNumber: "SN-78601",
     assetClass: "Vessel",
     drawingNo: "DWG-110-001",
-    
     // Classification & Tags
     hCode: "HC-001",
     axis: "Vertical",
@@ -59,34 +58,40 @@ const AssetDetailPage: React.FC = () => {
     active: true,
     integrity: false,
     reliability: true,
-    
     // Mock subtable data
-    childAssets: [
-      { id: "1", assetNo: "V-110-1", name: "Pressure Gauge", type: "Instrument" },
-      { id: "2", assetNo: "V-110-2", name: "Level Transmitter", type: "Instrument" }
-    ],
-    workOrders: [
-      { id: "WO-001", date: "15/03/2025", type: "Corrective", status: "Completed" },
-      { id: "WO-002", date: "22/04/2025", type: "Preventive", status: "Planned" }
-    ]
+    childAssets: [{
+      id: "1",
+      assetNo: "V-110-1",
+      name: "Pressure Gauge",
+      type: "Instrument"
+    }, {
+      id: "2",
+      assetNo: "V-110-2",
+      name: "Level Transmitter",
+      type: "Instrument"
+    }],
+    workOrders: [{
+      id: "WO-001",
+      date: "15/03/2025",
+      type: "Corrective",
+      status: "Completed"
+    }, {
+      id: "WO-002",
+      date: "22/04/2025",
+      type: "Preventive",
+      status: "Planned"
+    }]
   };
-
   const handleWorkRequest = () => {
     toast.info("Opening work request for this asset");
     navigate(`/maintain/work-request?assetId=${id}`);
   };
-
   const handleApplyChanges = () => {
     toast.success("Asset details updated successfully");
   };
-  
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <PageHeader 
-          title={`Asset: ${assetDetails.assetName || `#${id}`}`} 
-          icon={<Archive className="h-6 w-6" />}
-        />
+        <PageHeader title={`Asset: ${assetDetails.assetName || `#${id}`}`} icon={<Archive className="h-6 w-6" />} />
         <div className="flex space-x-2">
           <Button variant="outline" onClick={() => navigate('/manage/assets')} className="flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" /> Back to Assets
@@ -308,7 +313,8 @@ const AssetDetailPage: React.FC = () => {
                 <TabsTrigger value="bom">BOM</TabsTrigger>
                 <TabsTrigger value="workOrder">Work Order</TabsTrigger>
                 <TabsTrigger value="attachment">Attachment</TabsTrigger>
-                <TabsTrigger value="integrity">Integrity</TabsTrigger>
+                <TabsTrigger value="integrity">IoT
+              </TabsTrigger>
               </TabsList>
               
               <TabsContent value="installation" className="pt-4">
@@ -351,8 +357,7 @@ const AssetDetailPage: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y">
-                      {assetDetails.childAssets.map(item => (
-                        <tr key={item.id} className="hover:bg-muted/30">
+                      {assetDetails.childAssets.map(item => <tr key={item.id} className="hover:bg-muted/30">
                           <td className="p-3">{item.assetNo}</td>
                           <td className="p-3">{item.name}</td>
                           <td className="p-3">{item.type}</td>
@@ -361,8 +366,7 @@ const AssetDetailPage: React.FC = () => {
                               <Settings className="h-4 w-4" />
                             </Button>
                           </td>
-                        </tr>
-                      ))}
+                        </tr>)}
                     </tbody>
                   </table>
                 </div>
@@ -395,8 +399,6 @@ const AssetDetailPage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AssetDetailPage;
