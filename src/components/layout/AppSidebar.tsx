@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor } from 'lucide-react';
+import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -166,122 +166,138 @@ const sidebarItems: SidebarItemType[] = [{
     icon: BarChart4
   }]
 }, 
-// Modified Setup section to match the screenshot
+// Combined Admin module with Setup and Settings as submodules
 {
-  name: 'Setup',
-  icon: Settings,
+  name: 'Admin',
+  icon: Shield,
   children: [
+    // Setup submodule
     {
-      name: 'Company',
-      path: '/admin/setup/company',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 22h20"></path>
-          <path d="M6 18V2h12v16"></path>
-          <path d="M9 10h1"></path>
-          <path d="M9 6h1"></path>
-          <path d="M9 14h1"></path>
-          <path d="M14 10h1"></path>
-          <path d="M14 6h1"></path>
-          <path d="M14 14h1"></path>
-        </svg>
-      )
-    }, 
-    {
-      name: 'Client',
-      path: '/admin/setup/client',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
-          <circle cx="13" cy="7" r="3"></circle>
-          <path d="M22 10c0 4-3.5 7-8 8"></path>
-        </svg>
-      )
-    }, 
-    {
-      name: 'Project',
-      path: '/admin/setup/project',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
-          <path d="M16 12h-5a2 2 0 1 0 0 4h5"></path>
-          <path d="M22 15h-5a2 2 0 1 0 0 4h5"></path>
-        </svg>
-      )
-    }, 
-    {
-      name: 'Vendor',
-      path: '/admin/setup/vendor',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m7 9 4-6 4 6"></path>
-          <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
-          <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
-        </svg>
-      )
-    }, 
-    {
-      name: 'Sensor',
-      path: '/admin/setup/sensor',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="16" height="8" x="4" y="8" rx="2"></rect>
-          <path d="M8 8v8"></path>
-          <path d="M16 8v8"></path>
-        </svg>
-      )
-    }, 
-    {
-      name: 'Work Center',
-      path: '/admin/setup/work-center',
-      icon: () => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="5" r="1"></circle>
-          <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
-          <path d="m7 14 3-3 2 2 3-3 2 2"></path>
-          <circle cx="12" cy="17" r="3"></circle>
-        </svg>
-      )
+      name: 'Setup',
+      icon: Wrench,
+      children: [
+        {
+          name: 'Company',
+          path: '/admin/setup/company',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 22h20"></path>
+              <path d="M6 18V2h12v16"></path>
+              <path d="M9 10h1"></path>
+              <path d="M9 6h1"></path>
+              <path d="M9 14h1"></path>
+              <path d="M14 10h1"></path>
+              <path d="M14 6h1"></path>
+              <path d="M14 14h1"></path>
+            </svg>
+          )
+        }, 
+        {
+          name: 'Client',
+          path: '/admin/setup/client',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
+              <circle cx="13" cy="7" r="3"></circle>
+              <path d="M22 10c0 4-3.5 7-8 8"></path>
+            </svg>
+          )
+        }, 
+        {
+          name: 'Project',
+          path: '/admin/setup/project',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 12.5V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"></path>
+              <path d="M16 12h-5a2 2 0 1 0 0 4h5"></path>
+              <path d="M22 15h-5a2 2 0 1 0 0 4h5"></path>
+            </svg>
+          )
+        }, 
+        {
+          name: 'Vendor',
+          path: '/admin/setup/vendor',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m7 9 4-6 4 6"></path>
+              <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
+              <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
+            </svg>
+          )
+        }, 
+        {
+          name: 'Sensor',
+          path: '/admin/setup/sensor',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="16" height="8" x="4" y="8" rx="2"></rect>
+              <path d="M8 8v8"></path>
+              <path d="M16 8v8"></path>
+            </svg>
+          )
+        }, 
+        {
+          name: 'Work Center',
+          path: '/admin/setup/work-center',
+          icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="5" r="1"></circle>
+              <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
+              <path d="m7 14 3-3 2 2 3-3 2 2"></path>
+              <circle cx="12" cy="17" r="3"></circle>
+            </svg>
+          )
+        },
+      ]
     },
+    // Settings submodule
+    {
+      name: 'Settings',
+      icon: Settings,
+      children: [
+        {
+          name: 'Data Category',
+          path: '/admin/settings/data-category',
+          icon: Settings
+        }, 
+        {
+          name: 'Asset Tag',
+          path: '/admin/settings/asset-tag',
+          icon: Settings
+        }, 
+        {
+          name: 'Asset Class',
+          path: '/admin/settings/asset-class',
+          icon: Settings
+        }, 
+        {
+          name: 'Discipline',
+          path: '/admin/settings/discipline',
+          icon: Settings
+        }, 
+        {
+          name: 'Maintenance Type',
+          path: '/admin/settings/maintenance-type',
+          icon: Settings
+        }, 
+        {
+          name: 'Frequency Setup',
+          path: '/admin/settings/frequency-setup',
+          icon: Settings
+        }, 
+        {
+          name: 'Average UARS',
+          path: '/admin/settings/average-uars',
+          icon: Settings
+        }, 
+        {
+          name: 'Corrosion Group',
+          path: '/admin/settings/corrosion-group',
+          icon: Settings
+        }
+      ]
+    }
   ]
-}, 
-// Keep Settings as a separate item
-{
-  name: 'Setting',
-  icon: Settings,
-  children: [{
-    name: 'Data Category',
-    path: '/admin/settings/data-category',
-    icon: Settings
-  }, {
-    name: 'Asset Tag',
-    path: '/admin/settings/asset-tag',
-    icon: Settings
-  }, {
-    name: 'Asset Class',
-    path: '/admin/settings/asset-class',
-    icon: Settings
-  }, {
-    name: 'Discipline',
-    path: '/admin/settings/discipline',
-    icon: Settings
-  }, {
-    name: 'Maintenance Type',
-    path: '/admin/settings/maintenance-type',
-    icon: Settings
-  }, {
-    name: 'Frequency Setup',
-    path: '/admin/settings/frequency-setup',
-    icon: Settings
-  }, {
-    name: 'Average UARS',
-    path: '/admin/settings/average-uars',
-    icon: Settings
-  }, {
-    name: 'Corrosion Group',
-    path: '/admin/settings/corrosion-group',
-    icon: Settings
-  }]
 }];
 
 type SidebarItemProps = {
@@ -302,7 +318,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   isSetupChild = false
 }) => {
   const location = useLocation();
-  const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => location.pathname === child.path || child.children?.some(grandchild => location.pathname === grandchild.path));
+  const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => 
+    location.pathname === child.path || 
+    child.children?.some(grandchild => location.pathname === grandchild.path) ||
+    child.children?.some(grandchild => grandchild.children?.some(greatGrandchild => location.pathname === greatGrandchild.path))
+  );
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
   
   React.useEffect(() => {
@@ -326,14 +346,14 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   };
 
   // Special styling for IMS and RMS sections
-  const isSpecialSection = item.name === 'IMS' || item.name === 'RMS';
+  const isSpecialSection = item.name === 'IMS' || item.name === 'RMS' || item.name === 'Setup' || item.name === 'Settings';
   const specialSectionClass = isSpecialSection ? 'bg-[#1A1F2C] hover:bg-[#2a314a]' : '';
   
   // Special styling for Setup child items based on the image provided
   const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white' : '';
 
-  // Styling for Setup and Setting menu items to match the screenshot
-  const isMenuSection = item.name === 'Setup' || item.name === 'Setting';
+  // Admin module with nested structure
+  const isAdminSubmodule = depth === 1 && item.name === 'Setup' || item.name === 'Settings';
   
   return <li className="w-full">
       {item.path ? 
@@ -342,8 +362,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full transition-colors duration-200', {
             'bg-[#2a314a]': isActive,
             'justify-center': isCollapsed,
-            'pl-8': depth === 1 && !isSetupChild,
+            'pl-8': depth === 1 && !isSetupChild && !isAdminSubmodule,
             'pl-12': depth === 2 && !isSetupChild,
+            'pl-16': depth === 3 && !isSetupChild,
           }, specialSectionClass, setupChildClass)}
           onClick={handleClick} 
           title={isCollapsed ? item.name : undefined}
@@ -363,8 +384,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a] transition-colors duration-200', {
             'bg-[#2a314a]': isActive,
             'justify-center': isCollapsed,
-            'pl-8': depth === 1 && !isSetupChild,
+            'pl-8': depth === 1 && !isSetupChild && !isAdminSubmodule,
             'pl-12': depth === 2 && !isSetupChild,
+            'pl-16': depth === 3 && !isSetupChild,
           }, specialSectionClass, setupChildClass)}
           onClick={handleClick} 
           title={isCollapsed ? item.name : undefined}
@@ -385,51 +407,19 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 
       {isSubmenuOpen && item.children && !isCollapsed && (
         <ul className={cn("bg-[#242b3d] py-1", {
-          "bg-[#1A1F2C]": isSpecialSection || item.name === 'Setup' || item.name === 'Setting',
-          "bg-[#2a314a]": depth === 1 && !isSpecialSection && item.name !== 'Setup' && item.name !== 'Setting'
+          "bg-[#1A1F2C]": isSpecialSection,
+          "bg-[#2a314a]": depth === 1 && !isSpecialSection
         })}>
           {item.children.map((child, index) => {
-            if (child.children) {
-              // Handle nested submenu (for IMS and RMS under Monitor)
-              return <SidebarItem 
-                key={child.name} 
-                item={child} 
-                isCollapsed={isCollapsed} 
-                activeItem={activeItem} 
-                onActiveItemChange={onActiveItemChange} 
-                depth={depth + 1} 
-              />;
-            }
-            
-            // For Setup and Setting menu children
-            return (isMenuSection) ? (
-              <li key={child.name}>
-                <Link 
-                  to={child.path || '#'} 
-                  className="flex items-center py-2.5 px-4 text-white hover:bg-[#2a314a] hover:text-white transition-colors duration-200"
-                >
-                  {child.icon && <child.icon size={16} className="mr-3 flex-shrink-0" />}
-                  <span className="flex-1">{child.name}</span>
-                </Link>
-              </li>
-            ) : (
-              <li key={child.name}>
-                <Link 
-                  to={child.path || '#'} 
-                  className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
-                    'bg-[#2a314a] text-white': location.pathname === child.path,
-                    'py-3 px-6': isSpecialSection,
-                    // Special styling for submenu items
-                    'pl-12': depth === 1,
-                    'pl-16': depth === 2
-                  })}
-                >
-                  {child.icon && <child.icon size={16} className="mr-3 flex-shrink-0" />}
-                  <span className="flex-1">{child.name}</span>
-                  {child.children && <ChevronRight size={16} />}
-                </Link>
-              </li>
-            );
+            return <SidebarItem 
+              key={child.name} 
+              item={child} 
+              isCollapsed={isCollapsed} 
+              activeItem={activeItem} 
+              onActiveItemChange={onActiveItemChange} 
+              depth={depth + 1} 
+              isSetupChild={false}
+            />;
           })}
         </ul>
       )}
