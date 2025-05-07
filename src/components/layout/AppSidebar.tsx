@@ -48,6 +48,22 @@ const sidebarItems: SidebarItemType[] = [{
     icon: Database
   }]
 }, {
+  name: 'Material',
+  icon: Box,
+  children: [{
+    name: 'Items Master',
+    path: '/manage/items-master',
+    icon: Box
+  }, {
+    name: 'Inventory',
+    path: '/manage/inventory',
+    icon: Box
+  }, {
+    name: 'BOM Assembly',
+    path: '/manage/bom-assembly',
+    icon: Box
+  }]
+}, {
   name: 'Work Orders',
   icon: ListOrdered,
   children: [{
