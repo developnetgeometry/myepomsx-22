@@ -28,21 +28,74 @@ import {
 } from "@/components/ui/alert-dialog";
 import ManageDialog from '@/components/manage/ManageDialog';
 import * as z from 'zod';
+import { formatCurrency } from '@/utils/formatters';
 
 interface PMSchedule {
   id: string;
   pmNo: string;
   description: string;
+  packageNo?: string;
   asset: string;
+  tasks?: string;
   frequency: string;
+  workCenter?: string;
   nextDueDate: string;
   status: string;
+  manHour?: number;
+  manPower?: number;
+  duration?: number;
 }
 
 const PMSchedulePage: React.FC = () => {
   const navigate = useNavigate();
   // State management
-  const [pmSchedules, setPmSchedules] = useState<PMSchedule[]>([]);
+  const [pmSchedules, setPmSchedules] = useState<PMSchedule[]>([
+    {
+      id: "PM-1001",
+      pmNo: "SDSDSDS",
+      description: "EPDFDF",
+      packageNo: "CPP-PPD-PKG",
+      asset: "EXCHANGER, POUR POINT DEPRESSANT HEAT",
+      tasks: "TES1-TESCST ERE DF",
+      frequency: "2 MONTHLY",
+      workCenter: "Electrical Work Center",
+      status: "Active",
+      manHour: 2,
+      manPower: 2,
+      nextDueDate: "02/03/2028",
+      duration: 4
+    },
+    {
+      id: "PM-1002",
+      pmNo: "CPP-PPD-PMN",
+      description: "C11 - check date 25 Nov 2024",
+      packageNo: "CPP-PPD-PKG",
+      asset: "EXCHANGER POUR POINT DEPRESSANT HEAT",
+      tasks: "TES1D-TESCST RE DF",
+      frequency: "2 MONTHLY",
+      workCenter: "Offshore - Production",
+      status: "Active",
+      manHour: 2,
+      manPower: 2,
+      nextDueDate: "13/01/2027",
+      duration: 4
+    },
+    {
+      id: "PM-1003",
+      pmNo: "11101",
+      description: "Testing PM",
+      packageNo: "CPP-PCG0A-ASV",
+      asset: "PUMP, MAIN OIL LINE",
+      tasks: "Test123-TestingTask",
+      frequency: "Monthly",
+      workCenter: "Electrical Work Center",
+      status: "Active",
+      manHour: 2,
+      manPower: 2,
+      nextDueDate: "18/04/2027",
+      duration: 4
+    }
+  ]);
   const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState<string>(() => {
     const date = new Date();
@@ -63,10 +116,16 @@ const PMSchedulePage: React.FC = () => {
   const columns: Column[] = [
     { id: 'pmNo', header: 'PM No', accessorKey: 'pmNo' },
     { id: 'description', header: 'Description', accessorKey: 'description' },
+    { id: 'packageNo', header: 'Package No', accessorKey: 'packageNo' },
     { id: 'asset', header: 'Asset', accessorKey: 'asset' },
+    { id: 'tasks', header: 'Tasks', accessorKey: 'tasks' },
     { id: 'frequency', header: 'Frequency', accessorKey: 'frequency' },
-    { id: 'nextDueDate', header: 'Next Due Date', accessorKey: 'nextDueDate' },
+    { id: 'workCenter', header: 'Work Center', accessorKey: 'workCenter' },
+    { id: 'nextDueDate', header: 'Due Date', accessorKey: 'nextDueDate' },
     { id: 'status', header: 'Status', accessorKey: 'status' },
+    { id: 'manHour', header: 'Man Hour', accessorKey: 'manHour' },
+    { id: 'manPower', header: 'Man Power', accessorKey: 'manPower' },
+    { id: 'duration', header: 'Duration', accessorKey: 'duration' },
   ];
   
   // Asset options for the select dropdown
