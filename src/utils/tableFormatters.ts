@@ -43,15 +43,18 @@ export const formatDateTime = (dateString: string | Date | null | undefined): st
 };
 
 /**
- * Create a linked entity formatter for displaying related data
+ * Format linked entity data for displaying in tables
+ * Returns formatted data that can be used in cell rendering
  */
-export const createLinkedEntityFormatter = (value: any, label: string | null | undefined) => {
-  if (!value) return '-';
-  if (!label) return value;
-  return (
-    <div className="flex flex-col">
-      <span className="font-medium">{label}</span>
-      <span className="text-xs text-gray-500">{value}</span>
-    </div>
-  );
+export const formatLinkedEntity = (value: any, label: string | null | undefined): { 
+  value: any;
+  label: string | null | undefined;
+  hasRelation: boolean;
+} => {
+  return {
+    value: value || '-',
+    label: label,
+    hasRelation: !!label
+  };
 };
+

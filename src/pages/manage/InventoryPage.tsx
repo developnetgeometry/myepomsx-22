@@ -8,7 +8,7 @@ import { Package } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { Column } from '@/components/shared/DataTable';
 import TableFilters from '@/components/shared/TableFilters';
-import { formatRM, formatDate } from '@/utils/tableFormatters';
+import { formatRM, formatDate, formatLinkedEntity } from '@/utils/tableFormatters';
 import { itemsMaster } from '@/data/sampleData';
 
 interface InventoryItem {
@@ -62,12 +62,14 @@ const InventoryPage: React.FC = () => {
       id: 'itemNo',
       header: 'Item No',
       accessorKey: 'itemNo',
-      cell: (value, row) => (
-        <div className="flex flex-col">
-          <span className="font-medium">{value}</span>
-          <span className="text-xs text-gray-500">{row.itemDescription}</span>
-        </div>
-      ),
+      cell: (value, row) => {
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium">{value}</span>
+            <span className="text-xs text-gray-500">{row.itemDescription}</span>
+          </div>
+        );
+      },
     },
     {
       id: 'location',
