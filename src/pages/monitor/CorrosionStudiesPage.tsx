@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -72,6 +72,7 @@ const initialCorrosionStudies = [
 ];
 
 const CorrosionStudiesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [studies, setStudies] = useState(initialCorrosionStudies);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -134,6 +135,11 @@ const CorrosionStudiesPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  // Function to handle row click and navigate to the detail page
+  const handleRowClick = (row: any) => {
+    navigate(`/monitor/corrosion-studies/${row.id}`);
+  };
+
   // Function to get appropriate color class based on corrosion rate
   const getCorrosionRateColor = (rate: number) => {
     if (rate > 0.25) return 'text-red-600';
@@ -186,6 +192,7 @@ const CorrosionStudiesPage: React.FC = () => {
             columns={columns}
             data={studies}
             onEdit={handleEdit}
+            onRowClick={handleRowClick}
           />
         </CardContent>
       </Card>
