@@ -1,77 +1,884 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
 import StatusBadge from '@/components/shared/StatusBadge';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import DataTable from '@/components/shared/DataTable';
+import { toast } from 'sonner';
 
-const WorkRequestDetailPage: React.FC = () => {
+// Dummy data for the task detail table
+const taskDetailData = [
+  { id: 1, slNo: '001', site: 'Production Facility A', taskList: 'Pump Inspection' },
+  { id: 2, slNo: '002', site: 'Plant B', taskList: 'Valve Replacement' },
+  { id: 3, slNo: '003', site: 'Offshore Platform C', taskList: 'Compressor Maintenance' }
+];
+
+// Dummy data for dropdown options
+const statusOptions = [
+  { value: 'Draft', label: 'Draft' },
+  { value: 'Submitted', label: 'Submitted' },
+  { value: 'Pending', label: 'Pending' },
+  { value: 'Approved', label: 'Approved' },
+  { value: 'Rejected', label: 'Rejected' }
+];
+
+const facilityOptions = [
+  { value: 'Central Processing', label: 'Central Processing' },
+  { value: 'North Field', label: 'North Field' },
+  { value: 'South Field', label: 'South Field' },
+  { value: 'Terminal', label: 'Terminal' }
+];
+
+const systemOptions = [
+  { value: 'Production', label: 'Production' },
+  { value: 'Compression', label: 'Compression' },
+  { value: 'Separation', label: 'Separation' },
+  { value: 'Treatment', label: 'Treatment' }
+];
+
+const packageOptions = [
+  { value: 'V-110 Test Separator', label: 'V-110 Test Separator' },
+  { value: 'P-120 Transfer Pump', label: 'P-120 Transfer Pump' },
+  { value: 'C-130 Compressor', label: 'C-130 Compressor' },
+  { value: 'E-140 Heat Exchanger', label: 'E-140 Heat Exchanger' }
+];
+
+const assetOptions = [
+  { value: 'V-110', label: 'V-110' },
+  { value: 'P-120', label: 'P-120' },
+  { value: 'C-130', label: 'C-130' },
+  { value: 'E-140', label: 'E-140' }
+];
+
+const workCenterOptions = [
+  { value: 'Mechanical', label: 'Mechanical' },
+  { value: 'Electrical', label: 'Electrical' },
+  { value: 'Instrumentation', label: 'Instrumentation' },
+  { value: 'Piping', label: 'Piping' },
+  { value: 'Civil', label: 'Civil' }
+];
+
+const areaOptions = [
+  { value: 'Area A', label: 'Area A' },
+  { value: 'Area B', label: 'Area B' },
+  { value: 'Area C', label: 'Area C' },
+  { value: 'Area D', label: 'Area D' }
+];
+
+const maintenanceTypeOptions = [
+  { value: 'Corrective', label: 'Corrective (CM)' },
+  { value: 'Preventive', label: 'Preventive (PM)' },
+  { value: 'Predictive', label: 'Predictive (PdM)' },
+  { value: 'Detective', label: 'Detective' },
+  { value: 'Modification', label: 'Modification' }
+];
+
+const requestTypeOptions = [
+  { value: 'Finding', label: 'Finding' },
+  { value: 'Failure', label: 'Failure' },
+  { value: 'Audit', label: 'Audit' },
+  { value: 'Inspection', label: 'Inspection' }
+];
+
+const requestedByOptions = [
+  { value: 'John Doe', label: 'John Doe' },
+  { value: 'Jane Smith', label: 'Jane Smith' },
+  { value: 'Mike Johnson', label: 'Mike Johnson' },
+  { value: 'Sarah Williams', label: 'Sarah Williams' }
+];
+
+const criticalityOptions = [
+  { value: 'Low', label: 'Low' },
+  { value: 'Medium', label: 'Medium' },
+  { value: 'High', label: 'High' },
+  { value: 'Critical', label: 'Critical' }
+];
+
+// Form schema for validation
+const formSchema = z.object({
+  noWorkRequest: z.string(),
+  status: z.string(),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  requestDate: z.date(),
+  targetDueDate: z.date().optional(),
+  facilityLocation: z.string(),
+  system: z.string(),
+  package: z.string(),
+  asset: z.string(),
+  assetSCECode: z.string().optional(),
+  workCenter: z.string(),
+  area: z.string(),
+  dateFinding: z.date(),
+  maintenanceType: z.string(),
+  requestType: z.string(),
+  requestedBy: z.string(),
+  criticality: z.string(),
+  findingDetails: z.string().optional(),
+  attachReport: z.boolean().default(false),
+  childIncidentReport: z.boolean().default(false),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+// Task detail table columns
+const taskColumns = [
+  { id: 'slNo', header: 'SL#', accessorKey: 'slNo' },
+  { id: 'site', header: 'Site', accessorKey: 'site' },
+  { id: 'taskList', header: 'Task List', accessorKey: 'taskList' }
+];
+
+const WorkRequestDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('taskDetail');
+  const [loading, setLoading] = useState(false);
   
+  // Initialize form with default values
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      noWorkRequest: id || '',
+      status: 'Draft',
+      description: 'Compressor vibration issue that requires immediate attention',
+      requestDate: new Date(),
+      targetDueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // One week from today
+      facilityLocation: 'Central Processing',
+      system: 'Compression',
+      package: 'C-130 Compressor',
+      asset: 'C-130',
+      assetSCECode: 'SCE-130',
+      workCenter: 'Mechanical',
+      area: 'Area A',
+      dateFinding: new Date(),
+      maintenanceType: 'Corrective',
+      requestType: 'Finding',
+      requestedBy: 'John Doe',
+      criticality: 'High',
+      findingDetails: 'Observed unusual vibration and noise during operation. Initial inspection suggests bearing failure.',
+      attachReport: false,
+      childIncidentReport: false,
+    }
+  });
+  
+  // Load data based on the ID
+  useEffect(() => {
+    if (id) {
+      // In a real app, you'd fetch the work request data from an API
+      console.log(`Fetching work request data for ID: ${id}`);
+      // For now we're using the default values defined above
+    }
+  }, [id]);
+
+  const onSubmit = (values: FormValues) => {
+    setLoading(true);
+    
+    // Simulate API request
+    setTimeout(() => {
+      console.log('Submitted values:', values);
+      setLoading(false);
+      toast.success("Work request updated successfully");
+    }, 1000);
+  };
+
+  const handleApprove = () => {
+    setLoading(true);
+    
+    // Simulate API request
+    setTimeout(() => {
+      form.setValue('status', 'Approved');
+      setLoading(false);
+      toast.success("Work request approved successfully");
+    }, 1000);
+  };
+
+  const handleAddNewTask = () => {
+    // This would open a dialog to add a new task
+    toast.info("Add new task functionality would open a dialog here");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <PageHeader 
           title="Work Request Detail" 
         />
-        <Button variant="outline" onClick={() => navigate('/maintain/work-request')} className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/maintain/work-request')} 
+          className="flex items-center gap-2"
+        >
           <ArrowLeft className="h-4 w-4" /> Back to Work Requests
         </Button>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Work Request #{id}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Work Request No</h3>
-              <p className="text-base">{id}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Asset</h3>
-              <p className="text-base">Asset information would appear here</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Requested By</h3>
-              <p className="text-base">Requester information would appear here</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Request Date</h3>
-              <p className="text-base">Date information would appear here</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Work Center</h3>
-              <p className="text-base">Work center would appear here</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Work Type</h3>
-              <p className="text-base">Work type would appear here</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
-              <StatusBadge status="Pending" />
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Work Order No</h3>
-              <p className="text-base">Related work order would appear here</p>
-            </div>
-          </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              {/* Work Request Header Form */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                {/* Left Column */}
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="noWorkRequest"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Work Request No<span className="text-red-500 ml-1">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input {...field} readOnly className="bg-muted/30" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Description<span className="text-red-500 ml-1">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} richText />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="requestDate"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="text-sm font-medium">
+                            Work Request Date<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                                className={cn("p-3 pointer-events-auto")}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="targetDueDate"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="text-sm font-medium">Target Due Date</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value || undefined}
+                                onSelect={field.onChange}
+                                initialFocus
+                                className={cn("p-3 pointer-events-auto")}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="facilityLocation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Facility<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Facility" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {facilityOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="system"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            System<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select System" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {systemOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="package"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Package<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Package" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {packageOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="asset"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Asset<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Asset" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {assetOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                
+                {/* Right Column */}
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">
+                          Status<span className="text-red-500 ml-1">*</span>
+                        </FormLabel>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {statusOptions.map(option => (
+                              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="assetSCECode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Asset SCE Code</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="workCenter"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Work Center<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Work Center" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {workCenterOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="area"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Area<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Area" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {areaOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="dateFinding"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel className="text-sm font-medium">
+                            Date Finding<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                                className={cn("p-3 pointer-events-auto")}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="maintenanceType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Maintenance Type<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {maintenanceTypeOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="requestType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Request Type<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Request Type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {requestTypeOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="requestedBy"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Requested By<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Requester" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {requestedByOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="criticality"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Criticality<span className="text-red-500 ml-1">*</span>
+                          </FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Criticality" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {criticalityOptions.map(option => (
+                                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <FormField
+                  control={form.control}
+                  name="findingDetails"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">Finding Incident Details</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={5} richText />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="mt-4 grid grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
+                  name="attachReport"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-medium cursor-pointer">Analysis Report</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="childIncidentReport"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-medium cursor-pointer">Quick Incident Report</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
           
-          <div className="pt-4">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">Description</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-gray-600">Work request description would appear here...</p>
-              </CardContent>
-            </Card>
+          {/* Tabbed Detail Section */}
+          <Card>
+            <CardContent className="pt-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList>
+                  <TabsTrigger value="taskDetail">Task Detail</TabsTrigger>
+                  <TabsTrigger value="reports">Reports</TabsTrigger>
+                  <TabsTrigger value="failure">Failure</TabsTrigger>
+                  <TabsTrigger value="attachment">Attachment</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="taskDetail" className="pt-4 space-y-4">
+                  <div className="flex justify-end">
+                    <Button variant="outline" onClick={handleAddNewTask} className="text-sm">
+                      + Add Row
+                    </Button>
+                  </div>
+                  
+                  <DataTable 
+                    columns={taskColumns}
+                    data={taskDetailData}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="reports" className="pt-4">
+                  <div className="p-4 border rounded-md bg-muted/50">
+                    <h3 className="text-lg font-medium">Reports</h3>
+                    <p className="text-muted-foreground mt-2">
+                      No reports available for this work request.
+                    </p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="failure" className="pt-4">
+                  <div className="p-4 border rounded-md bg-muted/50">
+                    <h3 className="text-lg font-medium">Failure Information</h3>
+                    <p className="text-muted-foreground mt-2">
+                      No failure information has been recorded for this work request.
+                    </p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="attachment" className="pt-4">
+                  <div className="p-4 border rounded-md bg-muted/50">
+                    <h3 className="text-lg font-medium">Attachments</h3>
+                    <p className="text-muted-foreground mt-2">
+                      No attachments have been uploaded for this work request.
+                    </p>
+                    <Button variant="outline" className="mt-4">+ Add Attachment</Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+          
+          {/* Actions */}
+          <div className="flex justify-end gap-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => navigate('/maintain/work-request')}
+            >
+              Cancel
+            </Button>
+            
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              Save
+            </Button>
+            
+            <Button
+              type="button"
+              onClick={() => form.handleSubmit(onSubmit)()}
+              disabled={loading}
+            >
+              Submit
+            </Button>
+            
+            <Button
+              type="button"
+              onClick={handleApprove}
+              disabled={loading || form.getValues().status !== 'Submitted'}
+              className="bg-green-600 hover:bg-green-700 flex items-center gap-2"
+            >
+              <CheckCircle className="h-4 w-4" />
+              Approve
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </form>
+      </Form>
     </div>
   );
 };
