@@ -74,6 +74,8 @@ const SystemPage: React.FC = () => {
       <PageHeader 
         title="Systems" 
         subtitle="Manage plant systems and subsystems"
+        onAddNew={() => console.log('Add new system')}
+        addNewLabel="+ Add System"
         onSearch={(query) => console.log('Search:', query)}
       />
       

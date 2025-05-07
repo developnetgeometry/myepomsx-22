@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText, Eye } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import {
   AlertDialog,
@@ -32,6 +31,7 @@ interface DataTableProps {
   onRowClick?: (row: any) => void;
   onDelete?: (row: any) => void;
   onExport?: () => void;
+  onViewDetails?: (row: any) => void;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -41,7 +41,8 @@ const DataTable: React.FC<DataTableProps> = ({
   pageSize = 10,
   onRowClick,
   onDelete,
-  onExport
+  onExport,
+  onViewDetails
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -81,6 +82,16 @@ const DataTable: React.FC<DataTableProps> = ({
     e.stopPropagation();
     if (onEdit) {
       onEdit(row);
+    }
+  };
+
+  const handleViewDetailsClick = (row: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onViewDetails) {
+      onViewDetails(row);
+    } else if (onRowClick) {
+      // If no specific view details handler, fall back to row click
+      onRowClick(row);
     }
   };
   
@@ -133,7 +144,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     {column.header}
                   </TableHead>
                 ))}
-                {(onEdit || onDelete) && (
+                {(onEdit || onDelete || onViewDetails) && (
                   <TableHead className="w-24 text-right px-6 text-sm font-semibold text-gray-900">Actions</TableHead>
                 )}
               </TableRow>
@@ -141,7 +152,7 @@ const DataTable: React.FC<DataTableProps> = ({
             <TableBody>
               {currentData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={columns.length + ((onEdit || onDelete) ? 1 : 0)} className="h-24 text-center text-gray-500">
+                  <TableCell colSpan={columns.length + ((onEdit || onDelete || onViewDetails) ? 1 : 0)} className="h-24 text-center text-gray-500">
                     No results found
                   </TableCell>
                 </TableRow>
@@ -164,9 +175,28 @@ const DataTable: React.FC<DataTableProps> = ({
                             : row[column.accessorKey]}
                       </TableCell>
                     ))}
-                    {(onEdit || onDelete) && (
+                    {(onEdit || onDelete || onViewDetails) && (
                       <TableCell className="text-right py-2 pr-6">
                         <div className="flex space-x-2 justify-end">
+                          {onViewDetails && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                                    onClick={(e) => handleViewDetailsClick(row, e)}
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                    <span className="sr-only">View Details</span>
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>View Details</TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                          
                           {onEdit && (
                             <TooltipProvider>
                               <Tooltip>
