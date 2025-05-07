@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor } from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 type SidebarItemType = {
   name: string;
@@ -13,11 +13,11 @@ type SidebarItemType = {
   children?: {
     name: string;
     path?: string;
-    icon: React.ElementType; // Making icon required here to match the type definition
+    icon: React.ElementType;
     children?: {
       name: string;
       path: string;
-      icon: React.ElementType; // Making icon required here as well
+      icon: React.ElementType;
     }[];
   }[];
 };
@@ -165,7 +165,9 @@ const sidebarItems: SidebarItemType[] = [{
     path: '/measure/kpi-dashboard',
     icon: BarChart4
   }]
-}, {
+}, 
+// Modified Setup section to match the screenshot
+{
   name: 'Setup',
   icon: Settings,
   children: [
@@ -241,39 +243,45 @@ const sidebarItems: SidebarItemType[] = [{
         </svg>
       )
     },
-    {
-      name: 'Data Category',
-      path: '/admin/settings/data-category',
-      icon: Settings
-    }, {
-      name: 'Asset Tag',
-      path: '/admin/settings/asset-tag',
-      icon: Settings
-    }, {
-      name: 'Asset Class',
-      path: '/admin/settings/asset-class',
-      icon: Settings
-    }, {
-      name: 'Discipline',
-      path: '/admin/settings/discipline',
-      icon: Settings
-    }, {
-      name: 'Maintenance Type',
-      path: '/admin/settings/maintenance-type',
-      icon: Settings
-    }, {
-      name: 'Frequency Setup',
-      path: '/admin/settings/frequency-setup',
-      icon: Settings
-    }, {
-      name: 'Average UARS',
-      path: '/admin/settings/average-uars',
-      icon: Settings
-    }, {
-      name: 'Corrosion Group',
-      path: '/admin/settings/corrosion-group',
-      icon: Settings
-    }]
+  ]
+}, 
+// Keep Settings as a separate item
+{
+  name: 'Setting',
+  icon: Settings,
+  children: [{
+    name: 'Data Category',
+    path: '/admin/settings/data-category',
+    icon: Settings
+  }, {
+    name: 'Asset Tag',
+    path: '/admin/settings/asset-tag',
+    icon: Settings
+  }, {
+    name: 'Asset Class',
+    path: '/admin/settings/asset-class',
+    icon: Settings
+  }, {
+    name: 'Discipline',
+    path: '/admin/settings/discipline',
+    icon: Settings
+  }, {
+    name: 'Maintenance Type',
+    path: '/admin/settings/maintenance-type',
+    icon: Settings
+  }, {
+    name: 'Frequency Setup',
+    path: '/admin/settings/frequency-setup',
+    icon: Settings
+  }, {
+    name: 'Average UARS',
+    path: '/admin/settings/average-uars',
+    icon: Settings
+  }, {
+    name: 'Corrosion Group',
+    path: '/admin/settings/corrosion-group',
+    icon: Settings
+  }]
 }];
 
 type SidebarItemProps = {
@@ -282,7 +290,7 @@ type SidebarItemProps = {
   activeItem: string;
   onActiveItemChange: (item: string) => void;
   depth?: number;
-  isSetupChild?: boolean; // New prop to handle Setup children's special styling
+  isSetupChild?: boolean;
 };
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -291,14 +299,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   activeItem,
   onActiveItemChange,
   depth = 0,
-  isSetupChild = false // Default is false
+  isSetupChild = false
 }) => {
   const location = useLocation();
   const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => location.pathname === child.path || child.children?.some(grandchild => location.pathname === grandchild.path));
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
-  
-  // Check if this is the Setup parent menu
-  const isSetupParent = item.name === 'Setup';
   
   React.useEffect(() => {
     // Only auto-expand menus when sidebar is not collapsed
@@ -326,6 +331,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   
   // Special styling for Setup child items based on the image provided
   const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white' : '';
+
+  // Styling for Setup and Setting menu items to match the screenshot
+  const isMenuSection = item.name === 'Setup' || item.name === 'Setting';
   
   return <li className="w-full">
       {item.path ? 
@@ -377,8 +385,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 
       {isSubmenuOpen && item.children && !isCollapsed && (
         <ul className={cn("bg-[#242b3d] py-1", {
-          "bg-[#1A1F2C]": isSpecialSection || isSetupParent, // Apply dark bg for Setup menu too
-          "bg-[#2a314a]": depth === 1 && !isSpecialSection && !isSetupParent
+          "bg-[#1A1F2C]": isSpecialSection || item.name === 'Setup' || item.name === 'Setting',
+          "bg-[#2a314a]": depth === 1 && !isSpecialSection && item.name !== 'Setup' && item.name !== 'Setting'
         })}>
           {item.children.map((child, index) => {
             if (child.children) {
@@ -393,8 +401,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
               />;
             }
             
-            // For Setup menu children, pass the isSetupChild prop as true
-            return isSetupParent ? (
+            // For Setup and Setting menu children
+            return (isMenuSection) ? (
               <li key={child.name}>
                 <Link 
                   to={child.path || '#'} 
@@ -411,7 +419,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                   className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
                     'bg-[#2a314a] text-white': location.pathname === child.path,
                     'py-3 px-6': isSpecialSection,
-                    // Special styling for IMS and RMS submenu items
+                    // Special styling for submenu items
                     'pl-12': depth === 1,
                     'pl-16': depth === 2
                   })}
@@ -488,7 +496,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     isCollapsed={isCollapsed} 
                     activeItem={activeItem} 
                     onActiveItemChange={handleActiveItemChange} 
-                    // Add separator logic to visually separate some sections
                     isSetupChild={false}
                   />
                   {/* Add horizontal separator line after specific sections */}
