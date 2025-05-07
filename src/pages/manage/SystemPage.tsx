@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { X } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // Sample data
@@ -193,13 +193,14 @@ const SystemPage: React.FC = () => {
                 />
               </div>
               
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Checkbox 
-                  id="isActive" 
+                  id="isActive"
                   checked={newSystem.isActive}
                   onCheckedChange={(checked) => 
                     setNewSystem({...newSystem, isActive: checked === true})
                   }
+                  className="h-5 w-5 border-2"
                 />
                 <Label 
                   htmlFor="isActive" 
