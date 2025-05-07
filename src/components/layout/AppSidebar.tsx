@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
@@ -320,8 +321,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const location = useLocation();
   const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => 
     location.pathname === child.path || 
-    child.children?.some(grandchild => location.pathname === grandchild.path) ||
-    child.children?.some(grandchild => grandchild.children?.some(greatGrandchild => location.pathname === greatGrandchild.path))
+    child.children?.some(grandchild => location.pathname === grandchild.path)
   );
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
   
@@ -353,7 +353,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white' : '';
 
   // Admin module with nested structure
-  const isAdminSubmodule = depth === 1 && item.name === 'Setup' || item.name === 'Settings';
+  const isAdminSubmodule = depth === 1 && (item.name === 'Setup' || item.name === 'Settings');
   
   return <li className="w-full">
       {item.path ? 
@@ -410,7 +410,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           "bg-[#1A1F2C]": isSpecialSection,
           "bg-[#2a314a]": depth === 1 && !isSpecialSection
         })}>
-          {item.children.map((child, index) => {
+          {item.children.map((child) => {
+            // Fix for the type error: We need to check if child.children exists before using it
             return <SidebarItem 
               key={child.name} 
               item={child} 
