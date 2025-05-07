@@ -403,7 +403,7 @@ const RBIAssessmentPage: React.FC = () => {
   const [rbiData, setRbiData] = useState(initialRbiData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RBIAssessment>({
     id: '',
     rbiId: '',
     asset: '',
@@ -411,7 +411,74 @@ const RBIAssessmentPage: React.FC = () => {
     consequence: 'Low',
     riskRank: 'Low',
     nextAssessmentDate: '',
-    status: 'Active'
+    status: 'Active',
+    // Add all required properties based on the RBIAssessment interface
+    coatingQuality: 'Good',
+    dataConfidence: 'High',
+    hasCladding: false,
+    nominalThickness: 0,
+    tMin: 0,
+    currentThickness: 0,
+    description: '',
+    lastInspectionDate: new Date().toISOString().split('T')[0],
+    lastCoatingDate: new Date().toISOString().split('T')[0],
+    nthinA: 0,
+    nthinB: 0,
+    fsThin: 0,
+    srThin: 0,
+    dfThin1: 0,
+    dfThin2: 0,
+    creep: 0,
+    pothin1: 0,
+    agerc: 0,
+    bhthin: 0,
+    fcommd: 0,
+    fatta: 0,
+    outagehrs: 0,
+    outagemult: 0,
+    lrapprod: 0,
+    fprodd: 0,
+    popdens: 0,
+    injcost: 0,
+    facexp: 0,
+    volinv: 0,
+    fc: 0,
+    ftotal: 0,
+    envcost: 0,
+    fatality: 0,
+    evacuation: 0,
+    isoSys: 'Manual',
+    detSys: 'Manual',
+    mitigationSystem: 'Basic',
+    idealGasSpecificHeatEQ: 'Standard',
+    pkkpa: 0,
+    prtankKpa: 0,
+    wtkg: 0,
+    releaseType: 'Gas',
+    ratton: 0,
+    inventorykg: 0,
+    caCmdfail: 0,
+    caInjfail: 0,
+    caInjfatal: 0,
+    caCmdfatal: 0,
+    k: 0,
+    timemstep: 0,
+    ldmax: 0,
+    dfhta: 0,
+    dbrint: 0,
+    dfmat: 0,
+    dfextclsc: 0,
+    dfcuiiff: 0,
+    dmsccssc: 0,
+    dmfat: 0,
+    dpSCCSOHIC: 0,
+    cofFinancial: 0,
+    cofArea: 0,
+    dfthin: 0,
+    pof: 0,
+    pofValue: 0,
+    riskLevel: 'Low',
+    riskRanking: 'Low'
   });
 
   const handleAddNew = () => {
@@ -433,7 +500,7 @@ const RBIAssessmentPage: React.FC = () => {
     if (name === 'likelihood' || name === 'consequence') {
       const likelihood = name === 'likelihood' ? value : formData.likelihood;
       const consequence = name === 'consequence' ? value : formData.consequence;
-      const riskRank = calculateRiskRank(likelihood, consequence);
+      const riskRank = calculateRiskRank(likelihood as 'Low' | 'Medium' | 'High', consequence as 'Low' | 'Medium' | 'High');
       
       setFormData(prev => ({ 
         ...prev, 
@@ -446,17 +513,15 @@ const RBIAssessmentPage: React.FC = () => {
   };
 
   // Utility function to calculate risk rank
-  const calculateRiskRank = (likelihood: string, consequence: string) => {
+  const calculateRiskRank = (likelihood: 'Low' | 'Medium' | 'High', consequence: 'Low' | 'Medium' | 'High') => {
     if (likelihood === 'High' && consequence === 'High') {
-      return 'Critical';
+      return 'Critical' as const;
     } else if (likelihood === 'High' || consequence === 'High') {
-      return 'High';
-    } else if (likelihood === 'Medium' && consequence === 'Medium') {
-      return 'Medium';
+      return 'High' as const;
     } else if (likelihood === 'Medium' || consequence === 'Medium') {
-      return 'Medium';
+      return 'Medium' as const;
     } else {
-      return 'Low';
+      return 'Low' as const;
     }
   };
 
@@ -465,10 +530,15 @@ const RBIAssessmentPage: React.FC = () => {
     
     if (isEditMode) {
       setRbiData(prev => 
-        prev.map(item => item.id === formData.id ? formData : item)
+        prev.map(item => item.id === formData.id ? { ...formData } : item)
       );
     } else {
-      setRbiData(prev => [...prev, formData]);
+      // Ensure we create a complete RBIAssessment object
+      const newAssessment: RBIAssessment = {
+        ...formData,
+        id: String(rbiData.length + 1),
+      };
+      setRbiData(prev => [...prev, newAssessment]);
     }
     
     setIsDialogOpen(false);
