@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Building, User, Ship, Wrench, Thermometer, Tools } from 'lucide-react';
+import { Building, User, Ship, Wrench, Thermometer, Settings } from 'lucide-react';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 
@@ -40,7 +40,7 @@ const setupNavItems: SetupNavItem[] = [
   {
     name: 'Work Center',
     path: '/admin/setup/work-center',
-    icon: <Tools className="mr-2 h-4 w-4" />
+    icon: <Settings className="mr-2 h-4 w-4" />
   }
 ];
 
