@@ -1,8 +1,11 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor } from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
+
 type SidebarItemType = {
   name: string;
   icon: React.ElementType;
@@ -166,7 +169,7 @@ const sidebarItems: SidebarItemType[] = [{
   name: 'Setup',
   icon: Settings,
   children: [
-  // Admin setup items
+  // Admin setup items - these will be styled to match the image
   {
     name: 'Company',
     path: '/admin/setup/company',
@@ -174,11 +177,11 @@ const sidebarItems: SidebarItemType[] = [{
   }, {
     name: 'Client',
     path: '/admin/setup/client',
-    icon: Settings
+    icon: Users
   }, {
     name: 'Project',
     path: '/admin/setup/project',
-    icon: Settings
+    icon: Calendar
   }, {
     name: 'Vendor',
     path: '/admin/setup/vendor',
@@ -228,25 +231,30 @@ const sidebarItems: SidebarItemType[] = [{
   }]
 }];
 
-// Remove standalone IMS and RMS sections as they're now under Monitor
-
 type SidebarItemProps = {
   item: SidebarItemType;
   isCollapsed: boolean;
   activeItem: string;
   onActiveItemChange: (item: string) => void;
   depth?: number;
+  isSetupChild?: boolean; // New prop to handle Setup children's special styling
 };
+
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
   isCollapsed,
   activeItem,
   onActiveItemChange,
-  depth = 0
+  depth = 0,
+  isSetupChild = false // Default is false
 }) => {
   const location = useLocation();
   const isActive = activeItem === item.name || location.pathname === item.path || item.children?.some(child => location.pathname === child.path || child.children?.some(grandchild => location.pathname === grandchild.path));
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(isActive);
+  
+  // Check if this is the Setup parent menu
+  const isSetupParent = item.name === 'Setup';
+  
   React.useEffect(() => {
     // Only auto-expand menus when sidebar is not collapsed
     if (isActive && !isCollapsed) {
@@ -255,6 +263,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       setIsSubmenuOpen(false);
     }
   }, [isActive, isCollapsed]);
+  
   const handleClick = () => {
     if (item.children) {
       if (!isCollapsed) {
@@ -269,84 +278,131 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   // Special styling for IMS and RMS sections
   const isSpecialSection = item.name === 'IMS' || item.name === 'RMS';
   const specialSectionClass = isSpecialSection ? 'bg-[#1A1F2C] hover:bg-[#2a314a]' : '';
+  
+  // Special styling for Setup child items based on the image provided
+  const setupChildClass = isSetupChild ? 'pl-12 py-2.5 text-sm text-white/90' : '';
+  
   return <li className="w-full">
-      {item.path ? <Link to={item.path} className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full transition-colors duration-200', {
-      'bg-[#2a314a]': isActive,
-      'justify-center': isCollapsed,
-      'pl-8': depth === 1,
-      'pl-12': depth === 2
-    }, specialSectionClass)} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", {
-        "mr-0": isCollapsed
-      })} />
-          {!isCollapsed && <>
-              <span className="flex-1">{item.name}</span>
-              {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} />
-                </div>}
-            </>}
-        </Link> : <button className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a] transition-colors duration-200', {
-      'bg-[#2a314a]': isActive,
-      'justify-center': isCollapsed,
-      'pl-8': depth === 1,
-      'pl-12': depth === 2
-    }, specialSectionClass)} onClick={handleClick} title={isCollapsed ? item.name : undefined}>
-          <item.icon size={20} className={cn("flex-shrink-0 mr-3", {
-        "mr-0": isCollapsed
-      })} />
-          {!isCollapsed && <>
-              <span className="flex-1">{item.name}</span>
-              {item.children && <div className="ml-auto">
-                  <ChevronRight size={16} className={cn('transition-transform duration-200', {
-            'rotate-90': isSubmenuOpen
+      {item.path ? 
+        <Link 
+          to={item.path} 
+          className={cn('flex items-center py-3 px-4 text-white hover:bg-[#2a314a] w-full transition-colors duration-200', {
+            'bg-[#2a314a]': isActive,
+            'justify-center': isCollapsed,
+            'pl-8': depth === 1 && !isSetupChild,
+            'pl-12': depth === 2 && !isSetupChild,
+          }, specialSectionClass, setupChildClass)}
+          onClick={handleClick} 
+          title={isCollapsed ? item.name : undefined}
+        >
+          <item.icon size={isSetupChild ? 16 : 20} className={cn("flex-shrink-0 mr-3", {
+            "mr-0": isCollapsed
           })} />
-                </div>}
-            </>}
-        </button>}
+          {!isCollapsed && <>
+            <span className="flex-1">{item.name}</span>
+            {item.children && <div className="ml-auto">
+              <ChevronRight size={16} />
+            </div>}
+          </>}
+        </Link> 
+        : 
+        <button 
+          className={cn('flex w-full items-center py-3 px-4 text-white hover:bg-[#2a314a] transition-colors duration-200', {
+            'bg-[#2a314a]': isActive,
+            'justify-center': isCollapsed,
+            'pl-8': depth === 1 && !isSetupChild,
+            'pl-12': depth === 2 && !isSetupChild,
+          }, specialSectionClass, setupChildClass)}
+          onClick={handleClick} 
+          title={isCollapsed ? item.name : undefined}
+        >
+          <item.icon size={isSetupChild ? 16 : 20} className={cn("flex-shrink-0 mr-3", {
+            "mr-0": isCollapsed
+          })} />
+          {!isCollapsed && <>
+            <span className="flex-1">{item.name}</span>
+            {item.children && <div className="ml-auto">
+              <ChevronRight size={16} className={cn('transition-transform duration-200', {
+                'rotate-90': isSubmenuOpen
+              })} />
+            </div>}
+          </>}
+        </button>
+      }
 
-      {isSubmenuOpen && item.children && !isCollapsed && <ul className={cn("bg-[#242b3d] py-1", {
-      "bg-[#1A1F2C]": isSpecialSection,
-      "bg-[#2a314a]": depth === 1 && !isSpecialSection
-    })}>
+      {isSubmenuOpen && item.children && !isCollapsed && (
+        <ul className={cn("bg-[#242b3d] py-1", {
+          "bg-[#1A1F2C]": isSpecialSection || isSetupParent, // Apply dark bg for Setup menu too
+          "bg-[#2a314a]": depth === 1 && !isSpecialSection && !isSetupParent
+        })}>
           {item.children.map((child, index) => {
-        if (child.children) {
-          // Handle nested submenu (for IMS and RMS under Monitor)
-          return <SidebarItem key={child.name} item={child} isCollapsed={isCollapsed} activeItem={activeItem} onActiveItemChange={onActiveItemChange} depth={depth + 1} />;
-        }
-        return <li key={child.name}>
-                <Link to={child.path || '#'} className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
-            'bg-[#2a314a] text-white': location.pathname === child.path,
-            'py-3 px-6': isSpecialSection,
-            // Special styling for IMS and RMS submenu items
-            'pl-12': depth === 1,
-            'pl-16': depth === 2
-          })}>
+            if (child.children) {
+              // Handle nested submenu (for IMS and RMS under Monitor)
+              return <SidebarItem 
+                key={child.name} 
+                item={child} 
+                isCollapsed={isCollapsed} 
+                activeItem={activeItem} 
+                onActiveItemChange={onActiveItemChange} 
+                depth={depth + 1} 
+              />;
+            }
+            
+            // For Setup menu children, pass the isSetupChild prop as true
+            return isSetupParent ? (
+              <li key={child.name}>
+                <Link 
+                  to={child.path || '#'} 
+                  className="flex items-center py-2.5 px-8 text-sm text-white/90 hover:bg-[#2a314a] hover:text-white transition-colors duration-200"
+                >
+                  {child.icon && <child.icon size={16} className="mr-3 flex-shrink-0" />}
+                  <span className="flex-1">{child.name}</span>
+                </Link>
+              </li>
+            ) : (
+              <li key={child.name}>
+                <Link 
+                  to={child.path || '#'} 
+                  className={cn('flex items-center py-2 px-11 text-sm text-white/80 hover:bg-[#2a314a] hover:text-white transition-colors duration-200', {
+                    'bg-[#2a314a] text-white': location.pathname === child.path,
+                    'py-3 px-6': isSpecialSection,
+                    // Special styling for IMS and RMS submenu items
+                    'pl-12': depth === 1,
+                    'pl-16': depth === 2
+                  })}
+                >
                   {child.icon && <child.icon size={16} className="mr-3 flex-shrink-0" />}
                   <span className="flex-1">{child.name}</span>
                   {child.children && <ChevronRight size={16} />}
                 </Link>
-              </li>;
-      })}
-        </ul>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </li>;
 };
+
 type AppSidebarProps = {
   isCollapsed: boolean;
   onToggle: () => void;
   isMobile: boolean;
 };
+
 const AppSidebar: React.FC<AppSidebarProps> = ({
   isCollapsed,
   onToggle,
   isMobile
 }) => {
   const [activeItem, setActiveItem] = useState('Dashboard');
+  
   const handleActiveItemChange = (item: string) => {
     setActiveItem(item);
     if (isMobile) {
       onToggle();
     }
   };
+  
   return <>
       {isMobile && <button onClick={onToggle} className="fixed top-4 left-4 z-50 p-2 bg-[#1A1F2C] rounded-md text-white hover:bg-[#2a314a] transition-colors duration-200">
           {!isCollapsed ? <X size={20} /> : <Menu size={20} />}
@@ -380,15 +436,27 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           
           <div className="flex-1 overflow-y-auto">
             <ul className="space-y-0.5">
-              {sidebarItems.map((item, index) => <React.Fragment key={item.name}>
-                  <SidebarItem item={item} isCollapsed={isCollapsed} activeItem={activeItem} onActiveItemChange={handleActiveItemChange} />
-                  {/* Add horizontal separator line after Field Operations and Reports & Analytics */}
-                  {index === 4 || index === 5 || index === 6}
-                </React.Fragment>)}
+              {sidebarItems.map((item, index) => (
+                <React.Fragment key={item.name}>
+                  <SidebarItem 
+                    item={item} 
+                    isCollapsed={isCollapsed} 
+                    activeItem={activeItem} 
+                    onActiveItemChange={handleActiveItemChange} 
+                    // Add separator logic to visually separate some sections
+                    isSetupChild={false}
+                  />
+                  {/* Add horizontal separator line after specific sections */}
+                  {(index === 4 || index === 5 || index === 6) && 
+                    <Separator className="my-2 bg-white/10" />
+                  }
+                </React.Fragment>
+              ))}
             </ul>
           </div>
         </div>
       </div>
     </>;
 };
+
 export default AppSidebar;
