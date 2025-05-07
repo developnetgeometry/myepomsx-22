@@ -19,7 +19,7 @@ import StatusBadge from '@/components/shared/StatusBadge';
 import { ShieldAlertIcon } from 'lucide-react';
 
 // Sample data for RBI assessments
-const initialRbiData = [
+export const initialRbiData = [
   { 
     id: '1',
     rbiId: 'RBI-001',
@@ -89,26 +89,13 @@ const RBIAssessmentPage: React.FC = () => {
   });
 
   const handleAddNew = () => {
-    setIsEditMode(false);
-    setFormData({
-      id: `${rbiData.length + 1}`,
-      rbiId: `RBI-${String(rbiData.length + 1).padStart(3, '0')}`,
-      asset: '',
-      likelihood: 'Low',
-      consequence: 'Low',
-      riskRank: 'Low',
-      nextAssessmentDate: '',
-      status: 'Active'
-    });
-    setIsDialogOpen(true);
+    // Navigate to the new assessment page instead of opening a dialog
+    navigate('/monitor/rbi-assessment/new');
   };
 
   const handleEdit = (row: any) => {
-    setIsEditMode(true);
-    setFormData({
-      ...row
-    });
-    setIsDialogOpen(true);
+    // Navigate to the detail page for editing
+    navigate(`/monitor/rbi-assessment/${row.id}`);
   };
 
   const handleInputChange = (
@@ -173,7 +160,6 @@ const RBIAssessmentPage: React.FC = () => {
   };
 
   const handleRowClick = (row: any) => {
-    console.log('Row clicked:', row);
     navigate(`/monitor/rbi-assessment/${row.id}`);
   };
 
@@ -248,125 +234,6 @@ const RBIAssessmentPage: React.FC = () => {
           />
         </CardContent>
       </Card>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>
-              {isEditMode ? 'Edit RBI Assessment' : 'Add New RBI Assessment'}
-            </DialogTitle>
-            <DialogDescription>
-              Fill in the assessment details. Click save when you're done.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="rbiId">RBI ID</Label>
-                <Input
-                  id="rbiId"
-                  name="rbiId"
-                  value={formData.rbiId}
-                  onChange={handleInputChange}
-                  readOnly={isEditMode}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="asset">Asset</Label>
-                <Input
-                  id="asset"
-                  name="asset"
-                  value={formData.asset}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="likelihood">Likelihood</Label>
-                <select
-                  id="likelihood"
-                  name="likelihood"
-                  value={formData.likelihood}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  required
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="consequence">Consequence</Label>
-                <select
-                  id="consequence"
-                  name="consequence"
-                  value={formData.consequence}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  required
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="riskRank">Risk Rank</Label>
-                <Input
-                  id="riskRank"
-                  name="riskRank"
-                  value={formData.riskRank}
-                  readOnly
-                  className="bg-gray-50"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="nextAssessmentDate">Next Assessment Date</Label>
-                <Input
-                  id="nextAssessmentDate"
-                  name="nextAssessmentDate"
-                  type="date"
-                  value={formData.nextAssessmentDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  required
-                >
-                  <option value="Active">Active</option>
-                  <option value="Complete">Complete</option>
-                  <option value="On Hold">On Hold</option>
-                </select>
-              </div>
-            </div>
-            
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Save</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
