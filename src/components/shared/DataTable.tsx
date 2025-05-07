@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText, Eye } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText, Eye, X } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import {
   AlertDialog,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { formatCurrency, isMonetaryField } from '@/utils/formatters';
 
 export interface Column {
   id: string;
@@ -129,6 +130,27 @@ const DataTable: React.FC<DataTableProps> = ({
     }
   };
 
+  // Process cell value to apply Malaysian Ringgit formatting automatically
+  const formatCellValue = (column: Column, row: any): React.ReactNode => {
+    const value = row[column.accessorKey];
+    
+    // If a custom cell renderer is defined, use it
+    if (column.cell) {
+      return column.cell(value);
+    }
+    
+    // Check if this is a monetary field (based on column name)
+    if (
+      isMonetaryField(column.header) &&
+      typeof value === 'number'
+    ) {
+      return formatCurrency(value);
+    }
+    
+    // Return the value as-is for non-monetary fields
+    return value;
+  };
+
   return (
     <div className="w-full">
       <div className="rounded-lg border border-gray-100 shadow-sm bg-white overflow-hidden">
@@ -168,11 +190,9 @@ const DataTable: React.FC<DataTableProps> = ({
                         key={`${rowIndex}-${column.id}`}
                         className="py-4 px-6 text-sm text-gray-900"
                       >
-                        {column.cell 
-                          ? column.cell(row[column.accessorKey]) 
-                          : column.accessorKey.includes('status') 
-                            ? <StatusBadge status={row[column.accessorKey]} />
-                            : row[column.accessorKey]}
+                        {column.accessorKey.includes('status') 
+                          ? <StatusBadge status={row[column.accessorKey]} />
+                          : formatCellValue(column, row)}
                       </TableCell>
                     ))}
                     {(onEdit || onDelete || onViewDetails) && (

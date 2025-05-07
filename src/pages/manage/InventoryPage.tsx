@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -11,6 +10,7 @@ import { Inventory } from '@/types/manage';
 import ManageDialog from '@/components/manage/ManageDialog';
 import { Column } from '@/components/shared/DataTable';
 import * as z from 'zod';
+import { formatCurrency } from '@/utils/formatters';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -90,13 +90,11 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       id: 'unitPrice',
       header: 'Unit Price',
       accessorKey: 'unitPrice',
-      cell: (value) => `$${value.toFixed(2)}`,
     },
     {
       id: 'totalPrice',
       header: 'Total Price',
       accessorKey: 'totalPrice',
-      cell: (value) => `$${value.toFixed(2)}`,
     },
   ];
 
@@ -168,7 +166,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
     { name: 'maxLevel', label: 'Max Level', type: 'number' as const },
     { name: 'reorderLevel', label: 'Reorder Level', type: 'number' as const },
     { name: 'balance', label: 'Balance', type: 'number' as const },
-    { name: 'unitPrice', label: 'Unit Price', type: 'number' as const },
+    { name: 'unitPrice', label: 'Unit Price (RM)', type: 'number' as const },
   ];
 
   const content = (

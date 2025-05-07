@@ -10,8 +10,9 @@ import { itemsMaster } from '@/data/sampleData';
 import { Column } from '@/components/shared/DataTable';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
+import { formatCurrency } from '@/utils/formatters';
 
-// Sample parts inventory data
+// Sample parts inventory data with unit prices
 const partsInventory = itemsMaster.map(item => ({
   id: item.id,
   partNo: `P-${item.itemsNo}`,
@@ -20,7 +21,12 @@ const partsInventory = itemsMaster.map(item => ({
   type: item.type,
   manufacturer: item.manufacturer,
   quantity: Math.floor(Math.random() * 100),
+  unitPrice: Math.floor(Math.random() * 1000) + 50,
+  totalValue: 0, // Will be calculated below
   location: ['Main Warehouse', 'Secondary Storage', 'Production Floor'][Math.floor(Math.random() * 3)]
+})).map(item => ({
+  ...item,
+  totalValue: item.quantity * item.unitPrice // Calculate total value
 }));
 
 const PartsInventoryPage: React.FC = () => {
@@ -62,6 +68,16 @@ const PartsInventoryPage: React.FC = () => {
       id: 'quantity',
       header: 'Quantity',
       accessorKey: 'quantity',
+    },
+    {
+      id: 'unitPrice',
+      header: 'Unit Price',
+      accessorKey: 'unitPrice',
+    },
+    {
+      id: 'totalValue',
+      header: 'Total Value',
+      accessorKey: 'totalValue',
     },
     {
       id: 'location',

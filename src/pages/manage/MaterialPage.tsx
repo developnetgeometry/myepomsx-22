@@ -7,15 +7,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Box } from 'lucide-react';
 import ItemsMasterPage from './ItemsMasterPage';
 import InventoryPage from './InventoryPage';
+import { Inventory, ItemsMaster } from '@/types/manage';
 
 const MaterialPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleItemsMasterRowClick = (row: any) => {
+  const handleItemsMasterRowClick = (row: ItemsMaster) => {
     navigate(`/manage/items-master/${row.id}`);
   };
 
-  const handleInventoryRowClick = (row: any) => {
+  const handleInventoryRowClick = (row: Inventory) => {
     navigate(`/manage/inventory/${row.id}`);
   };
 

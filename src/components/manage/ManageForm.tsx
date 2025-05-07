@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, Upload } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { isMonetaryField } from "@/utils/formatters";
 
 interface ManageFormProps {
   schema: z.ZodSchema<any>;
@@ -78,6 +79,11 @@ const ManageForm = ({
     onSubmit(finalValues);
   };
 
+  // Determine if a field is monetary
+  const isCurrencyField = (fieldName: string, fieldLabel: string): boolean => {
+    return isMonetaryField(fieldName) || isMonetaryField(fieldLabel);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -90,7 +96,12 @@ const ManageForm = ({
               name={field.name}
               render={({ field: formField }) => (
                 <FormItem className={field.width === "half" ? "" : "col-span-2"}>
-                  <FormLabel>{field.label} {field.required && <span className="text-destructive">*</span>}</FormLabel>
+                  <FormLabel>
+                    {field.label} {field.required && <span className="text-destructive">*</span>}
+                    {isCurrencyField(field.name, field.label) && field.type === 'number' && (
+                      <span className="text-xs text-muted-foreground ml-1">(RM)</span>
+                    )}
+                  </FormLabel>
                   <FormControl>
                     {field.type === "select" ? (
                       <Select
@@ -110,13 +121,22 @@ const ManageForm = ({
                         </SelectContent>
                       </Select>
                     ) : field.type === "number" ? (
-                      <Input
-                        type="number"
-                        {...formField}
-                        onChange={(e) => formField.onChange(Number(e.target.value))}
-                        disabled={isSubmitting}
-                        placeholder={field.placeholder}
-                      />
+                      <div className={isCurrencyField(field.name, field.label) ? "relative" : ""}>
+                        {isCurrencyField(field.name, field.label) && (
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span className="text-gray-500">RM</span>
+                          </div>
+                        )}
+                        <Input
+                          type="number"
+                          step="0.01"
+                          {...formField}
+                          onChange={(e) => formField.onChange(Number(e.target.value))}
+                          disabled={isSubmitting}
+                          placeholder={field.placeholder}
+                          className={isCurrencyField(field.name, field.label) ? "pl-10" : ""}
+                        />
+                      </div>
                     ) : field.type === "date" ? (
                       <Input
                         type="date"
@@ -204,7 +224,12 @@ const ManageForm = ({
                   name={field.name}
                   render={({ field: formField }) => (
                     <FormItem>
-                      <FormLabel>{field.label} {field.required && <span className="text-destructive">*</span>}</FormLabel>
+                      <FormLabel>
+                        {field.label} {field.required && <span className="text-destructive">*</span>}
+                        {isCurrencyField(field.name, field.label) && field.type === 'number' && (
+                          <span className="text-xs text-muted-foreground ml-1">(RM)</span>
+                        )}
+                      </FormLabel>
                       <FormControl>
                         {field.type === "select" ? (
                           <Select
@@ -223,6 +248,23 @@ const ManageForm = ({
                               ))}
                             </SelectContent>
                           </Select>
+                        ) : field.type === "number" ? (
+                          <div className={isCurrencyField(field.name, field.label) ? "relative" : ""}>
+                            {isCurrencyField(field.name, field.label) && (
+                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span className="text-gray-500">RM</span>
+                              </div>
+                            )}
+                            <Input
+                              type="number"
+                              step="0.01"
+                              {...formField}
+                              onChange={(e) => formField.onChange(Number(e.target.value))}
+                              disabled={isSubmitting}
+                              placeholder={field.placeholder}
+                              className={isCurrencyField(field.name, field.label) ? "pl-10" : ""}
+                            />
+                          </div>
                         ) : field.type === "date" ? (
                           <Input
                             type="date"

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -98,6 +97,11 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
       header: 'Category',
       accessorKey: 'category',
     },
+    {
+      id: 'estimatedCost',
+      header: 'Estimated Cost',
+      accessorKey: 'estimatedCost',
+    },
   ];
 
   const formSchema = z.object({
@@ -141,7 +145,8 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
       label: 'Category',
       type: 'select' as const,
       options: categoryOptions
-    }
+    },
+    { name: 'estimatedCost', label: 'Estimated Cost (RM)', type: 'number' as const },
   ];
 
   const content = (
