@@ -54,15 +54,19 @@ const SystemDetailPage: React.FC = () => {
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/">Home</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/">Home</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} to="/manage/system">Systems</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link to="/manage/system">Systems</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink>System Details</BreadcrumbLink>
+            <span className="text-muted-foreground">System Details</span>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -5,8 +5,7 @@ import {
   Breadcrumb, 
   BreadcrumbList, 
   BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbPage, 
+  BreadcrumbLink,
   BreadcrumbSeparator 
 } from "@/components/ui/breadcrumb";
 
@@ -78,7 +77,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true, overrideItem
                     <Link to={item.href}>{item.label}</Link>
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                  <span className="text-muted-foreground">{item.label}</span>
                 )}
               </BreadcrumbItem>
               {index < overrideItems.length - 1 && <BreadcrumbSeparator />}
@@ -106,7 +105,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ showHome = true, overrideItem
       <React.Fragment key={path}>
         <BreadcrumbItem>
           {isLast ? (
-            <BreadcrumbPage>{displayName}</BreadcrumbPage>
+            <span className="text-muted-foreground">{displayName}</span>
           ) : (
             <BreadcrumbLink asChild>
               <Link to={path}>{displayName}</Link>
