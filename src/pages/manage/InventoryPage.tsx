@@ -38,13 +38,25 @@ const inventoryData: InventoryItem[] = Array(20).fill(0).map((_, i) => ({
   lastUpdated: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
 }));
 
-const InventoryPage: React.FC = () => {
+interface InventoryPageProps {
+  hideHeader?: boolean;
+  onRowClick?: (row: InventoryItem) => void;
+}
+
+const InventoryPage: React.FC<InventoryPageProps> = ({ 
+  hideHeader = false, 
+  onRowClick: externalRowClick 
+}) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   
   // Handle row click to navigate to details page
   const handleRowClick = (row: InventoryItem) => {
-    navigate(`/manage/inventory/${row.id}`);
+    if (externalRowClick) {
+      externalRowClick(row);
+    } else {
+      navigate(`/manage/inventory/${row.id}`);
+    }
   };
   
   // Handle add new inventory item
@@ -113,6 +125,52 @@ const InventoryPage: React.FC = () => {
     },
   ];
 
+  const content = (
+    <>
+      {hideHeader ? null : (
+        <Tabs defaultValue="list">
+          <TabsList>
+            <TabsTrigger value="list">List View</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+          </TabsList>
+          <TabsContent value="list" className="pt-4">
+            <DataTable 
+              data={inventoryData} 
+              columns={columns}
+              onRowClick={handleRowClick}
+              onAddNew={handleAddNew}
+              searchPlaceholder="Search inventory..."
+              title="Inventory Items"
+            />
+          </TabsContent>
+          <TabsContent value="details" className="pt-4">
+            <div className="p-4 border rounded-md bg-muted/50">
+              <h3 className="text-lg font-medium">Inventory Details</h3>
+              <p className="text-muted-foreground mt-2">
+                Select an inventory item from the list view to see detailed information.
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      )}
+      
+      {hideHeader && (
+        <DataTable 
+          data={inventoryData} 
+          columns={columns}
+          onRowClick={handleRowClick}
+          onAddNew={handleAddNew}
+          searchPlaceholder="Search inventory..."
+          title={hideHeader ? undefined : "Inventory Items"}
+        />
+      )}
+    </>
+  );
+
+  if (hideHeader) {
+    return content;
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader 
@@ -123,30 +181,7 @@ const InventoryPage: React.FC = () => {
       
       <Card>
         <CardContent className="pt-6">
-          <Tabs defaultValue="list">
-            <TabsList>
-              <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
-            </TabsList>
-            <TabsContent value="list" className="pt-4">
-              <DataTable 
-                data={inventoryData} 
-                columns={columns}
-                onRowClick={handleRowClick}
-                onAddNew={handleAddNew}
-                searchPlaceholder="Search inventory..."
-                title="Inventory Items"
-              />
-            </TabsContent>
-            <TabsContent value="details" className="pt-4">
-              <div className="p-4 border rounded-md bg-muted/50">
-                <h3 className="text-lg font-medium">Inventory Details</h3>
-                <p className="text-muted-foreground mt-2">
-                  Select an inventory item from the list view to see detailed information.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+          {content}
         </CardContent>
       </Card>
     </div>
