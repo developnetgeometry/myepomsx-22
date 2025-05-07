@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -24,6 +23,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Check, List, Save, Plus, Pencil, X, Search, Filter, Copy } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Sample data
 const initialTasks = [
@@ -167,7 +177,6 @@ const TaskLibraryPage: React.FC = () => {
     active: true,
     taskList: []
   });
-  
   const [selectedTaskListRows, setSelectedTaskListRows] = useState<string[]>([]);
   const [newTaskListItem, setNewTaskListItem] = useState<TaskListItem>({
     id: "1",
@@ -175,6 +184,9 @@ const TaskLibraryPage: React.FC = () => {
     description: ""
   });
   const [activeTab, setActiveTab] = useState("templates");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleAddNew = () => {
     setIsEditMode(false);
@@ -268,6 +280,55 @@ const TaskLibraryPage: React.FC = () => {
     );
   };
 
+  // Function to handle task duplication
+  const handleDuplicate = (task: Task) => {
+    const newTaskId = `${parseInt(tasks[tasks.length - 1].id) + 1}`;
+    const newTaskCode = `T-${String(parseInt(newTaskId)).padStart(3, '0')}`;
+    
+    const duplicatedTask: Task = {
+      ...task,
+      id: newTaskId,
+      taskCode: newTaskCode,
+      taskName: `${task.taskName} (Copy)`,
+      taskList: task.taskList.map(item => ({
+        ...item,
+        id: `${newTaskId}-task-${item.seq}`
+      })),
+      updatedAt: new Date().toISOString().split('T')[0]
+    };
+    
+    setTasks(prev => [...prev, duplicatedTask]);
+    
+    toast({
+      title: "Task Duplicated",
+      description: `${task.taskName} has been duplicated successfully.`,
+      duration: 3000,
+    });
+  };
+
+  // Function to confirm task deletion
+  const confirmDelete = (taskId: string) => {
+    setTaskToDelete(taskId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Function to handle task deletion
+  const handleDelete = () => {
+    if (taskToDelete) {
+      const taskName = tasks.find(t => t.id === taskToDelete)?.taskName;
+      setTasks(prev => prev.filter(task => task.id !== taskToDelete));
+      setDeleteDialogOpen(false);
+      setTaskToDelete(null);
+      
+      toast({
+        title: "Task Deleted",
+        description: `${taskName} has been deleted successfully.`,
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
   const renderTaskCard = (task: Task) => (
     <Card key={task.id} className="w-full hover:shadow-md transition-shadow duration-300">
       <CardHeader className="pb-2">
@@ -307,6 +368,10 @@ const TaskLibraryPage: React.FC = () => {
               variant="ghost"
               size="sm"
               className="h-8 px-2 text-gray-600 hover:text-gray-900"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDuplicate(task);
+              }}
             >
               <Copy className="h-4 w-4 mr-1" />
               Duplicate
@@ -315,6 +380,10 @@ const TaskLibraryPage: React.FC = () => {
               variant="ghost"
               size="sm"
               className="h-8 px-2 text-red-600 hover:text-red-800 hover:bg-red-50"
+              onClick={(e) => {
+                e.stopPropagation();
+                confirmDelete(task.id);
+              }}
             >
               <X className="h-4 w-4 mr-1" />
               Delete
@@ -589,12 +658,29 @@ const TaskLibraryPage: React.FC = () => {
                 Cancel
               </Button>
               <Button type="submit" className="bg-blue-600">
-                Create
+                {isEditMode ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the selected task.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
