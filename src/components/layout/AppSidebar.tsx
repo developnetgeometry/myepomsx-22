@@ -48,7 +48,7 @@ const sidebarItems: SidebarItemType[] = [{
     icon: Database
   }]
 }, {
-  name: 'Inventory',
+  name: 'Material',
   icon: Box,
   children: [{
     name: 'Material',
