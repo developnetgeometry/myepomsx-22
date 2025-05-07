@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Plus, Save, X } from 'lucide-react';
+import { ArrowLeft, Plus, Save, X, Trash2 } from 'lucide-react';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useLoadingState } from '@/hooks/use-loading-state';
 import { formatCurrency } from '@/utils/formatters';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface TaskDetail {
   id: number;
@@ -23,6 +33,13 @@ const PMScheduleDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isLoading: isSaving, withLoading: withSavingLoading } = useLoadingState();
+  const { isLoading: isDeleting, withLoading: withDeletingLoading } = useLoadingState();
+  
+  // Form modification tracking
+  const [isFormModified, setIsFormModified] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState('task-detail');
   
   const [pmDetail, setPmDetail] = useState({
     pmNo: 'PM-2024-001',
@@ -44,24 +61,52 @@ const PMScheduleDetailPage: React.FC = () => {
     { id: 1, description: 'Lubricate moving parts' },
     { id: 2, description: 'Tighten loose fittings' }
   ]);
+  
+  // Make a copy of the original data for cancellation purposes
+  const [originalTaskDetails, setOriginalTaskDetails] = useState<TaskDetail[]>([]);
+  
+  useEffect(() => {
+    // Store a deep copy of the original data when the component mounts
+    setOriginalTaskDetails(JSON.parse(JSON.stringify(taskDetails)));
+    
+    // Simulate loading data from API when ID changes
+    const loadData = async () => {
+      // In a real implementation, this would fetch data from the API
+      console.log(`Loading PM Schedule with ID: ${id}`);
+    };
+    
+    loadData();
+  }, [id]);
 
   // Handle editing task detail row
   const startEditing = (id: number) => {
     setTaskDetails(taskDetails.map(task => 
       task.id === id ? { ...task, isEditing: true } : task
     ));
+    setIsFormModified(true);
   };
 
   const updateTaskDescription = (id: number, description: string) => {
     setTaskDetails(taskDetails.map(task => 
       task.id === id ? { ...task, description } : task
     ));
+    setIsFormModified(true);
   };
 
   const stopEditing = (id: number) => {
-    setTaskDetails(taskDetails.map(task => 
-      task.id === id ? { ...task, isEditing: false } : task
-    ));
+    const updatedTasks = taskDetails.map(task => {
+      if (task.id === id) {
+        // Validate the description before saving
+        if (!task.description || task.description.trim() === '') {
+          toast.error("Task description cannot be empty");
+          return task; // Keep in editing mode
+        }
+        return { ...task, isEditing: false };
+      }
+      return task;
+    });
+    
+    setTaskDetails(updatedTasks);
   };
 
   // Handle adding new task
@@ -78,18 +123,85 @@ const PMScheduleDetailPage: React.FC = () => {
         isEditing: true 
       }
     ]);
+    setIsFormModified(true);
+  };
+  
+  // Handle deleting a task
+  const promptDeleteTask = (id: number) => {
+    setTaskToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+  
+  const confirmDeleteTask = () => {
+    if (taskToDelete !== null) {
+      withDeletingLoading(async () => {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        setTaskDetails(taskDetails.filter(task => task.id !== taskToDelete));
+        setDeleteDialogOpen(false);
+        setTaskToDelete(null);
+        setIsFormModified(true);
+        
+        toast.success("Task deleted successfully");
+      });
+    }
   };
 
   // Handle saving changes
   const handleSave = () => {
+    // Validate all tasks have descriptions before saving
+    const hasEmptyTasks = taskDetails.some(task => !task.description || task.description.trim() === '');
+    
+    if (hasEmptyTasks) {
+      toast.error("All tasks must have a description");
+      return;
+    }
+    
     withSavingLoading(async () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update all records to not be in editing mode
+      setTaskDetails(taskDetails.map(task => ({ ...task, isEditing: false })));
+      
+      // Update the original data with the new version
+      setOriginalTaskDetails(JSON.parse(JSON.stringify(taskDetails)));
+      
+      // Reset form modified flag
+      setIsFormModified(false);
       
       // Show success message
       toast.success("PM Schedule saved successfully");
     });
   };
+  
+  // Handle applying changes (save without navigating away)
+  const handleApplyChanges = () => {
+    handleSave();
+  };
+  
+  // Handle canceling changes
+  const handleCancel = () => {
+    if (isFormModified) {
+      // Restore the original data
+      setTaskDetails(JSON.parse(JSON.stringify(originalTaskDetails)));
+      setIsFormModified(false);
+      toast.info("Changes discarded");
+    }
+    
+    // Navigate back to PM Schedule list
+    navigate('/maintain/pm-schedule');
+  };
+  
+  // Handle tab changes
+  const handleTabChange = (value: string) => {
+    // Check for unsaved changes in current tab if needed
+    setActiveTab(value);
+  };
+
+  // Check if any row is currently being edited
+  const hasEditingRows = taskDetails.some(task => task.isEditing);
 
   return (
     <div className="space-y-6">
@@ -101,6 +213,7 @@ const PMScheduleDetailPage: React.FC = () => {
           variant="outline" 
           onClick={() => navigate('/maintain/pm-schedule')} 
           className="flex items-center gap-2"
+          disabled={isSaving}
         >
           <ArrowLeft className="h-4 w-4" /> Back to PM Schedule
         </Button>
@@ -174,7 +287,7 @@ const PMScheduleDetailPage: React.FC = () => {
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="task-detail" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="border-b w-full justify-start rounded-none h-auto p-0 bg-transparent">
           <TabsTrigger 
             value="task-detail"
@@ -231,7 +344,11 @@ const PMScheduleDetailPage: React.FC = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-blue-600">Task Detail</h3>
-                <Button onClick={addTask} className="flex items-center gap-2">
+                <Button 
+                  onClick={addTask} 
+                  className="flex items-center gap-2"
+                  disabled={isSaving || hasEditingRows}
+                >
                   <Plus className="h-4 w-4" /> Add Row
                 </Button>
               </div>
@@ -256,29 +373,43 @@ const PMScheduleDetailPage: React.FC = () => {
                               onChange={(e) => updateTaskDescription(task.id, e.target.value)} 
                               className="w-full"
                               autoFocus
+                              placeholder="Enter task description"
                             />
                           ) : (
-                            task.description
+                            task.description || <span className="text-gray-400">No description</span>
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          {task.isEditing ? (
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => stopEditing(task.id)}
-                            >
-                              <Save className="h-4 w-4 text-green-600" />
-                            </Button>
-                          ) : (
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => startEditing(task.id)}
-                            >
-                              <Plus className="h-4 w-4 text-blue-600" />
-                            </Button>
-                          )}
+                          <div className="flex justify-end gap-1">
+                            {task.isEditing ? (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => stopEditing(task.id)}
+                              >
+                                <Save className="h-4 w-4 text-green-600" />
+                              </Button>
+                            ) : (
+                              <>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => startEditing(task.id)}
+                                  disabled={isSaving || hasEditingRows}
+                                >
+                                  <Plus className="h-4 w-4 text-blue-600" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => promptDeleteTask(task.id)}
+                                  disabled={isSaving || hasEditingRows}
+                                >
+                                  <Trash2 className="h-4 w-4 text-red-600" />
+                                </Button>
+                              </>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -356,21 +487,26 @@ const PMScheduleDetailPage: React.FC = () => {
       <div className="flex items-center justify-end space-x-2 border-t pt-4">
         <Button 
           variant="outline" 
-          onClick={() => navigate('/maintain/pm-schedule')}
+          onClick={handleCancel}
           disabled={isSaving}
         >
           <X className="h-4 w-4 mr-1" /> Cancel
         </Button>
         <Button 
           variant="outline" 
-          onClick={handleSave}
-          disabled={isSaving}
+          onClick={handleApplyChanges}
+          disabled={isSaving || !isFormModified}
         >
-          Apply Changes
+          {isSaving ? (
+            <>
+              <div className="animate-spin w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full mr-2" />
+              Applying...
+            </>
+          ) : "Apply Changes"}
         </Button>
         <Button 
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || !isFormModified}
           className="flex items-center gap-2"
         >
           {isSaving ? (
@@ -385,6 +521,33 @@ const PMScheduleDetailPage: React.FC = () => {
           )}
         </Button>
       </div>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Task</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this task? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDeleteTask} 
+              className="bg-destructive text-destructive-foreground"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                  Deleting...
+                </>
+              ) : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
