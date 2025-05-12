@@ -14,10 +14,12 @@ function App() {
       <Route path="/" element={<Layout><Index /></Layout>} />
       
       {/* Monitor Routes */}
-      <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
-      <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
-      <Route path="/monitor/critical-assets-tracking" element={<Layout><CriticalAssetsTrackingPage /></Layout>} />
-      <Route path="/monitor/ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
+      <Route path="/monitor">
+        <Route path="rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
+        <Route path="rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
+        <Route path="critical-assets-tracking" element={<Layout><CriticalAssetsTrackingPage /></Layout>} />
+        <Route path="ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
+      </Route>
       
       {/* 404 Not Found */}
       <Route path="*" element={<NotFound />} />
