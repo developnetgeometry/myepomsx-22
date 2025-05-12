@@ -4,14 +4,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Plus, Save, X, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Save, X, Trash2, ListOrdered, Wrench, FileText, Users, Calendar, Table } from 'lucide-react';
 import StatusBadge from '@/components/shared/StatusBadge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table as UITable, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useLoadingState } from '@/hooks/use-loading-state';
 import { formatCurrency } from '@/utils/formatters';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +30,47 @@ interface TaskDetail {
   id: number;
   description: string;
   isEditing?: boolean;
+}
+
+interface MinAcceptanceCriteria {
+  id: number;
+  fieldName: string;
+  criteria: string;
+  isEditing?: boolean;
+}
+
+interface ChecksheetItem {
+  id: number;
+  fieldName: string;
+  attachment: string;
+  isEditing?: boolean;
+}
+
+interface WorkOrder {
+  id: string;
+  workOrderNo: string;
+  asset: string;
+  status: string;
+  planDueDate: string;
+}
+
+interface MaintainableGroupItem {
+  id: number;
+  asset: string;
+  group: string;
+}
+
+interface PlanLabor {
+  id: number;
+  employee: string;
+  duration: number;
+  manPower: number;
+}
+
+interface PlanMaterial {
+  id: number;
+  material: string;
+  quantity: number;
 }
 
 const PMScheduleDetailPage: React.FC = () => {
@@ -57,9 +101,55 @@ const PMScheduleDetailPage: React.FC = () => {
   });
 
   const [taskDetails, setTaskDetails] = useState<TaskDetail[]>([
-    { id: 0, description: 'Visual inspection' },
-    { id: 1, description: 'Lubricate moving parts' },
-    { id: 2, description: 'Tighten loose fittings' }
+    { id: 1, description: 'Replace light bulb' },
+    { id: 2, description: 'Change light bulb' },
+    { id: 3, description: 'Test Replace Pipe' }
+  ]);
+
+  const [serviceNotes, setServiceNotes] = useState<string>(
+    "Perform regular maintenance checks on the compressor unit. Ensure all connections are properly tightened and lubricated."
+  );
+
+  const [minAcceptanceCriteria, setMinAcceptanceCriteria] = useState<MinAcceptanceCriteria[]>([
+    { id: 1, fieldName: "Pressure Reading", criteria: "Must be between 2.5-3.0 bar" },
+    { id: 2, fieldName: "Temperature", criteria: "Not exceeding 65°C" },
+    { id: 3, fieldName: "Vibration Level", criteria: "Below 2.5 mm/s" }
+  ]);
+
+  const [checksheetItems, setChecksheetItems] = useState<ChecksheetItem[]>([
+    { id: 1, fieldName: "Pressure Test Report", attachment: "pressure-test-20240501.pdf" },
+    { id: 2, fieldName: "Vibration Analysis", attachment: "vibration-analysis-20240501.xlsx" },
+  ]);
+
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([
+    { 
+      id: "WO-1", 
+      workOrderNo: "WO-CPP-24/00001", 
+      asset: "Exchanger Unit", 
+      status: "Execute",
+      planDueDate: "15/06/2024"
+    }
+  ]);
+
+  const [additionalInfo, setAdditionalInfo] = useState<string>(
+    "This PM schedule is part of the quarterly maintenance program for critical heat exchangers. Follow standard safety protocols when accessing equipment."
+  );
+
+  const [maintainableGroups, setMaintainableGroups] = useState<MaintainableGroupItem[]>([
+    { id: 1, asset: "Spare Part Module", group: "PC001-G1" },
+    { id: 2, asset: "Control Unit", group: "CU002-G2" },
+    { id: 3, asset: "Sensor Array", group: "SA003-G1" }
+  ]);
+
+  const [planLabor, setPlanLabor] = useState<PlanLabor[]>([
+    { id: 1, employee: "Muhammad Izzat Imran bin Abdul Aziz", duration: 2, manPower: 1 },
+    { id: 2, employee: "Zairy Juzairy Bin Zaki", duration: 2, manPower: 1 }
+  ]);
+
+  const [planMaterials, setPlanMaterials] = useState<PlanMaterial[]>([
+    { id: 1, material: "CLAS2-Vending Machine", quantity: 1 },
+    { id: 2, material: "LUB-001 High Temp Grease", quantity: 2 },
+    { id: 3, material: "SEAL-120 O-Ring Kit", quantity: 5 }
   ]);
   
   // Make a copy of the original data for cancellation purposes
@@ -113,7 +203,7 @@ const PMScheduleDetailPage: React.FC = () => {
   const addTask = () => {
     const newId = taskDetails.length > 0 
       ? Math.max(...taskDetails.map(t => t.id)) + 1 
-      : 0;
+      : 1;
     
     setTaskDetails([
       ...taskDetails, 
@@ -198,6 +288,18 @@ const PMScheduleDetailPage: React.FC = () => {
   const handleTabChange = (value: string) => {
     // Check for unsaved changes in current tab if needed
     setActiveTab(value);
+  };
+
+  // Handle service notes update
+  const handleServiceNotesChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setServiceNotes(event.target.value);
+    setIsFormModified(true);
+  };
+
+  // Handle additional info update
+  const handleAdditionalInfoChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAdditionalInfo(event.target.value);
+    setIsFormModified(true);
   };
 
   // Check if any row is currently being edited
@@ -291,14 +393,16 @@ const PMScheduleDetailPage: React.FC = () => {
         <TabsList className="border-b w-full justify-start rounded-none h-auto p-0 bg-transparent">
           <TabsTrigger 
             value="task-detail"
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <ListOrdered className="h-4 w-4" />
             Task Detail
           </TabsTrigger>
           <TabsTrigger 
             value="service" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <Wrench className="h-4 w-4" />
             Service
           </TabsTrigger>
           <TabsTrigger 
@@ -309,32 +413,37 @@ const PMScheduleDetailPage: React.FC = () => {
           </TabsTrigger>
           <TabsTrigger 
             value="checksheet" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <FileText className="h-4 w-4" />
             Checksheet
           </TabsTrigger>
           <TabsTrigger 
             value="work-order" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <Table className="h-4 w-4" />
             Work Order
           </TabsTrigger>
           <TabsTrigger 
             value="additional-info" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <FileText className="h-4 w-4" />
             Additional Info
           </TabsTrigger>
           <TabsTrigger 
             value="maintainable-group" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <Users className="h-4 w-4" />
             Maintainable Group
           </TabsTrigger>
           <TabsTrigger 
             value="plan" 
-            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600"
+            className="py-2.5 px-4 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:font-medium data-[state=active]:text-blue-600 flex items-center gap-2"
           >
+            <Calendar className="h-4 w-4" />
             Plan
           </TabsTrigger>
         </TabsList>
@@ -354,10 +463,10 @@ const PMScheduleDetailPage: React.FC = () => {
               </div>
               
               <div className="border rounded-md overflow-hidden">
-                <Table>
+                <UITable>
                   <TableHeader>
                     <TableRow className="bg-gray-50">
-                      <TableHead className="w-[80px]">No</TableHead>
+                      <TableHead className="w-[80px]">Seq</TableHead>
                       <TableHead>Action Description</TableHead>
                       <TableHead className="w-[100px] text-right">Actions</TableHead>
                     </TableRow>
@@ -421,64 +530,293 @@ const PMScheduleDetailPage: React.FC = () => {
                       </TableRow>
                     )}
                   </TableBody>
-                </Table>
+                </UITable>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="service">
+        <TabsContent value="service" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Service information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-blue-600 mb-4">Service Notes</h3>
+                <div className="space-y-4">
+                  <div className="grid w-full gap-1.5">
+                    <Label htmlFor="service-notes">Notes</Label>
+                    <Textarea 
+                      id="service-notes" 
+                      value={serviceNotes} 
+                      onChange={handleServiceNotesChange}
+                      className="min-h-[200px]"
+                      placeholder="Enter service notes here..."
+                      richText
+                    />
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="min-acceptance">
+        <TabsContent value="min-acceptance" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Minimum acceptance criteria will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-blue-600">Minimum Acceptance Criteria</h3>
+              </div>
+              <div className="border rounded-md overflow-hidden">
+                <UITable>
+                  <TableHeader>
+                    <TableRow className="bg-gray-50">
+                      <TableHead>Field Name</TableHead>
+                      <TableHead>Min Acceptance Criteria</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {minAcceptanceCriteria.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.fieldName}</TableCell>
+                        <TableCell>{item.criteria}</TableCell>
+                      </TableRow>
+                    ))}
+                    {minAcceptanceCriteria.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={2} className="h-24 text-center">
+                          No minimum acceptance criteria found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </UITable>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="checksheet">
+        <TabsContent value="checksheet" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Checksheet information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-blue-600">Checksheet</h3>
+              </div>
+              <div className="border rounded-md overflow-hidden">
+                <UITable>
+                  <TableHeader>
+                    <TableRow className="bg-gray-50">
+                      <TableHead>Field Name</TableHead>
+                      <TableHead>Attachment</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {checksheetItems.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.fieldName}</TableCell>
+                        <TableCell>
+                          <Button variant="link" className="p-0 h-auto text-blue-600">
+                            {item.attachment}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {checksheetItems.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={2} className="h-24 text-center">
+                          No checksheet items found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </UITable>
+              </div>
+              <div className="mt-6">
+                <div className="space-y-4">
+                  <div className="grid w-full gap-1.5">
+                    <Label htmlFor="checksheet-notes">Checksheet Notes</Label>
+                    <Textarea 
+                      id="checksheet-notes"
+                      className="min-h-[150px]"
+                      placeholder="Enter checksheet notes here..."
+                      richText
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="file-upload" className="block mb-2">Upload Attachment</Label>
+                    <Input id="file-upload" type="file" />
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="work-order">
+        <TabsContent value="work-order" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Work order information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-blue-600">Work Orders</h3>
+              </div>
+              <div className="border rounded-md overflow-hidden">
+                <UITable>
+                  <TableHeader>
+                    <TableRow className="bg-gray-50">
+                      <TableHead>Work Order No</TableHead>
+                      <TableHead>Asset</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Plan Due Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {workOrders.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.workOrderNo}</TableCell>
+                        <TableCell>{item.asset}</TableCell>
+                        <TableCell>
+                          <StatusBadge status={item.status} />
+                        </TableCell>
+                        <TableCell>{item.planDueDate}</TableCell>
+                      </TableRow>
+                    ))}
+                    {workOrders.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="h-24 text-center">
+                          No work orders found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </UITable>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="additional-info">
+        <TabsContent value="additional-info" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Additional information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-blue-600 mb-4">Additional Information</h3>
+                <div className="space-y-4">
+                  <div className="grid w-full gap-1.5">
+                    <Label htmlFor="additional-info">Comments</Label>
+                    <Textarea 
+                      id="additional-info" 
+                      value={additionalInfo} 
+                      onChange={handleAdditionalInfoChange}
+                      className="min-h-[200px]"
+                      placeholder="Enter additional information here..."
+                      richText
+                    />
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="maintainable-group">
+        <TabsContent value="maintainable-group" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Maintainable group information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-blue-600">Maintainable Group</h3>
+              </div>
+              <div className="border rounded-md overflow-hidden">
+                <UITable>
+                  <TableHeader>
+                    <TableRow className="bg-gray-50">
+                      <TableHead>Asset</TableHead>
+                      <TableHead>Group</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {maintainableGroups.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.asset}</TableCell>
+                        <TableCell>{item.group}</TableCell>
+                      </TableRow>
+                    ))}
+                    {maintainableGroups.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={2} className="h-24 text-center">
+                          No maintainable groups found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </UITable>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="plan">
+        <TabsContent value="plan" className="pt-6">
           <Card>
-            <CardContent className="pt-6 text-center py-12">
-              <p className="text-gray-500">Plan information will be displayed here.</p>
+            <CardContent className="pt-6">
+              <div className="space-y-6">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-blue-600">Plan Labor</h3>
+                  </div>
+                  <div className="border rounded-md overflow-hidden mb-8">
+                    <UITable>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead>Employee</TableHead>
+                          <TableHead>Duration</TableHead>
+                          <TableHead>Man Power</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {planLabor.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.employee}</TableCell>
+                            <TableCell>{item.duration}</TableCell>
+                            <TableCell>{item.manPower}</TableCell>
+                          </TableRow>
+                        ))}
+                        {planLabor.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={3} className="h-24 text-center">
+                              No planned labor found.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </UITable>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-blue-600">Plan Material</h3>
+                  </div>
+                  <div className="border rounded-md overflow-hidden">
+                    <UITable>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead>Material</TableHead>
+                          <TableHead>Quantity</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {planMaterials.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.material}</TableCell>
+                            <TableCell>{item.quantity}</TableCell>
+                          </TableRow>
+                        ))}
+                        {planMaterials.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={2} className="h-24 text-center">
+                              No planned materials found.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </UITable>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
