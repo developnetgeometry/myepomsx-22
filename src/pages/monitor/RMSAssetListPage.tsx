@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
@@ -277,6 +278,7 @@ const UptimeEntryDialog: React.FC<UptimeDialogProps> = ({ isOpen, onClose, asset
 };
 
 const RMSAssetListPage: React.FC = () => {
+  const navigate = useNavigate();
   const [assets, setAssets] = useState(initialAssets);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -346,8 +348,7 @@ const RMSAssetListPage: React.FC = () => {
   };
   
   const handleAssetNoClick = (row: any) => {
-    setSelectedAsset(row);
-    setIsUptimeDialogOpen(true);
+    navigate(`/monitor/rms-asset-detail/${row.id}`);
   };
 
   const columns: Column[] = [

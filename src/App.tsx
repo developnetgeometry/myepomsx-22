@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import RMSDashboardPage from '@/pages/monitor/RMSDashboardPage';
 import RMSAssetListPage from '@/pages/monitor/RMSAssetListPage';
+import RMSAssetDetailPage from '@/pages/monitor/RMSAssetDetailPage';
 import CriticalAssetsPage from '@/pages/monitor/CriticalAssetsPage';
 import IMSDashboardPage from '@/pages/monitor/IMSDashboardPage';
 import NotFound from '@/pages/NotFound';
@@ -17,6 +18,7 @@ function App() {
       <Route path="/monitor">
         <Route path="rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
         <Route path="rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
+        <Route path="rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
         <Route path="critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="critical-assets-tracking" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
