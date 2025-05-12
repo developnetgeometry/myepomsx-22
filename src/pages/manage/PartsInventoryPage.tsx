@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Package, Wrench } from 'lucide-react';
+import { Wrench } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { itemsMaster } from '@/data/sampleData';
 import { Column } from '@/components/shared/DataTable';
@@ -95,27 +94,11 @@ const PartsInventoryPage: React.FC = () => {
       
       <Card>
         <CardContent className="pt-6">
-          <Tabs defaultValue="list">
-            <TabsList>
-              <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
-            </TabsList>
-            <TabsContent value="list" className="pt-4">
-              <DataTable 
-                data={data} 
-                columns={columns}
-                onRowClick={handleRowClick}
-              />
-            </TabsContent>
-            <TabsContent value="details" className="pt-4">
-              <div className="p-4 border rounded-md bg-muted/50">
-                <h3 className="text-lg font-medium">Part Details</h3>
-                <p className="text-muted-foreground mt-2">
-                  Select a part from the list view to see detailed information.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <DataTable 
+            data={data} 
+            columns={columns}
+            onRowClick={handleRowClick}
+          />
         </CardContent>
       </Card>
     </div>

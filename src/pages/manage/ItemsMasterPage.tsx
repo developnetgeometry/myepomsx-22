@@ -1,8 +1,8 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { List } from 'lucide-react';
 import DataTable from '@/components/shared/DataTable';
 import { itemsMaster } from '@/data/sampleData';
@@ -163,28 +163,12 @@ const ItemsMasterPage: React.FC<ItemsMasterPageProps> = ({ hideHeader = false, o
       ) : null}
       
       {!hideHeader ? (
-        <Tabs defaultValue="list">
-          <TabsList>
-            <TabsTrigger value="list">List View</TabsTrigger>
-            <TabsTrigger value="details">Details</TabsTrigger>
-          </TabsList>
-          <TabsContent value="list" className="pt-4">
-            <DataTable 
-              data={data} 
-              columns={columns} 
-              onEdit={handleEdit} 
-              onRowClick={handleRowClick}
-            />
-          </TabsContent>
-          <TabsContent value="details" className="pt-4">
-            <div className="p-4 border rounded-md bg-muted/50">
-              <h3 className="text-lg font-medium">Item Details</h3>
-              <p className="text-muted-foreground mt-2">
-                Select an item from the list view to see detailed information.
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        <DataTable 
+          data={data} 
+          columns={columns} 
+          onEdit={handleEdit} 
+          onRowClick={handleRowClick}
+        />
       ) : (
         <DataTable 
           data={data} 
