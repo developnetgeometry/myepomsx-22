@@ -17,6 +17,7 @@ function App() {
       <Route path="/monitor">
         <Route path="rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
         <Route path="rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
+        <Route path="critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="critical-assets-tracking" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
       </Route>
