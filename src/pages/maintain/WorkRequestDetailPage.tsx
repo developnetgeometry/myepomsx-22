@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -833,9 +832,6 @@ const WorkRequestDetailPage = () => {
                   <TabsTrigger value="reports">Reports</TabsTrigger>
                   <TabsTrigger value="failure">Failure</TabsTrigger>
                   <TabsTrigger value="attachment">Attachment</TabsTrigger>
-                  <TabsTrigger value="environmentDetail">Environment Detail</TabsTrigger>
-                  <TabsTrigger value="operationDetail">Operation Detail</TabsTrigger>
-                  <TabsTrigger value="additionalFields">Additional Fields</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="taskDetail" className="pt-4 space-y-4">
@@ -965,117 +961,6 @@ const WorkRequestDetailPage = () => {
                     </div>
                     
                     <Button type="button" className="mt-2">Upload Attachment</Button>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="environmentDetail" className="pt-4">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Environment Detail</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="weatherCondition">Weather Condition</Label>
-                        <Input id="weatherCondition" value="Clear Sky" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="visibility">Visibility</Label>
-                        <Input id="visibility" value="10 km" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="windSpeedDirection">Wind Speed Direction</Label>
-                        <Input id="windSpeedDirection" value="NW 15 km/h" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="seaWell">Sea Well</Label>
-                        <Input id="seaWell" value="Normal" readOnly />
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="operationDetail" className="pt-4">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Operation Detail</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="serviceAsset">Service Asset</Label>
-                        <Input id="serviceAsset" value="C-130 Compressor" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="pressure">Pressure</Label>
-                        <Input id="pressure" value="10.5 Bar" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="temp">Temp</Label>
-                        <Input id="temp" value="80°C" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="operatingHistory">Operating History</Label>
-                        <Input id="operatingHistory" value="5000 Hours" readOnly />
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="additionalFields" className="pt-4">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Additional Fields</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="alarmTrigger">Alarm Trigger</Label>
-                        <Input id="alarmTrigger" value="Vibration Sensor Alarm" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="shutdownType">Shutdown Type</Label>
-                        <Input id="shutdownType" value="Unplanned Shutdown" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="timeFailed">Time Failed</Label>
-                        <Input id="timeFailed" value="12/05/2025 09:00 AM" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="timeResume">Time Resume</Label>
-                        <Input id="timeResume" value="12/05/2025 02:30 PM" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="shift">Shift</Label>
-                        <Input id="shift" value="Shift A" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="redundant">Redundant</Label>
-                        <Input id="redundant" value="No" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="timeInService">Time in Service (Hour)</Label>
-                        <Input id="timeInService" value="4500" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="materialClass">Material Class</Label>
-                        <Input id="materialClass" value="Stainless Steel 316" readOnly />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="designCode">Design Code</Label>
-                        <Input id="designCode" value="ASME VIII Div 1" readOnly />
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6 space-y-2">
-                      <Label htmlFor="otherDetail">Other Detail</Label>
-                      <Textarea id="otherDetail" value="Temporary support installed for stabilization" readOnly />
-                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
