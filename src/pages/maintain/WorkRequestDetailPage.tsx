@@ -23,12 +23,25 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import DataTable from '@/components/shared/DataTable';
 import { toast } from 'sonner';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Dummy data for the task detail table
 const taskDetailData = [
-  { id: 1, slNo: '001', site: 'Production Facility A', taskList: 'Pump Inspection' },
-  { id: 2, slNo: '002', site: 'Plant B', taskList: 'Valve Replacement' },
-  { id: 3, slNo: '003', site: 'Offshore Platform C', taskList: 'Compressor Maintenance' }
+  { id: 1, seq: '1', taskList: 'Inspect Bearing Noise', activeStatus: true },
+  { id: 2, seq: '2', taskList: 'Tighten Loose Fittings', activeStatus: true },
+  { id: 3, seq: '3', taskList: 'Replace Bearing Unit', activeStatus: true }
+];
+
+// Dummy data for the reports tab
+const reportsData = [
+  { id: 1, reportType: 'Inspection', reportDescription: 'Bearing noise analysis report', attachment: 'report_bearing.pdf' },
+  { id: 2, reportType: 'Service Log', reportDescription: 'Maintenance service log summary', attachment: 'service_log.pdf' }
+];
+
+// Dummy data for the attachment tab
+const attachmentData = [
+  { id: 1, type: 'Work Request', attachmentDate: '12/05/2025', notes: 'Initial Finding Photo Attached', attachment: 'bearing_photo.jpg' }
 ];
 
 // Dummy data for dropdown options
@@ -140,9 +153,29 @@ type FormValues = z.infer<typeof formSchema>;
 
 // Task detail table columns
 const taskColumns = [
-  { id: 'slNo', header: 'SL#', accessorKey: 'slNo' },
-  { id: 'site', header: 'Site', accessorKey: 'site' },
-  { id: 'taskList', header: 'Task List', accessorKey: 'taskList' }
+  { id: 'seq', header: 'Seq', accessorKey: 'seq' },
+  { id: 'taskList', header: 'Task List', accessorKey: 'taskList' },
+  { 
+    id: 'activeStatus', 
+    header: 'Active Status',
+    accessorKey: 'activeStatus',
+    cell: (value: boolean) => value ? '✅' : '❌'
+  }
+];
+
+// Reports table columns
+const reportsColumns = [
+  { id: 'reportType', header: 'Report Type', accessorKey: 'reportType' },
+  { id: 'reportDescription', header: 'Report Description', accessorKey: 'reportDescription' },
+  { id: 'attachment', header: 'Attachment', accessorKey: 'attachment' }
+];
+
+// Attachment table columns
+const attachmentColumns = [
+  { id: 'type', header: 'Type', accessorKey: 'type' },
+  { id: 'attachmentDate', header: 'Attachment Date', accessorKey: 'attachmentDate' },
+  { id: 'notes', header: 'Notes', accessorKey: 'notes' },
+  { id: 'attachment', header: 'Attachment', accessorKey: 'attachment' }
 ];
 
 const WorkRequestDetailPage = () => {
@@ -212,6 +245,12 @@ const WorkRequestDetailPage = () => {
   const handleAddNewTask = () => {
     // This would open a dialog to add a new task
     toast.info("Add new task functionality would open a dialog here");
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      toast.success(`File "${event.target.files[0].name}" uploaded successfully`);
+    }
   };
 
   return (
@@ -789,11 +828,14 @@ const WorkRequestDetailPage = () => {
           <Card>
             <CardContent className="pt-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList>
+                <TabsList className="w-full border-b justify-start overflow-x-auto">
                   <TabsTrigger value="taskDetail">Task Detail</TabsTrigger>
                   <TabsTrigger value="reports">Reports</TabsTrigger>
                   <TabsTrigger value="failure">Failure</TabsTrigger>
                   <TabsTrigger value="attachment">Attachment</TabsTrigger>
+                  <TabsTrigger value="environmentDetail">Environment Detail</TabsTrigger>
+                  <TabsTrigger value="operationDetail">Operation Detail</TabsTrigger>
+                  <TabsTrigger value="additionalFields">Additional Fields</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="taskDetail" className="pt-4 space-y-4">
@@ -809,31 +851,231 @@ const WorkRequestDetailPage = () => {
                   />
                 </TabsContent>
                 
-                <TabsContent value="reports" className="pt-4">
-                  <div className="p-4 border rounded-md bg-muted/50">
-                    <h3 className="text-lg font-medium">Reports</h3>
-                    <p className="text-muted-foreground mt-2">
-                      No reports available for this work request.
-                    </p>
-                  </div>
+                <TabsContent value="reports" className="pt-4 space-y-4">
+                  <DataTable 
+                    columns={reportsColumns}
+                    data={reportsData}
+                  />
                 </TabsContent>
                 
                 <TabsContent value="failure" className="pt-4">
-                  <div className="p-4 border rounded-md bg-muted/50">
-                    <h3 className="text-lg font-medium">Failure Information</h3>
-                    <p className="text-muted-foreground mt-2">
-                      No failure information has been recorded for this work request.
-                    </p>
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Failure Impact Section</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Failure Type</h4>
+                          <p className="text-base">Mechanical Failure</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Shutdown</h4>
+                          <p className="text-base">Yes</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Lost Time Incident</h4>
+                          <p className="text-base">No</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Safety</h4>
+                          <p className="text-base">Moderate Risk</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Like Hood</h4>
+                          <p className="text-base">High</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Priority</h4>
+                          <p className="text-base">P1</p>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <h4 className="text-sm font-medium text-muted-foreground">Immediate Action Taken</h4>
+                        <p className="text-base">Shutdown compressor to prevent further damage.</p>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Consequence Section</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Critical Rank</h4>
+                          <p className="text-base">A1</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Probability Occurrence</h4>
+                          <p className="text-base">High</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">Environment Consequence</h4>
+                          <p className="text-base">Minor Leakage</p>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-muted-foreground">HSE Consequence</h4>
+                          <p className="text-base">Low Risk</p>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <h4 className="text-sm font-medium text-muted-foreground">Corrective Action</h4>
+                        <p className="text-base">Replace damaged bearing and retest.</p>
+                      </div>
+                    </div>
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="attachment" className="pt-4">
-                  <div className="p-4 border rounded-md bg-muted/50">
-                    <h3 className="text-lg font-medium">Attachments</h3>
-                    <p className="text-muted-foreground mt-2">
-                      No attachments have been uploaded for this work request.
-                    </p>
-                    <Button variant="outline" className="mt-4">+ Add Attachment</Button>
+                <TabsContent value="attachment" className="pt-4 space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Attachments</h3>
+                    <DataTable 
+                      columns={attachmentColumns}
+                      data={attachmentData}
+                    />
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Upload New Attachment</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="attachmentType">Attachment Type</Label>
+                        <Select defaultValue="workRequest">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="workRequest">Work Request</SelectItem>
+                            <SelectItem value="photo">Photo</SelectItem>
+                            <SelectItem value="document">Document</SelectItem>
+                            <SelectItem value="report">Report</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="notes">Notes</Label>
+                        <Input id="notes" placeholder="Enter notes about this attachment" />
+                      </div>
+                      
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="file">Upload File</Label>
+                        <Input id="file" type="file" onChange={handleFileChange} />
+                      </div>
+                    </div>
+                    
+                    <Button type="button" className="mt-2">Upload Attachment</Button>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="environmentDetail" className="pt-4">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Environment Detail</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="weatherCondition">Weather Condition</Label>
+                        <Input id="weatherCondition" value="Clear Sky" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="visibility">Visibility</Label>
+                        <Input id="visibility" value="10 km" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="windSpeedDirection">Wind Speed Direction</Label>
+                        <Input id="windSpeedDirection" value="NW 15 km/h" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="seaWell">Sea Well</Label>
+                        <Input id="seaWell" value="Normal" readOnly />
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="operationDetail" className="pt-4">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Operation Detail</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="serviceAsset">Service Asset</Label>
+                        <Input id="serviceAsset" value="C-130 Compressor" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="pressure">Pressure</Label>
+                        <Input id="pressure" value="10.5 Bar" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="temp">Temp</Label>
+                        <Input id="temp" value="80°C" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="operatingHistory">Operating History</Label>
+                        <Input id="operatingHistory" value="5000 Hours" readOnly />
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="additionalFields" className="pt-4">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Additional Fields</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="alarmTrigger">Alarm Trigger</Label>
+                        <Input id="alarmTrigger" value="Vibration Sensor Alarm" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="shutdownType">Shutdown Type</Label>
+                        <Input id="shutdownType" value="Unplanned Shutdown" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="timeFailed">Time Failed</Label>
+                        <Input id="timeFailed" value="12/05/2025 09:00 AM" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="timeResume">Time Resume</Label>
+                        <Input id="timeResume" value="12/05/2025 02:30 PM" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="shift">Shift</Label>
+                        <Input id="shift" value="Shift A" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="redundant">Redundant</Label>
+                        <Input id="redundant" value="No" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="timeInService">Time in Service (Hour)</Label>
+                        <Input id="timeInService" value="4500" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="materialClass">Material Class</Label>
+                        <Input id="materialClass" value="Stainless Steel 316" readOnly />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="designCode">Design Code</Label>
+                        <Input id="designCode" value="ASME VIII Div 1" readOnly />
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 space-y-2">
+                      <Label htmlFor="otherDetail">Other Detail</Label>
+                      <Textarea id="otherDetail" value="Temporary support installed for stabilization" readOnly />
+                    </div>
                   </div>
                 </TabsContent>
               </Tabs>
