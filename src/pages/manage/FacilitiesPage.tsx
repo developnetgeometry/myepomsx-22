@@ -157,30 +157,14 @@ const FacilitiesPage: React.FC = () => {
             </div>
           </div>
           
-          <Tabs defaultValue="list">
-            <TabsList>
-              <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
-            </TabsList>
-            <TabsContent value="list" className="pt-4">
-              <DataTable 
-                data={filteredData} 
-                columns={columns} 
-                onEdit={handleEdit} 
-                onDelete={handleDelete} 
-                onExport={handleExport}
-                onRowClick={handleRowClick} 
-              />
-            </TabsContent>
-            <TabsContent value="details" className="pt-4">
-              <div className="p-4 border rounded-md bg-muted/50">
-                <h3 className="text-lg font-medium">Facility Details</h3>
-                <p className="text-muted-foreground mt-2">
-                  Select a facility from the list view to see detailed information.
-                </p>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <DataTable 
+            data={filteredData} 
+            columns={columns} 
+            onEdit={handleEdit} 
+            onDelete={handleDelete} 
+            onExport={handleExport}
+            onRowClick={handleRowClick} 
+          />
         </CardContent>
       </Card>
 

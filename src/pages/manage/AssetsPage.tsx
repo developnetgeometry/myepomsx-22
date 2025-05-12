@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -289,7 +290,6 @@ const AssetsPage: React.FC = () => {
           <Tabs defaultValue="list">
             <TabsList>
               <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="hierarchy">Asset Hierarchy</TabsTrigger>
             </TabsList>
             <TabsContent value="list" className="pt-4">
@@ -299,14 +299,6 @@ const AssetsPage: React.FC = () => {
                 onEdit={handleEdit}
                 onRowClick={handleRowClick}
               />
-            </TabsContent>
-            <TabsContent value="details" className="pt-4">
-              <div className="p-4 border rounded-md bg-muted/50">
-                <h3 className="text-lg font-medium">Asset Details</h3>
-                <p className="text-muted-foreground mt-2">
-                  Select an asset from the list view to see detailed information.
-                </p>
-              </div>
             </TabsContent>
             <TabsContent value="hierarchy" className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
