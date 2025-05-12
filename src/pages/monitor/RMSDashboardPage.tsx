@@ -3,10 +3,41 @@ import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { LineChart, PieChart, BarChart, Line, Pie, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { LineChart, BarChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import KpiCard from '@/components/shared/KpiCard';
-import { Database, Activity, AlertTriangle, Gauge } from 'lucide-react';
+import { Database, Activity, AlertTriangle, Gauge, Calendar, Filter } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { formatCurrency } from '@/utils/formatters';
+import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+
+// Sample data for asset performance metrics
+const assetUtilizationData = [
+  { asset: 'Compressor P-1001', package: 'Package A', utilization: 92, availability: 95, reliability: 89 },
+  { asset: 'Pump System S-201', package: 'Package B', utilization: 87, availability: 89, reliability: 91 },
+  { asset: 'Control Valve CV-305', package: 'Package A', utilization: 94, availability: 97, reliability: 93 },
+  { asset: 'Heat Exchanger E-401', package: 'Package C', utilization: 81, availability: 84, reliability: 79 },
+  { asset: 'Storage Tank T-501', package: 'Package D', utilization: 95, availability: 92, reliability: 88 }
+];
+
+// Sample data for system reliability metrics
+const systemReliabilityData = [
+  { system: 'Compression System', availability: 94, reliability: 91 },
+  { system: 'Pumping System', availability: 89, reliability: 87 },
+  { system: 'Control System', availability: 96, reliability: 93 },
+  { system: 'Storage System', availability: 92, reliability: 90 }
+];
+
+// Sample data for average metrics
+const averageMetricsData = {
+  utilization: 90,
+  availability: 92,
+  reliability: 88
+};
 
 // Sample data for telemetry charts
 const temperatureData = [
@@ -85,8 +116,43 @@ const systemAlertsData = [
   { name: 'Control System', alerts: 4 },
 ];
 
+// Prepare Chart Data for Utilization by Asset
+const utilizationByAssetChartData = assetUtilizationData.map(item => ({
+  name: item.asset,
+  utilization: item.utilization,
+  availability: item.availability,
+  reliability: item.reliability
+}));
+
+// Prepare Chart Data for System Reliability
+const systemReliabilityChartData = systemReliabilityData.map(item => ({
+  name: item.system,
+  availability: item.availability,
+  reliability: item.reliability
+}));
+
+// Prepare data for average utilization chart
+const averageUtilizationChartData = [
+  { name: 'Average', utilization: averageMetricsData.utilization, availability: averageMetricsData.availability, reliability: averageMetricsData.reliability }
+];
+
 const RMSDashboardPage: React.FC = () => {
   const [activeSystem, setActiveSystem] = useState("All Systems");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  // Function to handle filter changes
+  const handleFilterChange = () => {
+    console.log("Applying filters:", { startDate, endDate, activeSystem });
+    // Here you would typically fetch or filter data based on the new criteria
+  };
+
+  // Function to reset filters
+  const resetFilters = () => {
+    setStartDate("");
+    setEndDate("");
+    setActiveSystem("All Systems");
+  };
 
   return (
     <div className="space-y-6">
@@ -122,7 +188,7 @@ const RMSDashboardPage: React.FC = () => {
           changeLabel="vs yesterday"
         />
         <KpiCard 
-          title="System Health" 
+          title="Average Reliability" 
           value="92%" 
           icon={<Gauge className="h-6 w-6" />} 
           change={1.5}
@@ -131,6 +197,44 @@ const RMSDashboardPage: React.FC = () => {
           changeLabel="vs last week"
         />
       </div>
+
+      {/* Date Range Filters */}
+      <Card className="mb-4">
+        <CardContent className="p-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input
+                  id="startDate"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-[180px]"
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="endDate">End Date</Label>
+                <Input
+                  id="endDate"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-[180px]"
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5 mt-6">
+                <Button variant="outline" size="sm" onClick={resetFilters} className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" /> Reset
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button onClick={handleFilterChange}>Apply Filters</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex flex-wrap gap-3 mb-4">
         <Badge variant="outline" className={activeSystem === "All Systems" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("All Systems")}>
@@ -148,14 +252,153 @@ const RMSDashboardPage: React.FC = () => {
         <Badge variant="outline" className={activeSystem === "Pump System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Pump System")}>
           Pump System
         </Badge>
+        <Badge variant="outline" className={activeSystem === "Control System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Control System")}>
+          Control System
+        </Badge>
       </div>
 
-      <Tabs defaultValue="telemetry" className="w-full">
-        <TabsList className="grid w-full md:w-[500px] grid-cols-3">
+      <Tabs defaultValue="performance" className="w-full">
+        <TabsList className="grid w-full md:w-[600px] grid-cols-2">
+          <TabsTrigger value="performance">Asset Performance</TabsTrigger>
           <TabsTrigger value="telemetry">Live Telemetry</TabsTrigger>
-          <TabsTrigger value="health">Health Status</TabsTrigger>
-          <TabsTrigger value="alerts">Alert Analysis</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="performance" className="mt-6">
+          <div className="grid grid-cols-1 gap-6">
+            {/* Utilization, Availability & Reliability (Asset Wise) */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Utilization, Availability & Reliability (Asset Wise)</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 pt-0">
+                <ChartContainer className="h-80" config={{}}>
+                  <BarChart data={utilizationByAssetChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar dataKey="utilization" name="Utilization %" fill="#3b82f6" />
+                    <Bar dataKey="availability" name="Availability %" fill="#22c55e" />
+                    <Bar dataKey="reliability" name="Reliability %" fill="#8b5cf6" />
+                  </BarChart>
+                </ChartContainer>
+                
+                <div className="mt-6 overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Asset Name</TableHead>
+                        <TableHead>Package Name</TableHead>
+                        <TableHead>Utilization %</TableHead>
+                        <TableHead>Availability %</TableHead>
+                        <TableHead>Reliability %</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {assetUtilizationData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.asset}</TableCell>
+                          <TableCell>{item.package}</TableCell>
+                          <TableCell>{item.utilization}%</TableCell>
+                          <TableCell>{item.availability}%</TableCell>
+                          <TableCell>{item.reliability}%</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Average Critical Asset Utilization, Availability & Reliability */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Average Critical Asset Utilization, Availability & Reliability</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 pt-0">
+                <ChartContainer className="h-80" config={{}}>
+                  <BarChart data={averageUtilizationChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar dataKey="utilization" name="Utilization %" fill="#3b82f6" />
+                    <Bar dataKey="availability" name="Availability %" fill="#22c55e" />
+                    <Bar dataKey="reliability" name="Reliability %" fill="#8b5cf6" />
+                  </BarChart>
+                </ChartContainer>
+                
+                <div className="mt-6 overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Metric</TableHead>
+                        <TableHead>Value</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Average Utilization</TableCell>
+                        <TableCell>{averageMetricsData.utilization}%</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Average Availability</TableCell>
+                        <TableCell>{averageMetricsData.availability}%</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Average Reliability</TableCell>
+                        <TableCell>{averageMetricsData.reliability}%</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* System Reliability & Availability */}
+            <Card>
+              <CardHeader>
+                <CardTitle>System Reliability & Availability</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 pt-0">
+                <ChartContainer className="h-80" config={{}}>
+                  <BarChart data={systemReliabilityChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Bar dataKey="availability" name="Availability %" fill="#22c55e" />
+                    <Bar dataKey="reliability" name="Reliability %" fill="#8b5cf6" />
+                  </BarChart>
+                </ChartContainer>
+                
+                <div className="mt-6 overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>System</TableHead>
+                        <TableHead>Availability %</TableHead>
+                        <TableHead>Reliability %</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {systemReliabilityData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.system}</TableCell>
+                          <TableCell>{item.availability}%</TableCell>
+                          <TableCell>{item.reliability}%</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
         
         <TabsContent value="telemetry" className="mt-6">
           <div className="grid grid-cols-1 gap-6">
@@ -215,78 +458,6 @@ const RMSDashboardPage: React.FC = () => {
               </Card>
             </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="health" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Asset Health Distribution</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0">
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={healthStatusData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {healthStatusData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Systems with Active Alerts</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={systemAlertsData} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis type="category" dataKey="name" width={150} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="alerts" name="Number of Alerts" fill="#f97316" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="alerts" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Alert Trends (Last 7 Days)</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 pt-0">
-              <ResponsiveContainer width="100%" height={350}>
-                <BarChart data={alertTrendsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="day" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="critical" name="Critical" stackId="a" fill="#ef4444" />
-                  <Bar dataKey="warning" name="Warning" stackId="a" fill="#f59e0b" />
-                  <Bar dataKey="info" name="Info" stackId="a" fill="#3b82f6" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
