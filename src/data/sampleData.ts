@@ -1,4 +1,3 @@
-
 // Sample inventory data
 export const inventory = [
   {
@@ -363,7 +362,8 @@ export const itemsMaster = [
     manufacturer: 'SKF',
     supplier: 'Industrial Supply Co.',
     uom: 'EA',
-    price: 120.75
+    price: 120.75,
+    manufacturerPartsNo: 'SKF-BA-2023'
   },
   { 
     id: '2', 
@@ -374,7 +374,8 @@ export const itemsMaster = [
     manufacturer: 'John Crane',
     supplier: 'Sealing Solutions Ltd',
     uom: 'EA',
-    price: 95.50
+    price: 95.50,
+    manufacturer_part_no: 'JC-MS-4456'
   },
   { 
     id: '3', 
@@ -385,7 +386,8 @@ export const itemsMaster = [
     manufacturer: 'Mobil',
     supplier: 'Oil Distributors Inc',
     uom: 'L',
-    price: 12.25
+    price: 12.25,
+    manufacturerPartsNo: 'MO-LUB-5500'
   },
   { 
     id: '4', 
@@ -396,7 +398,8 @@ export const itemsMaster = [
     manufacturer: 'Fisher',
     supplier: 'Valve Supply Co',
     uom: 'EA',
-    price: 450.00
+    price: 450.00,
+    manufacturerPartsNo: 'FSH-CV-8800'
   },
   { 
     id: '5', 
@@ -407,6 +410,7 @@ export const itemsMaster = [
     manufacturer: 'Wika',
     supplier: 'Instrument Solutions',
     uom: 'EA',
-    price: 85.25
+    price: 85.25,
+    manufacturerPartsNo: 'WK-PG-3344'
   }
 ];
