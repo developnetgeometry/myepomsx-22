@@ -5,11 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LineChart, PieChart, BarChart, Line, Pie, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import KpiCard from '@/components/shared/KpiCard';
-import { Database, Activity, AlertTriangle, Gauge } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Database, Activity, AlertTriangle, Gauge, Compressor, Cooling, Separator, Pump } from 'lucide-react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { formatDateTime } from '@/utils/formatters';
+import { cn } from '@/lib/utils';
 
 // Sample data for telemetry charts
 const temperatureData = [
@@ -150,7 +150,8 @@ const alertListData = [
     value: '92.5°C',
     threshold: '90.0°C',
     alertLevel: 'Warning',
-    timestamp: '2025-05-12 09:15:22'
+    timestamp: '2025-05-12 09:15:22',
+    system: 'Compressor System'
   },
   { 
     id: '2',
@@ -160,7 +161,8 @@ const alertListData = [
     value: '13.8 MPa',
     threshold: '13.5 MPa',
     alertLevel: 'Warning',
-    timestamp: '2025-05-12 08:45:30'
+    timestamp: '2025-05-12 08:45:30',
+    system: 'Flow Control'
   },
   { 
     id: '3',
@@ -170,7 +172,8 @@ const alertListData = [
     value: '1.8%',
     threshold: '1.5%',
     alertLevel: 'Warning',
-    timestamp: '2025-05-11 23:10:45'
+    timestamp: '2025-05-11 23:10:45',
+    system: 'Pressure Monitoring'
   },
   { 
     id: '5',
@@ -180,7 +183,8 @@ const alertListData = [
     value: '110.5°C',
     threshold: '95.0°C',
     alertLevel: 'Critical',
-    timestamp: '2025-05-12 07:50:38'
+    timestamp: '2025-05-12 07:50:38',
+    system: 'Pump System'
   },
   { 
     id: '5',
@@ -190,8 +194,18 @@ const alertListData = [
     value: '42.3 A',
     threshold: '40.0 A',
     alertLevel: 'Critical',
-    timestamp: '2025-05-12 06:58:12'
+    timestamp: '2025-05-12 06:58:12',
+    system: 'Pump System'
   }
+];
+
+// System options for filter tabs with icons
+const systemOptions = [
+  { id: "All Systems", label: "All Systems", icon: <Database className="h-4 w-4 mr-2" /> },
+  { id: "Compressor System", label: "Compressor System", icon: <Compressor className="h-4 w-4 mr-2" /> },
+  { id: "Cooling System", label: "Cooling System", icon: <Cooling className="h-4 w-4 mr-2" /> },
+  { id: "Separator System", label: "Separator System", icon: <Separator className="h-4 w-4 mr-2" /> },
+  { id: "Pump System", label: "Pump System", icon: <Pump className="h-4 w-4 mr-2" /> }
 ];
 
 // Filter assets by system
@@ -212,10 +226,31 @@ const filterAlertsBySystem = (system: string) => {
   return alertListData.filter(alert => systemAssetIds.includes(alert.id));
 };
 
+// Filter telemetry data based on system (simulated different data patterns for systems)
+const filterTelemetryData = (data: any[], system: string, factor: number = 1) => {
+  if (system === 'All Systems') return data;
+  
+  // Create system-specific variations
+  return data.map(point => ({
+    ...point,
+    value: system === 'Compressor System' ? point.value * 1.2 :
+           system === 'Cooling System' ? point.value * 0.8 :
+           system === 'Separator System' ? point.value * 0.9 :
+           system === 'Pump System' ? point.value * 1.1 :
+           point.value
+  }));
+};
+
 const RMSDashboardPage: React.FC = () => {
+  const [activeViewTab, setActiveViewTab] = useState("telemetry");
   const [activeSystem, setActiveSystem] = useState("All Systems");
+
+  // Filtered data based on active system
   const filteredAssets = filterAssetsBySystem(activeSystem);
   const filteredAlerts = filterAlertsBySystem(activeSystem);
+  const filteredTemperatureData = filterTelemetryData(temperatureData, activeSystem, 1);
+  const filteredPressureData = filterTelemetryData(pressureData, activeSystem, 1);
+  const filteredVibrationData = filterTelemetryData(vibrationData, activeSystem, 1);
 
   return (
     <div className="space-y-6">
@@ -261,60 +296,43 @@ const RMSDashboardPage: React.FC = () => {
         />
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-4">
-        <Badge 
-          variant="outline" 
-          className={activeSystem === "All Systems" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
-          onClick={() => setActiveSystem("All Systems")}
-        >
-          All Systems
-        </Badge>
-        <Badge 
-          variant="outline" 
-          className={activeSystem === "Compressor System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
-          onClick={() => setActiveSystem("Compressor System")}
-        >
-          Compressor System
-        </Badge>
-        <Badge 
-          variant="outline" 
-          className={activeSystem === "Cooling System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
-          onClick={() => setActiveSystem("Cooling System")}
-        >
-          Cooling System
-        </Badge>
-        <Badge 
-          variant="outline" 
-          className={activeSystem === "Separator System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
-          onClick={() => setActiveSystem("Separator System")}
-        >
-          Separator System
-        </Badge>
-        <Badge 
-          variant="outline" 
-          className={activeSystem === "Pump System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
-          onClick={() => setActiveSystem("Pump System")}
-        >
-          Pump System
-        </Badge>
-      </div>
+      {/* System Filter Tabs */}
+      <Tabs 
+        value={activeSystem} 
+        onValueChange={setActiveSystem}
+        className="w-full mb-6"
+      >
+        <TabsList className="w-full md:w-auto flex flex-wrap bg-muted/50 p-1">
+          {systemOptions.map(system => (
+            <TabsTrigger
+              key={system.id}
+              value={system.id}
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center"
+            >
+              {system.icon}
+              {system.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
-      <Tabs defaultValue="telemetry" className="w-full">
+      <Tabs value={activeViewTab} onValueChange={setActiveViewTab} className="w-full">
         <TabsList className="grid w-full md:w-[500px] grid-cols-3">
           <TabsTrigger value="telemetry">Live Telemetry</TabsTrigger>
           <TabsTrigger value="health">Health Status</TabsTrigger>
           <TabsTrigger value="alerts">Alert Analysis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="telemetry" className="mt-6">
+        <TabsContent value="telemetry" className="mt-6 animate-fade-in">
           <div className="grid grid-cols-1 gap-6">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Temperature Trends</CardTitle>
+                <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
               </CardHeader>
               <CardContent className="p-6 pt-0">
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={temperatureData}>
+                  <LineChart data={filteredTemperatureData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="time" />
                     <YAxis domain={['auto', 'auto']} label={{ value: '°C', angle: -90, position: 'insideLeft' }} />
@@ -328,12 +346,13 @@ const RMSDashboardPage: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>Pressure Readings</CardTitle>
+                  <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={pressureData}>
+                    <LineChart data={filteredPressureData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="time" />
                       <YAxis domain={['auto', 'auto']} label={{ value: 'MPa', angle: -90, position: 'insideLeft' }} />
@@ -346,12 +365,13 @@ const RMSDashboardPage: React.FC = () => {
               </Card>
 
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>Vibration Readings</CardTitle>
+                  <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={vibrationData}>
+                    <LineChart data={filteredVibrationData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="time" />
                       <YAxis domain={['auto', 'auto']} label={{ value: 'mm/s', angle: -90, position: 'insideLeft' }} />
@@ -366,10 +386,11 @@ const RMSDashboardPage: React.FC = () => {
           </div>
         </TabsContent>
         
-        <TabsContent value="health" className="mt-6">
+        <TabsContent value="health" className="mt-6 animate-fade-in">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Asset Health Status</CardTitle>
+              <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <div className="relative overflow-x-auto">
@@ -410,10 +431,11 @@ const RMSDashboardPage: React.FC = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="alerts" className="mt-6">
+        <TabsContent value="alerts" className="mt-6 animate-fade-in">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Alert Analysis</CardTitle>
+              <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <div className="relative overflow-x-auto">
@@ -448,13 +470,7 @@ const RMSDashboardPage: React.FC = () => {
                           </TableCell>
                           <TableCell>{alert.threshold}</TableCell>
                           <TableCell>
-                            <Badge className={
-                              alert.alertLevel === 'Critical' ? 'bg-red-500' :
-                              alert.alertLevel === 'Warning' ? 'bg-orange-500' :
-                              'bg-green-500'
-                            }>
-                              {alert.alertLevel}
-                            </Badge>
+                            <StatusBadge status={alert.alertLevel} />
                           </TableCell>
                           <TableCell>{formatDateTime(alert.timestamp)}</TableCell>
                         </TableRow>
@@ -467,8 +483,9 @@ const RMSDashboardPage: React.FC = () => {
           </Card>
           
           <Card className="mt-6">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Alert Trends (Last 7 Days)</CardTitle>
+              <div className="text-sm font-medium text-muted-foreground">{activeSystem}</div>
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <ResponsiveContainer width="100%" height={350}>
