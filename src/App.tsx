@@ -11,6 +11,8 @@ import PackagePage from './pages/manage/PackagePage';
 import PackageDetailPage from './pages/manage/PackageDetailPage';
 import AssetRegisterPage from './pages/manage/AssetRegisterPage';
 import AssetRegisterDetailPage from './pages/manage/AssetRegisterDetailPage';
+import ItemsMasterPage from './pages/manage/ItemsMasterPage';
+import ItemsMasterDetailPage from './pages/manage/ItemsMasterDetailPage';
 import ClientPage from './pages/admin/setup/ClientPage';
 import ClientDetailPage from './pages/admin/setup/ClientDetailPage';
 import ProjectPage from './pages/admin/setup/ProjectPage';
@@ -54,6 +56,8 @@ function App() {
         <Route path="/manage/package/:id" element={<Layout><PackageDetailPage /></Layout>} />
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
         <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
+        <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
+        <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
         
         {/* Admin Setup Routes */}
         <Route path="/admin/setup/client" element={<Layout><ClientPage /></Layout>} />
