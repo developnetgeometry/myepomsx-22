@@ -7,17 +7,25 @@ type StatusType = 'active' | 'inactive' | 'pending' | 'completed' | 'critical' |
 interface StatusBadgeProps {
   status: string;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, size = 'md' }) => {
   const lowercaseStatus = status?.toLowerCase() || '';
   
   // Health status with colored dot indicator
   if (lowercaseStatus === 'good' || lowercaseStatus === 'excellent') {
     return (
       <div className="flex items-center">
-        <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
-        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+        <div className={cn(
+          "rounded-full bg-green-500 mr-2",
+          size === 'sm' ? 'h-2 w-2' : size === 'lg' ? 'h-3 w-3' : 'h-2.5 w-2.5'
+        )}></div>
+        <span className={cn(
+          'text-gray-800 font-medium',
+          size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm',
+          className
+        )}>
           {status}
         </span>
       </div>
@@ -27,8 +35,15 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   if (lowercaseStatus === 'fair') {
     return (
       <div className="flex items-center">
-        <div className="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
-        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+        <div className={cn(
+          "rounded-full bg-yellow-500 mr-2",
+          size === 'sm' ? 'h-2 w-2' : size === 'lg' ? 'h-3 w-3' : 'h-2.5 w-2.5'
+        )}></div>
+        <span className={cn(
+          'text-gray-800 font-medium',
+          size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm',
+          className
+        )}>
           {status}
         </span>
       </div>
@@ -38,8 +53,15 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   if (lowercaseStatus === 'poor' || lowercaseStatus === 'needs attention') {
     return (
       <div className="flex items-center">
-        <div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
-        <span className={cn('text-sm text-gray-800 font-medium', className)}>
+        <div className={cn(
+          "rounded-full bg-red-500 mr-2",
+          size === 'sm' ? 'h-2 w-2' : size === 'lg' ? 'h-3 w-3' : 'h-2.5 w-2.5'
+        )}></div>
+        <span className={cn(
+          'text-gray-800 font-medium',
+          size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm',
+          className
+        )}>
           {status}
         </span>
       </div>
@@ -90,8 +112,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   return (
     <span 
       className={cn(
-        'inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        'inline-flex items-center justify-center rounded-full text-xs font-medium border',
         getStatusClass(status),
+        size === 'sm' ? 'px-2 py-0.5 text-xs' : 
+        size === 'lg' ? 'px-3 py-1 text-base' : 'px-2.5 py-0.5 text-xs',
         className
       )}
     >
