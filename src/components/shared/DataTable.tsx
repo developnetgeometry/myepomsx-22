@@ -191,7 +191,7 @@ const DataTable: React.FC<DataTableProps> = ({
                         className="py-4 px-6 text-sm text-gray-900"
                       >
                         {column.accessorKey.includes('status') 
-                          ? <StatusBadge status={row[column.accessorKey]} />
+                          ? <StatusBadge status={row[column.accessorKey]} /> 
                           : formatCellValue(column, row)}
                       </TableCell>
                     ))}

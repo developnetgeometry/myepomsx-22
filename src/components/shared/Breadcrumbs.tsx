@@ -32,6 +32,9 @@ const pathMap: Record<string, string> = {
   "parts-inventory": "Parts Inventory",
   "system": "System",
   "rms-asset-list": "RMS Asset List",
+  "rms-asset-detail": "RMS Asset Detail",
+  "critical-assets": "Critical Assets",
+  "rms-dashboard": "RMS Dashboard",
   // Add more mappings as needed
 };
 
