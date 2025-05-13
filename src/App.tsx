@@ -23,6 +23,19 @@ import AssetsPage from '@/pages/manage/AssetsPage';
 import IntegrityModulePage from '@/pages/integrity/IntegrityModulePage';
 import CompanyDetailPage from '@/pages/admin/setup/CompanyDetailPage';
 import ClientPage from '@/pages/admin/setup/ClientPage';
+import FacilitiesPage from '@/pages/manage/FacilitiesPage';
+import PackagePage from '@/pages/manage/PackagePage';
+import PackageDetailPage from '@/pages/manage/PackageDetailPage';
+import ItemsMasterPage from '@/pages/manage/ItemsMasterPage';
+import ItemsMasterDetailPage from '@/pages/manage/ItemsMasterDetailPage';
+import InventoryPage from '@/pages/manage/InventoryPage';
+import InventoryItemDetailPage from '@/pages/manage/InventoryItemDetailPage';
+import BomAssemblyPage from '@/pages/manage/BomAssemblyPage';
+import WorkOrderListPage from '@/pages/maintain/WorkOrderListPage';
+import WorkOrderDetailPage from '@/pages/maintain/WorkOrderDetailPage';
+import PMSchedulePage from '@/pages/maintain/PMSchedulePage';
+import PMScheduleDetailPage from '@/pages/maintain/PMScheduleDetailPage';
+import MaterialPage from '@/pages/manage/MaterialPage';
 
 function App() {
   return (
@@ -45,6 +58,10 @@ function App() {
       <Route path="/maintain/task-library/:id" element={<Layout><TaskLibraryDetailPage /></Layout>} />
       <Route path="/maintain/work-request" element={<Layout><WorkRequestPage /></Layout>} />
       <Route path="/maintain/work-request/:id" element={<Layout><WorkRequestDetailPage /></Layout>} />
+      <Route path="/maintain/work-order-list" element={<Layout><WorkOrderListPage /></Layout>} />
+      <Route path="/maintain/work-order-list/:id" element={<Layout><WorkOrderDetailPage /></Layout>} />
+      <Route path="/maintain/pm-schedule" element={<Layout><PMSchedulePage /></Layout>} />
+      <Route path="/maintain/pm-schedule/:id" element={<Layout><PMScheduleDetailPage /></Layout>} />
       
       {/* Manage Routes */}
       <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
@@ -52,6 +69,16 @@ function App() {
       <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
       <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
       <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+      <Route path="/manage/assets/:id" element={<Layout><AssetDetailsPage /></Layout>} />
+      <Route path="/manage/facilities" element={<Layout><FacilitiesPage /></Layout>} />
+      <Route path="/manage/package" element={<Layout><PackagePage /></Layout>} />
+      <Route path="/manage/package/:id" element={<Layout><PackageDetailPage /></Layout>} />
+      <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
+      <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
+      <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
+      <Route path="/manage/inventory/:id" element={<Layout><InventoryItemDetailPage /></Layout>} />
+      <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
+      <Route path="/manage/material" element={<Layout><MaterialPage /></Layout>} />
       
       {/* Integrity Routes */}
       <Route path="/integrity" element={<Layout><IntegrityModulePage /></Layout>} />
