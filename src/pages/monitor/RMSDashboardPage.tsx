@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LineChart, PieChart, BarChart, Line, Pie, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import KpiCard from '@/components/shared/KpiCard';
-import { Database, Activity, AlertTriangle, Gauge, Compressor, Cooling, Separator, Pump } from 'lucide-react';
+import { Database, Activity, AlertTriangle, Gauge, AirVent, SeparatorHorizontal, Pump } from 'lucide-react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { formatDateTime } from '@/utils/formatters';
@@ -202,9 +201,9 @@ const alertListData = [
 // System options for filter tabs with icons
 const systemOptions = [
   { id: "All Systems", label: "All Systems", icon: <Database className="h-4 w-4 mr-2" /> },
-  { id: "Compressor System", label: "Compressor System", icon: <Compressor className="h-4 w-4 mr-2" /> },
-  { id: "Cooling System", label: "Cooling System", icon: <Cooling className="h-4 w-4 mr-2" /> },
-  { id: "Separator System", label: "Separator System", icon: <Separator className="h-4 w-4 mr-2" /> },
+  { id: "Compressor System", label: "Compressor System", icon: <AirVent className="h-4 w-4 mr-2" /> },
+  { id: "Cooling System", label: "Cooling System", icon: <AirVent className="h-4 w-4 mr-2" /> },
+  { id: "Separator System", label: "Separator System", icon: <SeparatorHorizontal className="h-4 w-4 mr-2" /> },
   { id: "Pump System", label: "Pump System", icon: <Pump className="h-4 w-4 mr-2" /> }
 ];
 
