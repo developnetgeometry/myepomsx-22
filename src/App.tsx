@@ -15,6 +15,8 @@ import AssetRegisterDetailPage from '@/pages/manage/AssetRegisterDetailPage';
 import DashboardPage from '@/pages/DashboardPage';
 import SystemPage from '@/pages/manage/SystemPage';
 import AssetHierarchyPage from '@/pages/manage/AssetHierarchyPage';
+import TaskLibraryPage from '@/pages/maintain/TaskLibraryPage';
+import TaskLibraryDetailPage from '@/pages/maintain/TaskLibraryDetailPage';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
       {/* Maintain Routes */}
       <Route path="/maintain/wo-history" element={<Layout><WOHistoryPage /></Layout>} />
       <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
+      <Route path="/maintain/task-library" element={<Layout><TaskLibraryPage /></Layout>} />
+      <Route path="/maintain/task-library/:id" element={<Layout><TaskLibraryDetailPage /></Layout>} />
       
       {/* Manage Routes */}
       <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
@@ -40,12 +44,7 @@ function App() {
       <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
       <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
       
-      {/* Redirect to dashboard rather than showing 404 for common paths */}
-      <Route path="/manage/*" element={<Layout><DashboardPage /></Layout>} />
-      <Route path="/monitor/*" element={<Layout><DashboardPage /></Layout>} />
-      <Route path="/maintain/*" element={<Layout><DashboardPage /></Layout>} />
-      
-      {/* 404 Not Found */}
+      {/* 404 Not Found - Only use for completely unknown routes */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
