@@ -11,11 +11,13 @@ import Index from '@/pages/Index';
 import WOHistoryPage from '@/pages/maintain/WOHistoryPage';
 import WOHistoryDetailPage from '@/pages/maintain/WOHistoryDetailPage';
 import AssetRegisterPage from '@/pages/manage/AssetRegisterPage';
+import DashboardPage from '@/pages/DashboardPage';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout><Index /></Layout>} />
+      <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
       
       {/* Monitor Routes */}
       <Route path="/monitor">

@@ -6,8 +6,8 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to the RMS Dashboard page
-    navigate('/monitor/rms-dashboard');
+    // Redirect to the Dashboard page (not RMS Dashboard)
+    navigate('/dashboard');
   }, [navigate]);
 
   return null;
