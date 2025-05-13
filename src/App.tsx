@@ -57,6 +57,7 @@ import RBIAssessmentPage from './pages/monitor/RBIAssessmentPage';
 import RBIAssessmentDetailPage from './pages/monitor/RBIAssessmentDetailPage';
 import RMSAssetListPage from './pages/monitor/RMSAssetListPage';
 import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
+import RMSAssetDetailPage from './pages/monitor/RMSAssetDetailPage';
 
 // Admin pages
 import AssetClassPage from './pages/admin/settings/AssetClassPage';
@@ -154,6 +155,7 @@ function App() {
         <Route path="/monitor/rbi-assessment/:id" element={<Layout><RBIAssessmentDetailPage /></Layout>} />
         <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
         <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
+        <Route path="/monitor/rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
         
         {/* Admin routes */}
         <Route path="/admin/settings/asset-class" element={<Layout><AssetClassPage /></Layout>} />
