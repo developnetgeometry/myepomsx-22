@@ -55,6 +55,8 @@ import RMSAssetListPage from './pages/monitor/RMSAssetListPage';
 import RMSAssetDetailPage from './pages/monitor/RMSAssetDetailPage';
 import CriticalAssetsPage from './pages/monitor/CriticalAssetsPage';
 import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
+import WOHistoryPage from './pages/maintain/WOHistoryPage';
+import WOHistoryDetailPage from './pages/maintain/WOHistoryDetailPage';
 
 function App() {
   return (
@@ -123,6 +125,10 @@ function App() {
         <Route path="/monitor/rms-asset-list/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
         <Route path="/monitor/critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
+        
+        {/* Maintain Routes */}
+        <Route path="/maintain/wo-history" element={<Layout><WOHistoryPage /></Layout>} />
+        <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
         
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
