@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -51,7 +50,8 @@ const ItemsMasterDetailPage: React.FC = () => {
       category: item?.category || "",
       type: item?.type || "",
       manufacturer: item?.manufacturer || "",
-      manufacturerPartsNo: item?.manufacturerPartsNo || "",
+      // Handle both possible property names for manufacturer parts number
+      manufacturerPartsNo: item?.manufacturerPartsNo || item?.manufacturer_part_no || "",
       modelNo: "",
       unit: "Each",
       specification: "",

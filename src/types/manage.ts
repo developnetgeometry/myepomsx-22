@@ -14,6 +14,10 @@ export interface System {
   code: string;
   facilityLocationId: string;
   facilityLocation?: string;
+  // Add support for the fields used in sample data
+  tag?: string;
+  facilityId?: string;
+  facilityName?: string;
 }
 
 // Package Types
@@ -64,10 +68,15 @@ export interface ItemsMaster {
   id: string;
   itemsNo: string;
   name: string;
-  manufacturerPartsNo: string;
+  manufacturerPartsNo?: string;  // Make this optional to support both property names
+  manufacturer_part_no?: string;  // Alternative property name
   manufacturer: string;
   type: string;
   category: string;
+  // Add support for other fields in sample data
+  supplier?: string;
+  uom?: string;
+  price?: number;
 }
 
 // Inventory Types

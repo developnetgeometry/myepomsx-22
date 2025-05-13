@@ -21,11 +21,17 @@ const SystemDetailPage: React.FC = () => {
     
     if (foundSystem) {
       // Find the facility name for the system
-      const facility = facilityLocations.find(f => f.id === foundSystem.facilityLocationId);
-      setSystem({
+      const facility = facilityLocations.find(f => f.id === foundSystem.facilityId);
+      
+      // Create a system object that matches the System interface
+      const systemData: System = {
         ...foundSystem,
+        code: foundSystem.tag || '', // Use tag as code if available
+        facilityLocationId: foundSystem.facilityId || '', // Use facilityId as facilityLocationId
         facilityLocation: facility?.name || 'Unknown'
-      });
+      };
+      
+      setSystem(systemData);
     } else {
       toast.error("System not found");
       navigate('/manage/system');
@@ -90,7 +96,7 @@ const SystemDetailPage: React.FC = () => {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">System Code</TableCell>
-                <TableCell>{system.code}</TableCell>
+                <TableCell>{system.code || system.tag}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm" onClick={handleEdit}>
                     <Pencil className="h-4 w-4" />
