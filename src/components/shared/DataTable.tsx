@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText, Eye, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pencil, Download, Trash2, FileText, View, X } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import {
   AlertDialog,
@@ -208,7 +208,7 @@ const DataTable: React.FC<DataTableProps> = ({
                                     className="h-8 w-8 p-0 text-gray-500 hover:text-blue-600 hover:bg-blue-50"
                                     onClick={(e) => handleViewDetailsClick(row, e)}
                                   >
-                                    <Eye className="h-4 w-4" />
+                                    <View className="h-4 w-4" />
                                     <span className="sr-only">View Details</span>
                                   </Button>
                                 </TooltipTrigger>
