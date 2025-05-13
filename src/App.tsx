@@ -24,6 +24,7 @@ import IntegrityModulePage from '@/pages/integrity/IntegrityModulePage';
 import CompanyDetailPage from '@/pages/admin/setup/CompanyDetailPage';
 import ClientPage from '@/pages/admin/setup/ClientPage';
 import FacilitiesPage from '@/pages/manage/FacilitiesPage';
+import FacilityDetailPage from '@/pages/manage/FacilityDetailPage';
 import PackagePage from '@/pages/manage/PackagePage';
 import PackageDetailPage from '@/pages/manage/PackageDetailPage';
 import ItemsMasterPage from '@/pages/manage/ItemsMasterPage';
@@ -37,6 +38,7 @@ import PMSchedulePage from '@/pages/maintain/PMSchedulePage';
 import PMScheduleDetailPage from '@/pages/maintain/PMScheduleDetailPage';
 import MaterialPage from '@/pages/manage/MaterialPage';
 import AssetDetailsPage from '@/pages/manage/AssetDetailsPage';
+import SystemDetailPage from '@/pages/manage/SystemDetailPage';
 
 function App() {
   return (
@@ -68,10 +70,12 @@ function App() {
       <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
       <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
       <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
+      <Route path="/manage/system/:id" element={<Layout><SystemDetailPage /></Layout>} />
       <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
       <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
       <Route path="/manage/assets/:id" element={<Layout><AssetDetailsPage /></Layout>} />
       <Route path="/manage/facilities" element={<Layout><FacilitiesPage /></Layout>} />
+      <Route path="/manage/facilities/:id" element={<Layout><FacilityDetailPage /></Layout>} />
       <Route path="/manage/package" element={<Layout><PackagePage /></Layout>} />
       <Route path="/manage/package/:id" element={<Layout><PackageDetailPage /></Layout>} />
       <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
