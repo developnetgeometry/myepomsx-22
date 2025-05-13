@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart4, Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
+import { Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -140,26 +140,6 @@ const sidebarItems: SidebarItemType[] = [{
       path: '/monitor/rms-dashboard',
       icon: RMSDashboardIcon
     }]
-  }]
-}, {
-  name: 'Reports & Analytics',
-  icon: BarChart4,
-  children: [{
-    name: 'Asset Performance',
-    path: '/measure/asset-performance',
-    icon: BarChart4
-  }, {
-    name: 'Work Analytics',
-    path: '/measure/work-analytics',
-    icon: BarChart4
-  }, {
-    name: 'Cost Analysis',
-    path: '/measure/cost-analysis',
-    icon: BarChart4
-  }, {
-    name: 'KPI Dashboard',
-    path: '/measure/kpi-dashboard',
-    icon: BarChart4
   }]
 }, 
 // Combined Admin module with Setup and Settings as submodules
