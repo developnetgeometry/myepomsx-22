@@ -1,206 +1,115 @@
 
-import React, { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Edit, MoreHorizontal } from 'lucide-react';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import StatusBadge from '@/components/shared/StatusBadge';
-
-// Sample data - In a real application, you would fetch this from an API
-const systemDetail = {
-  id: '1',
-  systemId: 'SYS001',
-  name: 'Feed Water System',
-  description: 'Process feed water treatment and distribution',
-  category: 'Process',
-  area: 'Plant Area A',
-  project: 'Main Plant',
-  status: 'Active',
-  type: 'Critical',
-  createdDate: '2023-05-15',
-  modifiedDate: '2023-06-20',
-  createdBy: 'John Smith',
-  modifiedBy: 'Jane Doe'
-};
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft, Layers, Pencil } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { System } from '@/types/manage';
+import { systems, facilityLocations } from '@/data/sampleData';
+import { toast } from 'sonner';
 
 const SystemDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [system, setSystem] = useState<System | null>(null);
   
-  // In a real application, you would fetch the system details based on the ID
-  const system = systemDetail;
-  
+  useEffect(() => {
+    // Fetch system data based on id
+    const foundSystem = systems.find(s => s.id === id);
+    
+    if (foundSystem) {
+      // Find the facility name for the system
+      const facility = facilityLocations.find(f => f.id === foundSystem.facilityLocationId);
+      setSystem({
+        ...foundSystem,
+        facilityLocation: facility?.name || 'Unknown'
+      });
+    } else {
+      toast.error("System not found");
+      navigate('/manage/system');
+    }
+  }, [id, navigate]);
+
   const handleEdit = () => {
-    setIsEditMode(true);
-    // In a real application, you would navigate to the edit form or enable editing mode
-    // For now, we'll just show an alert
-    alert("Edit mode would be enabled here");
-    setIsEditMode(false);
+    // In a real application, this would open an edit form
+    toast.info("Edit functionality would be implemented here");
   };
   
+  if (!system) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-6">
-      {/* Breadcrumbs */}
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link to="/manage/system">Systems</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <span className="text-muted-foreground">System Details</span>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      
-      {/* Header with actions */}
       <div className="flex items-center justify-between">
         <PageHeader 
           title="System Detail" 
+          icon={<Layers className="h-6 w-6" />}
         />
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate('/manage/system')} className="flex items-center gap-2">
-            <ArrowLeft className="h-4 w-4" /> Back to Systems
-          </Button>
-          <Button onClick={handleEdit} className="flex items-center gap-2">
-            <Edit className="h-4 w-4" /> Edit
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-              <DropdownMenuItem>Archive</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/manage/system')} 
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Systems
+        </Button>
       </div>
       
-      {/* Main Content */}
       <Card>
-        <CardHeader className="bg-blue-50 border-b">
-          <CardTitle className="text-blue-800">System Information</CardTitle>
-        </CardHeader>
         <CardContent className="pt-6">
-          <div className="space-y-6">
-            {/* Basic Information */}
-            <div>
-              <h3 className="font-medium text-lg mb-3">Basic Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">System ID</h4>
-                  <p className="text-base">{system.systemId}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Name</h4>
-                  <p className="text-base">{system.name}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Type</h4>
-                  <p className="text-base">{system.type}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
-                  <StatusBadge status={system.status} />
-                </div>
-              </div>
-            </div>
-            
-            <Separator />
-            
-            {/* System Details */}
-            <div>
-              <h3 className="font-medium text-lg mb-3">System Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Category</h4>
-                  <p className="text-base">{system.category}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Area</h4>
-                  <p className="text-base">{system.area}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Project</h4>
-                  <p className="text-base">{system.project}</p>
-                </div>
-                <div className="md:col-span-2">
-                  <h4 className="text-sm font-medium text-muted-foreground">Description</h4>
-                  <p className="text-base">{system.description}</p>
-                </div>
-              </div>
-            </div>
-            
-            <Separator />
-            
-            {/* System Metadata */}
-            <div>
-              <h3 className="font-medium text-lg mb-3">Record Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Created By</h4>
-                  <p className="text-base">{system.createdBy}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Created Date</h4>
-                  <p className="text-base">{system.createdDate}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Modified By</h4>
-                  <p className="text-base">{system.modifiedBy}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground">Modified Date</h4>
-                  <p className="text-base">{system.modifiedDate}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Related Assets */}
-      <Card>
-        <CardHeader className="bg-blue-50 border-b">
-          <CardTitle className="text-blue-800">Associated Assets</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-              <span className="font-medium">Asset-001</span>
-              <span className="text-sm text-muted-foreground">Pump Station 1</span>
-            </div>
-            <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-              <span className="font-medium">Asset-002</span>
-              <span className="text-sm text-muted-foreground">Control Valve A12</span>
-            </div>
-            <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-              <span className="font-medium">Asset-003</span>
-              <span className="text-sm text-muted-foreground">Flow Meter FT-103</span>
-            </div>
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Field</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead className="w-[100px] text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">System No</TableCell>
+                <TableCell>{system.systemNo}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">System Name</TableCell>
+                <TableCell>{system.name}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">System Code</TableCell>
+                <TableCell>{system.code}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Facility Location</TableCell>
+                <TableCell>{system.facilityLocation}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

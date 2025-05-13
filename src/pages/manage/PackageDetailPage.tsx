@@ -1,19 +1,45 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Package } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft, Package, Pencil } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Package as PackageType } from '@/types/manage';
 import { packages, systems } from '@/data/sampleData';
+import { toast } from 'sonner';
 
 const PackageDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [packageData, setPackageData] = useState<PackageType | null>(null);
   
-  // Find the package in sample data
-  const packageItem = packages.find(pkg => pkg.id === id);
-  const system = packageItem ? systems.find(sys => sys.id === packageItem.systemId) : null;
+  useEffect(() => {
+    // Fetch package data based on id
+    const foundPackage = packages.find(p => p.id === id);
+    
+    if (foundPackage) {
+      // Find the system name for the package
+      const system = systems.find(s => s.id === foundPackage.systemId);
+      setPackageData({
+        ...foundPackage,
+        systemName: system?.name || 'Unknown'
+      });
+    } else {
+      toast.error("Package not found");
+      navigate('/manage/package');
+    }
+  }, [id, navigate]);
+
+  const handleEdit = () => {
+    // In a real application, this would open an edit form
+    toast.info("Edit functionality would be implemented here");
+  };
+  
+  if (!packageData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -22,61 +48,78 @@ const PackageDetailPage: React.FC = () => {
           title="Package Detail" 
           icon={<Package className="h-6 w-6" />}
         />
-        <Button variant="outline" onClick={() => navigate('/manage/package')} className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/manage/package')} 
+          className="flex items-center gap-2"
+        >
           <ArrowLeft className="h-4 w-4" /> Back to Packages
         </Button>
       </div>
       
       <Card>
-        <CardHeader>
-          <CardTitle>Package #{packageItem?.packageNo || id}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Package ID</h3>
-              <p className="text-base">{packageItem?.packageNo || id}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Package Name</h3>
-              <p className="text-base">{packageItem?.name || "N/A"}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Package Tag</h3>
-              <p className="text-base">{packageItem?.tag || "N/A"}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">System</h3>
-              <p className="text-base">{system?.name || "N/A"}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground">Package Type</h3>
-              <p className="text-base">{packageItem?.type || "N/A"}</p>
-            </div>
-          </div>
-          
-          <div className="pt-4">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">Package Contents</h3>
-            <Card>
-              <CardContent className="pt-6">
-                <p className="text-gray-600">This package contains various assets and equipment necessary for the system operation.</p>
-                <div className="mt-4 space-y-2">
-                  <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-                    <span className="font-medium">Asset 001</span>
-                    <span className="text-sm text-muted-foreground">Control Valve</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-                    <span className="font-medium">Asset 002</span>
-                    <span className="text-sm text-muted-foreground">Pressure Transmitter</span>
-                  </div>
-                  <div className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-md">
-                    <span className="font-medium">Asset 003</span>
-                    <span className="text-sm text-muted-foreground">Flow Meter</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <CardContent className="pt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Field</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead className="w-[100px] text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">Package No</TableCell>
+                <TableCell>{packageData.packageNo}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Package Name</TableCell>
+                <TableCell>{packageData.name}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Package Tag</TableCell>
+                <TableCell>{packageData.tag}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">System Name</TableCell>
+                <TableCell>{packageData.systemName}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Package Type</TableCell>
+                <TableCell>{packageData.type}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" onClick={handleEdit}>
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
