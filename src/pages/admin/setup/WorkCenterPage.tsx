@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import StatusBadge from '@/components/shared/StatusBadge';
-import { Building, Search } from 'lucide-react';
+import { Building } from 'lucide-react';
 
 // Sample work center data
 const initialWorkCenters = [
@@ -76,6 +76,7 @@ const initialWorkCenters = [
 ];
 
 const WorkCenterPage: React.FC = () => {
+  const navigate = useNavigate();
   const [workCenters, setWorkCenters] = useState(initialWorkCenters);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -136,6 +137,10 @@ const WorkCenterPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/admin/setup/work-center/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'workCenterId', header: 'Work Center ID', accessorKey: 'workCenterId' },
     { id: 'name', header: 'Name', accessorKey: 'name' },
@@ -166,6 +171,7 @@ const WorkCenterPage: React.FC = () => {
         columns={columns}
         data={workCenters}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

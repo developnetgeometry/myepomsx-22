@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,7 @@ const initialClients = [
 ];
 
 const ClientPage: React.FC = () => {
+  const navigate = useNavigate();
   const [clients, setClients] = useState(initialClients);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -128,6 +130,10 @@ const ClientPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/admin/setup/client/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'clientCode', header: 'Client Code', accessorKey: 'clientCode' },
     { id: 'clientName', header: 'Client Name', accessorKey: 'clientName' },
@@ -156,6 +162,7 @@ const ClientPage: React.FC = () => {
         columns={columns}
         data={clients}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

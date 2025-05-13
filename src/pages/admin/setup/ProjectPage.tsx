@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ const initialProjects = [
     projectCode: 'PRJ001',
     projectName: 'Refinery Upgrade Project',
     client: 'TechOil Solutions',
+    clientId: '1',
     startDate: '2025-01-15',
     endDate: '2025-07-30',
     status: 'Active',
@@ -34,6 +35,7 @@ const initialProjects = [
     projectCode: 'PRJ002',
     projectName: 'Pipeline Integrity Assessment',
     client: 'GlobalEnergy Services',
+    clientId: '3',
     startDate: '2025-03-01',
     endDate: '2025-06-15',
     status: 'Active',
@@ -44,6 +46,7 @@ const initialProjects = [
     projectCode: 'PRJ003',
     projectName: 'Offshore Platform Maintenance',
     client: 'Offshore Systems Ltd.',
+    clientId: '4',
     startDate: '2025-02-10',
     endDate: '2025-04-10',
     status: 'Completed',
@@ -54,6 +57,7 @@ const initialProjects = [
     projectCode: 'PRJ004',
     projectName: 'Control System Upgrade',
     client: 'Industrial Automation Corp.',
+    clientId: '2',
     startDate: '2025-05-01',
     endDate: '2025-08-31',
     status: 'Planned',
@@ -64,6 +68,7 @@ const initialProjects = [
     projectCode: 'PRJ005',
     projectName: 'Equipment Reliability Analysis',
     client: 'PetroMaintain Inc.',
+    clientId: '5',
     startDate: '2025-04-15',
     endDate: '2025-07-15',
     status: 'Active',
@@ -72,6 +77,7 @@ const initialProjects = [
 ];
 
 const ProjectPage: React.FC = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState(initialProjects);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -80,6 +86,7 @@ const ProjectPage: React.FC = () => {
     projectCode: '',
     projectName: '',
     client: '',
+    clientId: '',
     startDate: '',
     endDate: '',
     status: 'Planned',
@@ -93,6 +100,7 @@ const ProjectPage: React.FC = () => {
       projectCode: `PRJ${String(projects.length + 1).padStart(3, '0')}`,
       projectName: '',
       client: '',
+      clientId: '',
       startDate: '',
       endDate: '',
       status: 'Planned',
@@ -128,6 +136,10 @@ const ProjectPage: React.FC = () => {
     setIsDialogOpen(false);
   };
 
+  const handleRowClick = (row: any) => {
+    navigate(`/admin/setup/project/${row.id}`);
+  };
+
   const columns: Column[] = [
     { id: 'projectCode', header: 'Project Code', accessorKey: 'projectCode' },
     { id: 'projectName', header: 'Project Name', accessorKey: 'projectName' },
@@ -157,6 +169,7 @@ const ProjectPage: React.FC = () => {
         columns={columns}
         data={projects}
         onEdit={handleEdit}
+        onRowClick={handleRowClick}
       />
       
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
