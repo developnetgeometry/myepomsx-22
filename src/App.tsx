@@ -20,25 +20,24 @@ function App() {
       <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
       
       {/* Monitor Routes */}
-      <Route path="/monitor">
-        <Route path="rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
-        <Route path="rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
-        <Route path="rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
-        <Route path="critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
-        <Route path="critical-assets-tracking" element={<Layout><CriticalAssetsPage /></Layout>} />
-        <Route path="ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
-      </Route>
+      <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
+      <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
+      <Route path="/monitor/rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
+      <Route path="/monitor/critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
+      <Route path="/monitor/critical-assets-tracking" element={<Layout><CriticalAssetsPage /></Layout>} />
+      <Route path="/monitor/ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
       
       {/* Maintain Routes */}
-      <Route path="/maintain">
-        <Route path="wo-history" element={<Layout><WOHistoryPage /></Layout>} />
-        <Route path="wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
-      </Route>
+      <Route path="/maintain/wo-history" element={<Layout><WOHistoryPage /></Layout>} />
+      <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
       
       {/* Manage Routes */}
-      <Route path="/manage">
-        <Route path="asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
-      </Route>
+      <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
+      
+      {/* Redirect to dashboard rather than showing 404 for common paths */}
+      <Route path="/manage/*" element={<Layout><DashboardPage /></Layout>} />
+      <Route path="/monitor/*" element={<Layout><DashboardPage /></Layout>} />
+      <Route path="/maintain/*" element={<Layout><DashboardPage /></Layout>} />
       
       {/* 404 Not Found */}
       <Route path="*" element={<NotFound />} />
