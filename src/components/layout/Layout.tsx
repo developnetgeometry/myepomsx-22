@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AppSidebar from './AppSidebar';
 import Header from './Header';
-import Breadcrumbs from '@/components/shared/Breadcrumbs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
@@ -53,7 +52,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
         
         <main className="p-4 md:p-6 flex-1 animate-fade-in">
-          <Breadcrumbs />
           {children}
         </main>
       </div>

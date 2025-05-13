@@ -2,9 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Edit, MoreHorizontal, Settings } from 'lucide-react';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
@@ -14,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import StatusBadge from '@/components/shared/StatusBadge';
 import { toast } from 'sonner';
+import Breadcrumbs from '@/components/shared/Breadcrumbs';
 
 // Sample data - In a real application, you would fetch this from an API
 const systemDetail = {
@@ -60,25 +59,7 @@ const SystemDetailPage: React.FC = () => {
 
   if (loading) {
     return <div className="space-y-6">
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage">Manage</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage/system">Systems</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>Details</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumbs />
       
       <div className="flex items-center gap-3 mb-4">
         <div className="bg-blue-50 p-2 rounded">
@@ -108,25 +89,7 @@ const SystemDetailPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Breadcrumbs */}
-      <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage">Manage</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage/system">Systems</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>{system.name}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <Breadcrumbs />
       
       {/* System Title */}
       <div className="flex items-center gap-3 mb-4">
