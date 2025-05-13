@@ -3,237 +3,73 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
+import DataTable, { Column } from '@/components/shared/DataTable';
 import { Package } from 'lucide-react';
-import DataTable from '@/components/shared/DataTable';
 import { inventory } from '@/data/sampleData';
-import { Inventory } from '@/types/manage';
-import ManageDialog from '@/components/manage/ManageDialog';
-import { Column } from '@/components/shared/DataTable';
-import * as z from 'zod';
-import { formatCurrency, isMonetaryField } from '@/utils/formatters';
 
-interface InventoryPageProps {
-  hideHeader?: boolean;
-  onRowClick?: (row: Inventory) => void;
-}
-
-const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRowClick }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [currentItem, setCurrentItem] = useState<Inventory | null>(null);
-  const [data, setData] = useState<Inventory[]>(inventory);
+const InventoryPage: React.FC = () => {
   const navigate = useNavigate();
-
-  const handleAddNew = () => {
-    setIsEditMode(false);
-    setCurrentItem(null);
-    setIsDialogOpen(true);
-  };
-
-  const handleEdit = (item: Inventory) => {
-    setIsEditMode(true);
-    setCurrentItem(item);
-    setIsDialogOpen(true);
-  };
+  const [searchQuery, setSearchQuery] = useState('');
   
-  const handleRowClick = (row: Inventory) => {
-    if (onRowClick) {
-      onRowClick(row);
-    } else {
-      // Navigate to the inventory item detail page
-      navigate(`/manage/inventory/${row.id}`);
-    }
-  };
-
-  const handleSubmit = (values: any) => {
-    if (isEditMode && currentItem) {
-      setData(data.map(item => item.id === currentItem.id ? { ...item, ...values } : item));
-    } else {
-      // Calculate total price
-      const totalPrice = values.unitPrice * values.balance;
-      setData([...data, { id: String(data.length + 1), ...values, totalPrice }]);
-    }
-  };
-
+  // Sample columns for inventory items
   const columns: Column[] = [
-    {
-      id: 'store',
-      header: 'Store',
-      accessorKey: 'store',
-    },
-    {
-      id: 'rackNo',
-      header: 'Rack No',
-      accessorKey: 'rackNo',
-    },
-    {
-      id: 'itemsNo',
-      header: 'Items No',
-      accessorKey: 'itemsNo',
-    },
-    {
-      id: 'itemName',
-      header: 'Item Name',
-      accessorKey: 'itemName',
-    },
-    {
-      id: 'manufacturerPartsNo',
-      header: 'Manufacturer Parts No',
-      accessorKey: 'manufacturerPartsNo',
-    },
-    {
-      id: 'balance',
-      header: 'Balance',
+    { id: 'id', header: 'ID', accessorKey: 'id' },
+    { id: 'itemName', header: 'Item Name', accessorKey: 'itemName' },
+    { id: 'store', header: 'Store', accessorKey: 'store' },
+    { 
+      id: 'balance', 
+      header: 'Balance', 
       accessorKey: 'balance',
+      cell: (value) => (
+        <span className="font-medium">{value}</span>
+      ) 
     },
-    {
-      id: 'unitPrice',
-      header: 'Unit Price',
+    { 
+      id: 'unitPrice', 
+      header: 'Unit Price', 
       accessorKey: 'unitPrice',
-      cell: (value: number) => formatCurrency(value)
+      cell: (value) => (
+        <span>${value.toFixed(2)}</span>
+      ) 
     },
-    {
-      id: 'totalPrice',
-      header: 'Total Price',
+    { 
+      id: 'totalPrice', 
+      header: 'Total Price', 
       accessorKey: 'totalPrice',
-      cell: (value: number) => formatCurrency(value)
+      cell: (value) => (
+        <span>${value.toFixed(2)}</span>
+      ) 
     },
   ];
 
-  const formSchema = z.object({
-    store: z.string().min(1, "Store is required"),
-    rackNo: z.string().min(1, "Rack No is required"),
-    itemsNo: z.string().min(1, "Items No is required"),
-    itemName: z.string().min(1, "Item Name is required"),
-    manufacturerPartsNo: z.string().min(1, "Manufacturer Parts No is required"),
-    manufacturer: z.string().min(1, "Manufacturer is required"),
-    type: z.string().min(1, "Type is required"),
-    category: z.string().min(1, "Category is required"),
-    description: z.string().optional(),
-    minLevel: z.number().min(0, "Min Level must be at least 0"),
-    maxLevel: z.number().min(1, "Max Level must be at least 1"),
-    reorderLevel: z.number().min(0, "Reorder Level must be at least 0"),
-    balance: z.number().min(0, "Balance must be at least 0"),
-    unitPrice: z.number().min(0, "Unit Price must be at least 0"),
-  });
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
 
-  const typeOptions = [
-    { value: 'Mechanical', label: 'Mechanical' },
-    { value: 'Electrical', label: 'Electrical' },
-    { value: 'Instrumentation', label: 'Instrumentation' },
-    { value: 'Safety', label: 'Safety' },
-    { value: 'Process', label: 'Process' },
-  ];
-
-  const categoryOptions = [
-    { value: 'Rotating Equipment', label: 'Rotating Equipment' },
-    { value: 'Sealing', label: 'Sealing' },
-    { value: 'Protection', label: 'Protection' },
-    { value: 'Measurement', label: 'Measurement' },
-    { value: 'Flow Control', label: 'Flow Control' },
-  ];
-
-  const storeOptions = [
-    { value: 'Main Warehouse', label: 'Main Warehouse' },
-    { value: 'Electrical Store', label: 'Electrical Store' },
-    { value: 'Instrument Store', label: 'Instrument Store' },
-  ];
-
-  const formFields = [
-    { 
-      name: 'store', 
-      label: 'Store', 
-      type: 'select' as const,
-      options: storeOptions
-    },
-    { name: 'rackNo', label: 'Rack No', type: 'text' as const },
-    { name: 'itemsNo', label: 'Items No', type: 'text' as const },
-    { name: 'itemName', label: 'Item Name', type: 'text' as const },
-    { name: 'manufacturerPartsNo', label: 'Manufacturer Parts No', type: 'text' as const },
-    { name: 'manufacturer', label: 'Manufacturer', type: 'text' as const },
-    { 
-      name: 'type', 
-      label: 'Type', 
-      type: 'select' as const,
-      options: typeOptions
-    },
-    {
-      name: 'category',
-      label: 'Category',
-      type: 'select' as const,
-      options: categoryOptions
-    },
-    { name: 'description', label: 'Item Description', type: 'text' as const },
-    { name: 'minLevel', label: 'Min Level', type: 'number' as const },
-    { name: 'maxLevel', label: 'Max Level', type: 'number' as const },
-    { name: 'reorderLevel', label: 'Reorder Level', type: 'number' as const },
-    { name: 'balance', label: 'Balance', type: 'number' as const },
-    { name: 'unitPrice', label: 'Unit Price (RM)', type: 'number' as const },
-  ];
-
-  const content = (
-    <>
-      {hideHeader ? (
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={handleAddNew}
-            className="text-sm text-blue-500 hover:underline"
-          >
-            + Add New Inventory Item
-          </button>
-        </div>
-      ) : null}
-      
-      <DataTable 
-        data={data} 
-        columns={columns} 
-        onEdit={handleEdit}
-        onRowClick={handleRowClick}
-      />
-
-      <ManageDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title={isEditMode ? "Edit Inventory Item" : "Add New Inventory Item"}
-        formSchema={formSchema}
-        defaultValues={currentItem || { 
-          store: "", 
-          rackNo: "", 
-          itemsNo: "", 
-          itemName: "", 
-          manufacturerPartsNo: "", 
-          manufacturer: "", 
-          type: "", 
-          category: "",
-          description: "",
-          minLevel: 0,
-          maxLevel: 0,
-          reorderLevel: 0,
-          balance: 0,
-          unitPrice: 0
-        }}
-        formFields={formFields}
-        onSubmit={handleSubmit}
-        isEdit={isEditMode}
-      />
-    </>
-  );
-
-  if (hideHeader) {
-    return content;
-  }
+  // Handle view details
+  const handleView = (row: any) => {
+    navigate(`/manage/inventory/${row.id}`);
+  };
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Inventory" 
+      <PageHeader
+        title="Inventory Management"
+        subtitle="Manage spare parts inventory"
         icon={<Package className="h-6 w-6" />}
-        onAddNew={handleAddNew}
+        onSearch={handleSearch}
+        onAddNew={() => navigate('/manage/inventory/new')}
+        addNewLabel="+ Add New Item"
       />
       
       <Card>
-        <CardContent className="pt-6">
-          {content}
+        <CardContent className="p-6">
+          <DataTable
+            columns={columns}
+            data={inventory}
+            onView={handleView}
+          />
         </CardContent>
       </Card>
     </div>

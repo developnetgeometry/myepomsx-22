@@ -13,6 +13,9 @@ import AssetRegisterPage from './pages/manage/AssetRegisterPage';
 import AssetRegisterDetailPage from './pages/manage/AssetRegisterDetailPage';
 import ItemsMasterPage from './pages/manage/ItemsMasterPage';
 import ItemsMasterDetailPage from './pages/manage/ItemsMasterDetailPage';
+import InventoryPage from './pages/manage/InventoryPage';
+import InventoryDetailPage from './pages/manage/InventoryDetailPage';
+import InventoryItemDetailPage from './pages/manage/InventoryItemDetailPage';
 import ClientPage from './pages/admin/setup/ClientPage';
 import ClientDetailPage from './pages/admin/setup/ClientDetailPage';
 import ProjectPage from './pages/admin/setup/ProjectPage';
@@ -40,6 +43,7 @@ import MaintenanceTypeDetailPage from './pages/admin/settings/MaintenanceTypeDet
 import AverageUARSPage from './pages/admin/settings/AverageUARSPage';
 import AverageUARSDetailPage from './pages/admin/settings/AverageUARSDetailPage';
 import IntegrityModulePage from './pages/integrity/IntegrityModulePage';
+import InventoryGroupsPage from './pages/monitor/InventoryGroupsPage';
 
 function App() {
   return (
@@ -58,6 +62,9 @@ function App() {
         <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
         <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
         <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
+        <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
+        <Route path="/manage/inventory/:id" element={<Layout><InventoryDetailPage /></Layout>} />
+        <Route path="/manage/inventory/item/:id" element={<Layout><InventoryItemDetailPage /></Layout>} />
         
         {/* Admin Setup Routes */}
         <Route path="/admin/setup/client" element={<Layout><ClientPage /></Layout>} />
@@ -90,6 +97,9 @@ function App() {
         <Route path="/admin/settings/average-uars/:id" element={<Layout><AverageUARSDetailPage /></Layout>} />
         
         <Route path="/integrity/module" element={<Layout><IntegrityModulePage /></Layout>} />
+        
+        {/* Monitor Routes */}
+        <Route path="/monitor/inventory-groups" element={<Layout><InventoryGroupsPage /></Layout>} />
         
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
