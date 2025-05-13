@@ -7,7 +7,12 @@ import DataTable, { Column } from '@/components/shared/DataTable';
 import { Package } from 'lucide-react';
 import { inventory } from '@/data/sampleData';
 
-const InventoryPage: React.FC = () => {
+interface InventoryPageProps {
+  hideHeader?: boolean;
+  onRowClick?: (row: any) => void;
+}
+
+const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRowClick }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -47,28 +52,34 @@ const InventoryPage: React.FC = () => {
     setSearchQuery(query);
   };
 
-  // Handle view details
-  const handleView = (row: any) => {
-    navigate(`/manage/inventory/${row.id}`);
+  // Handle row click
+  const handleRowClick = (row: any) => {
+    if (onRowClick) {
+      onRowClick(row);
+    } else {
+      navigate(`/manage/inventory/${row.id}`);
+    }
   };
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Inventory Management"
-        subtitle="Manage spare parts inventory"
-        icon={<Package className="h-6 w-6" />}
-        onSearch={handleSearch}
-        onAddNew={() => navigate('/manage/inventory/new')}
-        addNewLabel="+ Add New Item"
-      />
+      {!hideHeader && (
+        <PageHeader
+          title="Inventory Management"
+          subtitle="Manage spare parts inventory"
+          icon={<Package className="h-6 w-6" />}
+          onSearch={handleSearch}
+          onAddNew={() => navigate('/manage/inventory/new')}
+          addNewLabel="+ Add New Item"
+        />
+      )}
       
       <Card>
         <CardContent className="p-6">
           <DataTable
             columns={columns}
             data={inventory}
-            onView={handleView}
+            onRowClick={handleRowClick}
           />
         </CardContent>
       </Card>

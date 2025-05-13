@@ -7,7 +7,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Box } from 'lucide-react';
 import ItemsMasterPage from './ItemsMasterPage';
 import InventoryPage from './InventoryPage';
-import { Inventory, ItemsMaster } from '@/types/manage';
+
+// Define the types for clarity
+interface ItemsMaster {
+  id: string;
+  itemsNo: string;
+  name: string;
+  category: string;
+  type: string;
+  manufacturer: string;
+  supplier: string;
+  uom: string;
+  price: number;
+}
+
+interface Inventory {
+  id: string;
+  itemName: string;
+  description: string;
+  store: string;
+  balance: number;
+  minLevel: number;
+  maxLevel: number;
+  reorderLevel: number;
+  unitPrice: number;
+  totalPrice: number;
+  rackNo: string;
+}
 
 const MaterialPage: React.FC = () => {
   const navigate = useNavigate();
