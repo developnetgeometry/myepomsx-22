@@ -65,6 +65,8 @@ import WorkRequestPage from './pages/maintain/WorkRequestPage';
 import WorkRequestDetailPage from './pages/maintain/WorkRequestDetailPage';
 import WorkOrderListPage from './pages/maintain/WorkOrderListPage';
 import WorkOrderDetailPage from './pages/maintain/WorkOrderDetailPage';
+import BomAssemblyPage from './pages/manage/BomAssemblyPage';
+import AssetsPage from './pages/manage/AssetsPage';
 
 function App() {
   return (
@@ -81,6 +83,8 @@ function App() {
         <Route path="/manage/package/:id" element={<Layout><PackageDetailPage /></Layout>} />
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
         <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
+        <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+        <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
         <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
         <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
         <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
