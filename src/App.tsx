@@ -25,7 +25,6 @@ function App() {
         <Route path="rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
         <Route path="rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
         <Route path="critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
-        {/* Both routes point to the same component for consistency */}
         <Route path="critical-assets-tracking" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
       </Route>
