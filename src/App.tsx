@@ -67,6 +67,8 @@ import WorkOrderListPage from './pages/maintain/WorkOrderListPage';
 import WorkOrderDetailPage from './pages/maintain/WorkOrderDetailPage';
 import BomAssemblyPage from './pages/manage/BomAssemblyPage';
 import AssetsPage from './pages/manage/AssetsPage';
+import AssetDetailPage from './pages/manage/AssetDetailsPage';
+import BomAssemblyDetailPage from './pages/manage/BomAssemblyPage';
 
 function App() {
   return (
@@ -84,7 +86,9 @@ function App() {
         <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
         <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
         <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+        <Route path="/manage/assets/:id" element={<Layout><AssetDetailPage /></Layout>} />
         <Route path="/manage/bom-assembly" element={<Layout><BomAssemblyPage /></Layout>} />
+        <Route path="/manage/bom-assembly/:id" element={<Layout><BomAssemblyDetailPage /></Layout>} />
         <Route path="/manage/items-master" element={<Layout><ItemsMasterPage /></Layout>} />
         <Route path="/manage/items-master/:id" element={<Layout><ItemsMasterDetailPage /></Layout>} />
         <Route path="/manage/inventory" element={<Layout><InventoryPage /></Layout>} />
@@ -134,7 +138,7 @@ function App() {
         <Route path="/monitor/corrosion-studies/:id" element={<Layout><CorrosionStudiesDetailPage /></Layout>} />
         <Route path="/monitor/inspection-data" element={<Layout><InspectionDataPage /></Layout>} />
         <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
-        <Route path="/monitor/rms-asset-list/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
+        <Route path="/monitor/rms-asset-detail/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
         <Route path="/monitor/critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
         <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
         
