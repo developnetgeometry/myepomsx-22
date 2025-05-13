@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -11,9 +10,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 // Find facility details from the sample data
 const getFacilityDetails = (id: string) => {
   const facility = facilityLocations.find(facility => facility.id === id);
-  
   if (!facility) return null;
-  
   return {
     ...facility,
     code: 'FAC001',
@@ -31,13 +28,15 @@ const getFacilityDetails = (id: string) => {
     notes: "Main operational facility with full maintenance capabilities."
   };
 };
-
 const FacilityDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
   const navigate = useNavigate();
   const [facility, setFacility] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
   useEffect(() => {
     if (id) {
       // Simulate API call to fetch facility details
@@ -53,18 +52,14 @@ const FacilityDetailPage: React.FC = () => {
       }, 500);
     }
   }, [id, navigate]);
-  
   const handleBack = () => {
     navigate("/manage/facilities");
   };
-  
   const handleEdit = () => {
     toast.info("Edit functionality would open a form to edit this facility");
   };
-  
   if (loading) {
-    return (
-      <div className="space-y-6">
+    return <div className="space-y-6">
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -107,13 +102,10 @@ const FacilityDetailPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-  
   if (!facility) {
-    return (
-      <div className="space-y-6">
+    return <div className="space-y-6">
         <Breadcrumb className="mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -141,31 +133,12 @@ const FacilityDetailPage: React.FC = () => {
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Facilities
           </Button>
         </div>
-      </div>
-    );
+      </div>;
   }
-  
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       {/* Breadcrumbs */}
       <Breadcrumb className="mb-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage">Manage</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/manage/facilities">Facilities</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>Details</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
+        
       </Breadcrumb>
       
       {/* Facility Title */}
@@ -251,8 +224,6 @@ const FacilityDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default FacilityDetailPage;
