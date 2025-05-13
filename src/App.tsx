@@ -57,6 +57,14 @@ import CriticalAssetsPage from './pages/monitor/CriticalAssetsPage';
 import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
 import WOHistoryPage from './pages/maintain/WOHistoryPage';
 import WOHistoryDetailPage from './pages/maintain/WOHistoryDetailPage';
+import TaskLibraryPage from './pages/maintain/TaskLibraryPage';
+import TaskLibraryDetailPage from './pages/maintain/TaskLibraryDetailPage';
+import PMSchedulePage from './pages/maintain/PMSchedulePage';
+import PMScheduleDetailPage from './pages/maintain/PMScheduleDetailPage';
+import WorkRequestPage from './pages/maintain/WorkRequestPage';
+import WorkRequestDetailPage from './pages/maintain/WorkRequestDetailPage';
+import WorkOrderListPage from './pages/maintain/WorkOrderListPage';
+import WorkOrderDetailPage from './pages/maintain/WorkOrderDetailPage';
 
 function App() {
   return (
@@ -129,6 +137,14 @@ function App() {
         {/* Maintain Routes */}
         <Route path="/maintain/wo-history" element={<Layout><WOHistoryPage /></Layout>} />
         <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
+        <Route path="/maintain/task-library" element={<Layout><TaskLibraryPage /></Layout>} />
+        <Route path="/maintain/task-library/:id" element={<Layout><TaskLibraryDetailPage /></Layout>} />
+        <Route path="/maintain/pm-schedule" element={<Layout><PMSchedulePage /></Layout>} />
+        <Route path="/maintain/pm-schedule/:id" element={<Layout><PMScheduleDetailPage /></Layout>} />
+        <Route path="/maintain/work-request" element={<Layout><WorkRequestPage /></Layout>} />
+        <Route path="/maintain/work-request/:id" element={<Layout><WorkRequestDetailPage /></Layout>} />
+        <Route path="/maintain/work-order-list" element={<Layout><WorkOrderListPage /></Layout>} />
+        <Route path="/maintain/work-order-list/:id" element={<Layout><WorkOrderDetailPage /></Layout>} />
         
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
