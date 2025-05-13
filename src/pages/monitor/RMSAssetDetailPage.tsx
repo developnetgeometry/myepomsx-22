@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
-import { HardDrive, Edit } from 'lucide-react';
+import { HardDrive, Edit, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { formatDateTime } from '@/utils/formatters';
@@ -357,6 +357,24 @@ const RMSAssetDetailPage: React.FC = () => {
     setAssetUptimeData(entries);
   };
 
+  // Function to get status indicator component
+  const getStatusIndicator = (status: string) => {
+    const lowercaseStatus = status.toLowerCase();
+    
+    if (lowercaseStatus === 'good' || lowercaseStatus === 'excellent') {
+      return (
+        <div className="flex items-center">
+          <Check className="h-4 w-4 text-green-500 mr-1.5" />
+          <span className="text-green-700 font-medium">{status}</span>
+        </div>
+      );
+    } else if (lowercaseStatus === 'fair') {
+      return <StatusBadge status={status} />;
+    } else {
+      return <StatusBadge status={status} />;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -545,78 +563,108 @@ const RMSAssetDetailPage: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="health" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Health Status</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="flex flex-col items-center space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="text-4xl font-bold">
-                    <StatusBadge status={asset.healthStatus} size="lg" />
+          <div className="space-y-6">
+            {/* Main Health Summary Card */}
+            <Card className="border-green-100 bg-green-50/30">
+              <CardContent className="p-6 flex items-center justify-center">
+                <div className="flex flex-col items-center space-y-2">
+                  <h3 className="text-lg font-medium text-gray-700">Overall Health Status</h3>
+                  <div className="flex items-center">
+                    <div className={`rounded-full w-4 h-4 mr-3 ${
+                      asset.healthStatus.toLowerCase() === 'good' ? 'bg-green-500' :
+                      asset.healthStatus.toLowerCase() === 'fair' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-3xl font-bold">
+                      {asset.healthStatus}
+                    </span>
                   </div>
                 </div>
-                
-                <div className="w-full max-w-3xl">
-                  <h3 className="font-semibold text-lg mb-4">Health Status Details</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>Temperature Status</span>
-                      <StatusBadge status={
+              </CardContent>
+            </Card>
+            
+            {/* Health Status Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Health Status Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                    <span className="font-medium">Temperature Status</span>
+                    <div>
+                      {getStatusIndicator(
                         asset.id === "5" ? "Critical" : 
                         asset.id === "3" ? "Poor" : 
                         asset.id === "2" ? "Fair" : "Good"
-                      } />
+                      )}
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span>Pressure Status</span>
-                      <StatusBadge status={
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                    <span className="font-medium">Pressure Status</span>
+                    <div>
+                      {getStatusIndicator(
                         asset.id === "3" ? "Poor" : 
                         asset.id === "2" ? "Fair" : "Good"
-                      } />
+                      )}
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span>Vibration Status</span>
-                      <StatusBadge status={
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                    <span className="font-medium">Vibration Status</span>
+                    <div>
+                      {getStatusIndicator(
                         asset.id === "5" ? "Critical" : 
                         asset.id === "3" ? "Poor" : "Good"
-                      } />
+                      )}
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span>Overall Performance</span>
-                      <StatusBadge status={
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                    <span className="font-medium">Overall Performance</span>
+                    <div>
+                      {getStatusIndicator(
                         asset.id === "5" ? "Critical" : 
                         asset.id === "3" ? "Poor" : 
                         asset.id === "2" ? "Fair" : "Good"
-                      } />
+                      )}
                     </div>
                   </div>
                 </div>
-                
-                <div className="w-full max-w-3xl">
-                  <h3 className="font-semibold text-lg mb-4">Recent Maintenance History</h3>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Description</TableHead>
+              </CardContent>
+            </Card>
+            
+            {/* Recent Maintenance History */}
+            <Card>
+              <CardHeader className="border-b">
+                <CardTitle>Recent Maintenance History</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50">
+                      <TableHead className="w-[120px]">Date</TableHead>
+                      <TableHead className="w-[120px]">Type</TableHead>
+                      <TableHead>Description</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {asset.maintenanceHistory?.map((item, index) => (
+                      <TableRow key={index} className="hover:bg-slate-50/50">
+                        <TableCell className="font-medium">{item.date}</TableCell>
+                        <TableCell>
+                          <Badge variant={item.type === "Preventive" ? "outline" : "secondary"} className="font-normal">
+                            {item.type}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{item.description}</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {asset.maintenanceHistory?.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.date}</TableCell>
-                          <TableCell>{item.type}</TableCell>
-                          <TableCell>{item.description}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
         
         <TabsContent value="alerts" className="mt-6">
