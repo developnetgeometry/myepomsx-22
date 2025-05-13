@@ -40,14 +40,17 @@ const formatSegment = (segment: string): string => {
   // Convert kebab-case to Title Case
   return segment.split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 };
+
 interface BreadcrumbItem {
   href?: string;
   label: string;
 }
+
 interface BreadcrumbsProps {
   showHome?: boolean;
   overrideItems?: BreadcrumbItem[];
 }
+
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   showHome = true,
   overrideItems
@@ -69,6 +72,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         </BreadcrumbList>
       </Breadcrumb>;
   }
+
   const pathSegments = location.pathname.split("/").filter(segment => segment);
 
   // Handle root path
@@ -81,6 +85,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     const path = `/${pathSegments.slice(0, index + 1).join("/")}`;
     const isLast = index === pathSegments.length - 1;
     const displayName = formatSegment(segment);
+    
     return <React.Fragment key={path}>
         <BreadcrumbItem>
           {isLast ? <span className="text-muted-foreground">{displayName}</span> : <BreadcrumbLink asChild>
@@ -90,8 +95,22 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         {!isLast && <BreadcrumbSeparator />}
       </React.Fragment>;
   });
+
   return <Breadcrumb className="mb-4">
-      
+      <BreadcrumbList>
+        {showHome && (
+          <>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+          </>
+        )}
+        {breadcrumbItems}
+      </BreadcrumbList>
     </Breadcrumb>;
 };
+
 export default Breadcrumbs;

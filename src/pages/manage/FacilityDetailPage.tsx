@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Building, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { facilityLocations } from '@/data/sampleData';
 import { toast } from "sonner";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Breadcrumbs from '@/components/shared/Breadcrumbs';
 
 // Find facility details from the sample data
 const getFacilityDetails = (id: string) => {
@@ -60,25 +60,7 @@ const FacilityDetailPage: React.FC = () => {
   };
   if (loading) {
     return <div className="space-y-6">
-        <Breadcrumb className="mb-4">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/manage">Manage</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/manage/facilities">Facilities</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink>Details</BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumbs />
         
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-blue-50 p-2 rounded">
@@ -106,25 +88,7 @@ const FacilityDetailPage: React.FC = () => {
   }
   if (!facility) {
     return <div className="space-y-6">
-        <Breadcrumb className="mb-4">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/manage">Manage</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/manage/facilities">Facilities</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink>Not Found</BreadcrumbLink>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumbs />
         
         <div className="bg-white border rounded-lg shadow-sm p-8 text-center">
           <h2 className="text-xl font-medium mb-2">Facility Not Found</h2>
@@ -137,9 +101,7 @@ const FacilityDetailPage: React.FC = () => {
   }
   return <div className="space-y-6">
       {/* Breadcrumbs */}
-      <Breadcrumb className="mb-4">
-        
-      </Breadcrumb>
+      <Breadcrumbs />
       
       {/* Facility Title */}
       <div className="flex items-center gap-3 mb-4">
