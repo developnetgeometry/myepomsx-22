@@ -21,6 +21,23 @@ import VendorPage from './pages/admin/setup/VendorPage';
 import VendorDetailPage from './pages/admin/setup/VendorDetailPage';
 import SensorPage from './pages/admin/setup/SensorPage';
 import SensorDetailPage from './pages/admin/setup/SensorDetailPage';
+import AssetClassPage from './pages/admin/settings/AssetClassPage';
+import AssetClassDetailPage from './pages/admin/settings/AssetClassDetailPage';
+import AssetTagPage from './pages/admin/settings/AssetTagPage';
+import AssetTagDetailPage from './pages/admin/settings/AssetTagDetailPage';
+import CorrosionGroupPage from './pages/admin/settings/CorrosionGroupPage';
+import CorrosionGroupDetailPage from './pages/admin/settings/CorrosionGroupDetailPage';
+import DataCategoryPage from './pages/admin/settings/DataCategoryPage';
+import DataCategoryDetailPage from './pages/admin/settings/DataCategoryDetailPage';
+import DisciplinePage from './pages/admin/settings/DisciplinePage';
+import DisciplineDetailPage from './pages/admin/settings/DisciplineDetailPage';
+import FrequencySetupPage from './pages/admin/settings/FrequencySetupPage';
+import FrequencySetupDetailPage from './pages/admin/settings/FrequencySetupDetailPage';
+import MaintenanceTypePage from './pages/admin/settings/MaintenanceTypePage';
+import MaintenanceTypeDetailPage from './pages/admin/settings/MaintenanceTypeDetailPage';
+import AverageUARSPage from './pages/admin/settings/AverageUARSPage';
+import AverageUARSDetailPage from './pages/admin/settings/AverageUARSDetailPage';
+import IntegrityModulePage from './pages/integrity/IntegrityModulePage';
 
 function App() {
   return (
@@ -49,6 +66,26 @@ function App() {
         <Route path="/admin/setup/vendor/:id" element={<Layout><VendorDetailPage /></Layout>} />
         <Route path="/admin/setup/sensor" element={<Layout><SensorPage /></Layout>} />
         <Route path="/admin/setup/sensor/:id" element={<Layout><SensorDetailPage /></Layout>} />
+        
+        {/* Admin Settings Routes */}
+        <Route path="/admin/settings/asset-class" element={<Layout><AssetClassPage /></Layout>} />
+        <Route path="/admin/settings/asset-class/:id" element={<Layout><AssetClassDetailPage /></Layout>} />
+        <Route path="/admin/settings/asset-tag" element={<Layout><AssetTagPage /></Layout>} />
+        <Route path="/admin/settings/asset-tag/:id" element={<Layout><AssetTagDetailPage /></Layout>} />
+        <Route path="/admin/settings/corrosion-group" element={<Layout><CorrosionGroupPage /></Layout>} />
+        <Route path="/admin/settings/corrosion-group/:id" element={<Layout><CorrosionGroupDetailPage /></Layout>} />
+        <Route path="/admin/settings/data-category" element={<Layout><DataCategoryPage /></Layout>} />
+        <Route path="/admin/settings/data-category/:id" element={<Layout><DataCategoryDetailPage /></Layout>} />
+        <Route path="/admin/settings/discipline" element={<Layout><DisciplinePage /></Layout>} />
+        <Route path="/admin/settings/discipline/:id" element={<Layout><DisciplineDetailPage /></Layout>} />
+        <Route path="/admin/settings/frequency-setup" element={<Layout><FrequencySetupPage /></Layout>} />
+        <Route path="/admin/settings/frequency-setup/:id" element={<Layout><FrequencySetupDetailPage /></Layout>} />
+        <Route path="/admin/settings/maintenance-type" element={<Layout><MaintenanceTypePage /></Layout>} />
+        <Route path="/admin/settings/maintenance-type/:id" element={<Layout><MaintenanceTypeDetailPage /></Layout>} />
+        <Route path="/admin/settings/average-uars" element={<Layout><AverageUARSPage /></Layout>} />
+        <Route path="/admin/settings/average-uars/:id" element={<Layout><AverageUARSDetailPage /></Layout>} />
+        
+        <Route path="/integrity/module" element={<Layout><IntegrityModulePage /></Layout>} />
         
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
