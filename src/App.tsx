@@ -19,6 +19,10 @@ import TaskLibraryPage from '@/pages/maintain/TaskLibraryPage';
 import TaskLibraryDetailPage from '@/pages/maintain/TaskLibraryDetailPage';
 import WorkRequestPage from '@/pages/maintain/WorkRequestPage';
 import WorkRequestDetailPage from '@/pages/maintain/WorkRequestDetailPage';
+import AssetsPage from '@/pages/manage/AssetsPage';
+import IntegrityModulePage from '@/pages/integrity/IntegrityModulePage';
+import CompanyDetailPage from '@/pages/admin/setup/CompanyDetailPage';
+import ClientPage from '@/pages/admin/setup/ClientPage';
 
 function App() {
   return (
@@ -47,6 +51,14 @@ function App() {
       <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
       <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
       <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
+      <Route path="/manage/assets" element={<Layout><AssetsPage /></Layout>} />
+      
+      {/* Integrity Routes */}
+      <Route path="/integrity" element={<Layout><IntegrityModulePage /></Layout>} />
+      
+      {/* Admin Routes */}
+      <Route path="/admin/setup/company/:id" element={<Layout><CompanyDetailPage /></Layout>} />
+      <Route path="/admin/setup/client" element={<Layout><ClientPage /></Layout>} />
       
       {/* 404 Not Found - Only use for completely unknown routes */}
       <Route path="*" element={<NotFound />} />
