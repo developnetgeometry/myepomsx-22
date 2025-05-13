@@ -44,6 +44,17 @@ import AverageUARSPage from './pages/admin/settings/AverageUARSPage';
 import AverageUARSDetailPage from './pages/admin/settings/AverageUARSDetailPage';
 import IntegrityModulePage from './pages/integrity/IntegrityModulePage';
 import InventoryGroupsPage from './pages/monitor/InventoryGroupsPage';
+import IntegrityPage from './pages/monitor/IntegrityPage';
+import RBIAssessmentPage from './pages/monitor/RBIAssessmentPage';
+import RBIAssessmentDetailPage from './pages/monitor/RBIAssessmentDetailPage';
+import CorrosionStudiesPage from './pages/monitor/CorrosionStudiesPage';
+import CorrosionStudiesDetailPage from './pages/monitor/CorrosionStudiesDetailPage';
+import InspectionDataPage from './pages/monitor/InspectionDataPage';
+import IMSDashboardPage from './pages/monitor/IMSDashboardPage';
+import RMSAssetListPage from './pages/monitor/RMSAssetListPage';
+import RMSAssetDetailPage from './pages/monitor/RMSAssetDetailPage';
+import CriticalAssetsPage from './pages/monitor/CriticalAssetsPage';
+import RMSDashboardPage from './pages/monitor/RMSDashboardPage';
 
 function App() {
   return (
@@ -96,10 +107,22 @@ function App() {
         <Route path="/admin/settings/average-uars" element={<Layout><AverageUARSPage /></Layout>} />
         <Route path="/admin/settings/average-uars/:id" element={<Layout><AverageUARSDetailPage /></Layout>} />
         
+        {/* Integrity Routes */}
         <Route path="/integrity/module" element={<Layout><IntegrityModulePage /></Layout>} />
         
         {/* Monitor Routes */}
         <Route path="/monitor/inventory-groups" element={<Layout><InventoryGroupsPage /></Layout>} />
+        <Route path="/monitor/integrity" element={<Layout><IntegrityPage /></Layout>} />
+        <Route path="/monitor/ims-dashboard" element={<Layout><IMSDashboardPage /></Layout>} />
+        <Route path="/monitor/rbi-assessment" element={<Layout><RBIAssessmentPage /></Layout>} />
+        <Route path="/monitor/rbi-assessment/:id" element={<Layout><RBIAssessmentDetailPage /></Layout>} />
+        <Route path="/monitor/corrosion-studies" element={<Layout><CorrosionStudiesPage /></Layout>} />
+        <Route path="/monitor/corrosion-studies/:id" element={<Layout><CorrosionStudiesDetailPage /></Layout>} />
+        <Route path="/monitor/inspection-data" element={<Layout><InspectionDataPage /></Layout>} />
+        <Route path="/monitor/rms-asset-list" element={<Layout><RMSAssetListPage /></Layout>} />
+        <Route path="/monitor/rms-asset-list/:id" element={<Layout><RMSAssetDetailPage /></Layout>} />
+        <Route path="/monitor/critical-assets" element={<Layout><CriticalAssetsPage /></Layout>} />
+        <Route path="/monitor/rms-dashboard" element={<Layout><RMSDashboardPage /></Layout>} />
         
         <Route path="*" element={<Layout><NotFound /></Layout>} />
       </Routes>
