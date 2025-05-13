@@ -36,6 +36,7 @@ import WorkOrderDetailPage from '@/pages/maintain/WorkOrderDetailPage';
 import PMSchedulePage from '@/pages/maintain/PMSchedulePage';
 import PMScheduleDetailPage from '@/pages/maintain/PMScheduleDetailPage';
 import MaterialPage from '@/pages/manage/MaterialPage';
+import AssetDetailsPage from '@/pages/manage/AssetDetailsPage';
 
 function App() {
   return (
