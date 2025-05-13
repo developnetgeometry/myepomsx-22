@@ -7,6 +7,9 @@ import { LineChart, PieChart, BarChart, Line, Pie, Bar, XAxis, YAxis, CartesianG
 import KpiCard from '@/components/shared/KpiCard';
 import { Database, Activity, AlertTriangle, Gauge } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import StatusBadge from '@/components/shared/StatusBadge';
+import { formatDateTime } from '@/utils/formatters';
 
 // Sample data for telemetry charts
 const temperatureData = [
@@ -85,8 +88,134 @@ const systemAlertsData = [
   { name: 'Control System', alerts: 4 },
 ];
 
+// Asset health status for table display
+const assetHealthData = [
+  { 
+    id: '1',
+    assetNo: 'RMS-A001',
+    assetName: 'Compressor Station Alpha',
+    system: 'Compressor System',
+    healthStatus: 'Good',
+    lastUpdated: '2025-05-12 09:15:22'
+  },
+  { 
+    id: '2',
+    assetNo: 'RMS-A002',
+    assetName: 'Flow Control Valve FCV-201',
+    system: 'Flow Control',
+    healthStatus: 'Fair',
+    lastUpdated: '2025-05-12 08:45:30'
+  },
+  { 
+    id: '3',
+    assetNo: 'RMS-A003',
+    assetName: 'Pressure Transmitter PT-305',
+    system: 'Pressure Monitoring',
+    healthStatus: 'Poor',
+    lastUpdated: '2025-05-11 23:10:45'
+  },
+  { 
+    id: '4',
+    assetNo: 'RMS-A004',
+    assetName: 'Storage Tank Level Sensor',
+    system: 'Level Monitoring',
+    healthStatus: 'Good',
+    lastUpdated: '2025-05-12 10:30:15'
+  },
+  { 
+    id: '5',
+    assetNo: 'RMS-A005',
+    assetName: 'Pump Motor Temperature Sensor',
+    system: 'Pump System',
+    healthStatus: 'Critical',
+    lastUpdated: '2025-05-12 07:50:38'
+  },
+  { 
+    id: '6',
+    assetNo: 'RMS-A006',
+    assetName: 'Cooling Tower Fan Motor',
+    system: 'Cooling System',
+    healthStatus: 'Good',
+    lastUpdated: '2025-05-12 11:22:05'
+  }
+];
+
+// Alert list for analysis tab
+const alertListData = [
+  { 
+    id: '1',
+    assetNo: 'RMS-A001',
+    assetName: 'Compressor Station Alpha',
+    metric: 'Temperature',
+    value: '92.5°C',
+    threshold: '90.0°C',
+    alertLevel: 'Warning',
+    timestamp: '2025-05-12 09:15:22'
+  },
+  { 
+    id: '2',
+    assetNo: 'RMS-A002',
+    assetName: 'Flow Control Valve FCV-201',
+    metric: 'Pressure',
+    value: '13.8 MPa',
+    threshold: '13.5 MPa',
+    alertLevel: 'Warning',
+    timestamp: '2025-05-12 08:45:30'
+  },
+  { 
+    id: '3',
+    assetNo: 'RMS-A003',
+    assetName: 'Pressure Transmitter PT-305',
+    metric: 'Accuracy',
+    value: '1.8%',
+    threshold: '1.5%',
+    alertLevel: 'Warning',
+    timestamp: '2025-05-11 23:10:45'
+  },
+  { 
+    id: '5',
+    assetNo: 'RMS-A005',
+    assetName: 'Pump Motor Temperature Sensor',
+    metric: 'Temperature',
+    value: '110.5°C',
+    threshold: '95.0°C',
+    alertLevel: 'Critical',
+    timestamp: '2025-05-12 07:50:38'
+  },
+  { 
+    id: '5',
+    assetNo: 'RMS-A005',
+    assetName: 'Pump Motor Temperature Sensor',
+    metric: 'Current',
+    value: '42.3 A',
+    threshold: '40.0 A',
+    alertLevel: 'Critical',
+    timestamp: '2025-05-12 06:58:12'
+  }
+];
+
+// Filter assets by system
+const filterAssetsBySystem = (system: string) => {
+  if (system === 'All Systems') return assetHealthData;
+  return assetHealthData.filter(asset => asset.system === system);
+};
+
+// Filter alerts by system
+const filterAlertsBySystem = (system: string) => {
+  if (system === 'All Systems') return alertListData;
+  
+  // Find assets in the specified system
+  const systemAssets = assetHealthData.filter(asset => asset.system === system);
+  const systemAssetIds = systemAssets.map(asset => asset.id);
+  
+  // Filter alerts for those assets
+  return alertListData.filter(alert => systemAssetIds.includes(alert.id));
+};
+
 const RMSDashboardPage: React.FC = () => {
   const [activeSystem, setActiveSystem] = useState("All Systems");
+  const filteredAssets = filterAssetsBySystem(activeSystem);
+  const filteredAlerts = filterAlertsBySystem(activeSystem);
 
   return (
     <div className="space-y-6">
@@ -133,19 +262,39 @@ const RMSDashboardPage: React.FC = () => {
       </div>
 
       <div className="flex flex-wrap gap-3 mb-4">
-        <Badge variant="outline" className={activeSystem === "All Systems" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("All Systems")}>
+        <Badge 
+          variant="outline" 
+          className={activeSystem === "All Systems" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
+          onClick={() => setActiveSystem("All Systems")}
+        >
           All Systems
         </Badge>
-        <Badge variant="outline" className={activeSystem === "Compressor System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Compressor System")}>
+        <Badge 
+          variant="outline" 
+          className={activeSystem === "Compressor System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
+          onClick={() => setActiveSystem("Compressor System")}
+        >
           Compressor System
         </Badge>
-        <Badge variant="outline" className={activeSystem === "Cooling System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Cooling System")}>
+        <Badge 
+          variant="outline" 
+          className={activeSystem === "Cooling System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
+          onClick={() => setActiveSystem("Cooling System")}
+        >
           Cooling System
         </Badge>
-        <Badge variant="outline" className={activeSystem === "Separator System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Separator System")}>
+        <Badge 
+          variant="outline" 
+          className={activeSystem === "Separator System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
+          onClick={() => setActiveSystem("Separator System")}
+        >
           Separator System
         </Badge>
-        <Badge variant="outline" className={activeSystem === "Pump System" ? "bg-primary text-primary-foreground" : ""} onClick={() => setActiveSystem("Pump System")}>
+        <Badge 
+          variant="outline" 
+          className={activeSystem === "Pump System" ? "bg-primary text-primary-foreground cursor-pointer" : "cursor-pointer"} 
+          onClick={() => setActiveSystem("Pump System")}
+        >
           Pump System
         </Badge>
       </div>
@@ -218,57 +367,106 @@ const RMSDashboardPage: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="health" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Asset Health Distribution</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0">
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={healthStatusData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {healthStatusData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Systems with Active Alerts</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={systemAlertsData} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis type="category" dataKey="name" width={150} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="alerts" name="Number of Alerts" fill="#f97316" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Asset Health Status</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 pt-0">
+              <div className="relative overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Asset No</TableHead>
+                      <TableHead>Asset Name</TableHead>
+                      <TableHead>System</TableHead>
+                      <TableHead>Health Status</TableHead>
+                      <TableHead>Last Updated</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredAssets.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-6">
+                          No assets found for this system
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredAssets.map((asset) => (
+                        <TableRow key={asset.id}>
+                          <TableCell className="font-medium">{asset.assetNo}</TableCell>
+                          <TableCell>{asset.assetName}</TableCell>
+                          <TableCell>{asset.system}</TableCell>
+                          <TableCell>
+                            <StatusBadge status={asset.healthStatus} />
+                          </TableCell>
+                          <TableCell>{formatDateTime(asset.lastUpdated)}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         
         <TabsContent value="alerts" className="mt-6">
           <Card>
+            <CardHeader>
+              <CardTitle>Alert Analysis</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 pt-0">
+              <div className="relative overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Asset</TableHead>
+                      <TableHead>Metric</TableHead>
+                      <TableHead>Current Value</TableHead>
+                      <TableHead>Threshold</TableHead>
+                      <TableHead>Alert Level</TableHead>
+                      <TableHead>Timestamp</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredAlerts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-6">
+                          No alerts found for this system
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredAlerts.map((alert, index) => (
+                        <TableRow key={`${alert.id}-${index}`}>
+                          <TableCell className="font-medium">{alert.assetName}</TableCell>
+                          <TableCell>{alert.metric}</TableCell>
+                          <TableCell className={
+                            alert.alertLevel === 'Critical' ? 'text-red-500 font-semibold' : 
+                            alert.alertLevel === 'Warning' ? 'text-orange-500 font-semibold' : ''
+                          }>
+                            {alert.value}
+                          </TableCell>
+                          <TableCell>{alert.threshold}</TableCell>
+                          <TableCell>
+                            <Badge className={
+                              alert.alertLevel === 'Critical' ? 'bg-red-500' :
+                              alert.alertLevel === 'Warning' ? 'bg-orange-500' :
+                              'bg-green-500'
+                            }>
+                              {alert.alertLevel}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{formatDateTime(alert.timestamp)}</TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="mt-6">
             <CardHeader>
               <CardTitle>Alert Trends (Last 7 Days)</CardTitle>
             </CardHeader>
