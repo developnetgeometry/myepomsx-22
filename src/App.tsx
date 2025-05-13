@@ -17,6 +17,8 @@ import SystemPage from '@/pages/manage/SystemPage';
 import AssetHierarchyPage from '@/pages/manage/AssetHierarchyPage';
 import TaskLibraryPage from '@/pages/maintain/TaskLibraryPage';
 import TaskLibraryDetailPage from '@/pages/maintain/TaskLibraryDetailPage';
+import WorkRequestPage from '@/pages/maintain/WorkRequestPage';
+import WorkRequestDetailPage from '@/pages/maintain/WorkRequestDetailPage';
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
       <Route path="/maintain/wo-history/:id" element={<Layout><WOHistoryDetailPage /></Layout>} />
       <Route path="/maintain/task-library" element={<Layout><TaskLibraryPage /></Layout>} />
       <Route path="/maintain/task-library/:id" element={<Layout><TaskLibraryDetailPage /></Layout>} />
+      <Route path="/maintain/work-request" element={<Layout><WorkRequestPage /></Layout>} />
+      <Route path="/maintain/work-request/:id" element={<Layout><WorkRequestDetailPage /></Layout>} />
       
       {/* Manage Routes */}
       <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
