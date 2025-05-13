@@ -11,7 +11,10 @@ import Index from '@/pages/Index';
 import WOHistoryPage from '@/pages/maintain/WOHistoryPage';
 import WOHistoryDetailPage from '@/pages/maintain/WOHistoryDetailPage';
 import AssetRegisterPage from '@/pages/manage/AssetRegisterPage';
+import AssetRegisterDetailPage from '@/pages/manage/AssetRegisterDetailPage';
 import DashboardPage from '@/pages/DashboardPage';
+import SystemPage from '@/pages/manage/SystemPage';
+import AssetHierarchyPage from '@/pages/manage/AssetHierarchyPage';
 
 function App() {
   return (
@@ -33,6 +36,9 @@ function App() {
       
       {/* Manage Routes */}
       <Route path="/manage/asset-register" element={<Layout><AssetRegisterPage /></Layout>} />
+      <Route path="/manage/asset-register/:id" element={<Layout><AssetRegisterDetailPage /></Layout>} />
+      <Route path="/manage/system" element={<Layout><SystemPage /></Layout>} />
+      <Route path="/manage/asset-hierarchy" element={<Layout><AssetHierarchyPage /></Layout>} />
       
       {/* Redirect to dashboard rather than showing 404 for common paths */}
       <Route path="/manage/*" element={<Layout><DashboardPage /></Layout>} />
