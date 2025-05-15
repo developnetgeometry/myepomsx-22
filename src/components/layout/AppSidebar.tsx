@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
@@ -450,7 +449,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 <img 
                   src="/lovable-uploads/aab3e771-b0d1-477c-8a42-390b37ca14e1.png" 
                   alt="EPOMS Logo" 
-                  className="h-10" 
+                  className="h-14" 
                 />
               ) : (
                 <span className="font-bold text-white text-2xl">E</span>
