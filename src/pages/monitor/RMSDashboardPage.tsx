@@ -80,7 +80,7 @@ const systemReliabilityData = [
   },
 ];
 
-// Custom tooltip for bar charts - Fixed with proper typing
+// Fix the type error with the tooltip
 const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
