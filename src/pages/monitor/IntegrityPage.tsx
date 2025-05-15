@@ -1,122 +1,162 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Plus, ShieldAlert } from 'lucide-react';
 import PageHeader from '@/components/shared/PageHeader';
 import DataTable, { Column } from '@/components/shared/DataTable';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import StatusBadge from '@/components/shared/StatusBadge';
+import { ShieldIcon } from 'lucide-react';
 
-// Sample piping data
-const initialPipingData = [
-  {
-    id: '1',
-    lineNo: 'L-101',
-    asset: 'PV-1001',
-    system: 'System-1',
-    materialConstruction: 'Carbon Steel',
-    nominalBoreDiameter: '4"',
-    pipeSchedule: 'Schedule 40',
-    riskRank: 'Medium',
-    status: 'Active',
+// Sample data for pressure vessels
+const pressureVesselData = [
+  { 
+    id: '1', 
+    assetCode: 'PV-1001', 
+    assetName: 'Separator Vessel', 
+    area: 'Process Area A', 
+    system: 'Separation System', 
+    status: 'Active' 
   },
-  {
-    id: '2',
-    lineNo: 'L-102',
-    asset: 'PP-2003',
-    system: 'System-2',
-    materialConstruction: 'Stainless Steel',
-    nominalBoreDiameter: '6"',
-    pipeSchedule: 'Schedule 80',
-    riskRank: 'High',
-    status: 'Active',
+  { 
+    id: '2', 
+    assetCode: 'PV-1002', 
+    assetName: 'Flash Drum', 
+    area: 'Process Area B', 
+    system: 'Flash System', 
+    status: 'Active' 
   },
-  {
-    id: '3',
-    lineNo: 'L-103',
-    asset: 'PV-1002',
-    system: 'System-1',
-    materialConstruction: 'Carbon Steel',
-    nominalBoreDiameter: '2"',
-    pipeSchedule: 'Schedule 40',
-    riskRank: 'Low',
-    status: 'Active',
+  { 
+    id: '3', 
+    assetCode: 'PV-1003', 
+    assetName: 'Storage Tank', 
+    area: 'Tank Farm', 
+    system: 'Storage System', 
+    status: 'Inactive' 
+  },
+  { 
+    id: '4', 
+    assetCode: 'PV-1004', 
+    assetName: 'Knockout Drum', 
+    area: 'Compressor Area', 
+    system: 'Gas Compression', 
+    status: 'Under Maintenance' 
+  },
+  { 
+    id: '5', 
+    assetCode: 'PV-1005', 
+    assetName: 'Pressure Vessel', 
+    area: 'Process Area C', 
+    system: 'High Pressure System', 
+    status: 'Active' 
   },
 ];
 
-const IntegrityPage = () => {
+// Sample data for piping
+const pipingData = [
+  { 
+    id: '1', 
+    assetCode: 'PP-2001', 
+    assetName: 'Main Process Line', 
+    area: 'Process Area A', 
+    system: 'Feed System', 
+    status: 'Active' 
+  },
+  { 
+    id: '2', 
+    assetCode: 'PP-2002', 
+    assetName: 'Product Transfer Line', 
+    area: 'Process Area B', 
+    system: 'Product System', 
+    status: 'Active' 
+  },
+  { 
+    id: '3', 
+    assetCode: 'PP-2003', 
+    assetName: 'Flare Header', 
+    area: 'Utility Area', 
+    system: 'Flare System', 
+    status: 'Under Inspection' 
+  },
+  { 
+    id: '4', 
+    assetCode: 'PP-2004', 
+    assetName: 'Cooling Water Line', 
+    area: 'Cooling Tower', 
+    system: 'Cooling System', 
+    status: 'Active' 
+  },
+  { 
+    id: '5', 
+    assetCode: 'PP-2005', 
+    assetName: 'Steam Header', 
+    area: 'Utility Area', 
+    system: 'Steam System', 
+    status: 'Active' 
+  },
+];
+
+const IntegrityPage: React.FC = () => {
   const navigate = useNavigate();
-  const [pipingData, setPipingData] = useState(initialPipingData);
-
-  const handleAddNewPiping = () => {
-    navigate('/monitor/integrity/piping/new');
-  };
-
-  const handleRowClick = (row: any) => {
-    navigate(`/monitor/integrity/piping/${row.id}`);
-  };
-
-  // Function to get appropriate color class based on risk rank
-  const getRiskRankColor = (rank: string) => {
-    switch(rank) {
-      case 'Critical': return 'bg-red-100 text-red-800';
-      case 'High': return 'bg-orange-100 text-orange-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   const columns: Column[] = [
-    { id: 'lineNo', header: 'Line No', accessorKey: 'lineNo' },
-    { id: 'asset', header: 'Asset', accessorKey: 'asset' },
+    { id: 'assetCode', header: 'Asset Code', accessorKey: 'assetCode' },
+    { id: 'assetName', header: 'Asset Name', accessorKey: 'assetName' },
+    { id: 'area', header: 'Area', accessorKey: 'area' },
     { id: 'system', header: 'System', accessorKey: 'system' },
-    { id: 'materialConstruction', header: 'Material', accessorKey: 'materialConstruction' },
-    { id: 'nominalBoreDiameter', header: 'Nominal Bore', accessorKey: 'nominalBoreDiameter' },
-    { id: 'pipeSchedule', header: 'Pipe Schedule', accessorKey: 'pipeSchedule' },
     { 
-      id: 'riskRank', 
-      header: 'Risk Rank', 
-      accessorKey: 'riskRank',
-      cell: (value) => (
-        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${getRiskRankColor(value)}`}>
-          {value}
-        </span>
-      )
-    },
-    {
-      id: 'status',
-      header: 'Status',
+      id: 'status', 
+      header: 'Status', 
       accessorKey: 'status',
       cell: (value) => <StatusBadge status={value} />
     },
   ];
 
+  const handleRowClick = (row: any) => {
+    // Navigate to the asset integrity detail page with the current tab type and row id
+    const currentTab = document.querySelector('[data-state="active"][role="tab"]')?.getAttribute('data-value');
+    const assetType = currentTab === 'piping' ? 'piping' : 'pressureVessel';
+    navigate(`/monitor/integrity/${assetType}/${row.id}`);
+  };
+
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Integrity Module"
-        subtitle="Manage piping integrity assessments"
-        icon={<ShieldAlert className="h-6 w-6" />}
+      <PageHeader 
+        title="Integrity Management" 
+        subtitle="Asset integrity monitoring and reporting"
+        icon={<ShieldIcon className="h-6 w-6" />}
         onSearch={(query) => console.log('Search:', query)}
       />
 
-      <div className="flex justify-end mb-4">
-        <Button onClick={handleAddNewPiping}>
-          <Plus className="mr-2 h-4 w-4" /> Add New Piping
-        </Button>
-      </div>
-
-      <Card>
-        <CardContent className="p-6">
-          <DataTable
-            columns={columns}
-            data={pipingData}
-            onRowClick={handleRowClick}
-          />
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="pressureVessel" className="w-full">
+        <TabsList className="grid w-full md:w-[400px] grid-cols-2">
+          <TabsTrigger value="pressureVessel">Pressure Vessel</TabsTrigger>
+          <TabsTrigger value="piping">Piping</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="pressureVessel" className="mt-6">
+          <Card>
+            <CardContent className="p-6">
+              <DataTable
+                columns={columns}
+                data={pressureVesselData}
+                onRowClick={handleRowClick}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="piping" className="mt-6">
+          <Card>
+            <CardContent className="p-6">
+              <DataTable
+                columns={columns}
+                data={pipingData}
+                onRowClick={handleRowClick}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
