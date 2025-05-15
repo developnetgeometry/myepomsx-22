@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,10 +77,8 @@ const IMSDashboardPage: React.FC = () => {
         </TabsList>
         
         <TabsContent value="risk" className="mt-6">
-          {/* Resize the risk matrix by wrapping it in a container with max-width and mx-auto */}
-          <div className="max-w-3xl mx-auto">
-            <RiskMatrix />
-          </div>
+          {/* Full width risk matrix without the previous max-width constraint */}
+          <RiskMatrix />
         </TabsContent>
         
         <TabsContent value="integrity" className="mt-6">
