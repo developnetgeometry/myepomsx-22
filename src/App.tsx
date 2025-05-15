@@ -1,9 +1,12 @@
+
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
 import Index from './pages/Index'
 import Overview from './pages/Overview'
 import RBIAssessmentPVDetailPage from './pages/monitor/RBIAssessmentPVDetailPage'
+import PipingForm from './pages/monitor/PipingForm'
+import PipingDetail from './pages/monitor/PipingDetail'
 
 // Admin Pages
 import ClientPage from './pages/admin/setup/ClientPage'
@@ -194,6 +197,8 @@ function App() {
           <Route path="/monitor/inspection-data" element={<InspectionDataPage />} />
           <Route path="/monitor/integrity" element={<IntegrityPage />} />
           <Route path="/monitor/integrity/pressureVessel/:id" element={<RBIAssessmentPVDetailPage />} />
+          <Route path="/monitor/integrity/piping/new" element={<PipingForm />} />
+          <Route path="/monitor/integrity/piping/:id" element={<PipingDetail />} />
           <Route path="/monitor/inventory-groups" element={<InventoryGroupsPage />} />
           <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
           <Route path="/monitor/rbi-assessment/:id" element={<RBIAssessmentDetailPage />} />
