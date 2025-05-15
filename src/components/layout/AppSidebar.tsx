@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
@@ -270,6 +271,11 @@ const sidebarItems: SidebarItemType[] = [{
           name: 'Corrosion Group',
           path: '/admin/settings/corrosion-group',
           icon: Settings
+        },
+        {
+          name: 'Users',
+          path: '/admin/settings/users',
+          icon: Users
         }
       ]
     }

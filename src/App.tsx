@@ -54,6 +54,7 @@ import MaintenanceTypePage from '@/pages/admin/settings/MaintenanceTypePage';
 import MaintenanceTypeDetailPage from '@/pages/admin/settings/MaintenanceTypeDetailPage';
 import AverageUARSPage from '@/pages/admin/settings/AverageUARSPage';
 import AverageUARSDetailPage from '@/pages/admin/settings/AverageUARSDetailPage';
+import UserManagementPage from '@/pages/admin/settings/UserManagementPage';
 
 // Integrity imports
 import IntegrityModulePage from '@/pages/integrity/IntegrityModulePage';
@@ -140,6 +141,7 @@ function App() {
             <Route path="/admin/settings/maintenance-type/:id" element={<MaintenanceTypeDetailPage />} />
             <Route path="/admin/settings/average-uars" element={<AverageUARSPage />} />
             <Route path="/admin/settings/average-uars/:id" element={<AverageUARSDetailPage />} />
+            <Route path="/admin/settings/users" element={<UserManagementPage />} />
             
             {/* Integrity Routes */}
             <Route path="/integrity/module" element={<IntegrityModulePage />} />
