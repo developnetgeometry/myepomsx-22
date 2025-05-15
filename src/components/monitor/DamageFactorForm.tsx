@@ -53,13 +53,26 @@ const DamageFactorForm: React.FC<DamageFactorFormProps> = ({
   const handleSelectChange = (field: keyof RBIAssessment, value: string) => {
     if (readOnly) return;
     
+    // Convert to boolean if the field is hasCladding
+    let processedValue: any = value;
+    if (field === 'hasCladding') {
+      processedValue = value === 'true';
+    }
+    
     onAssessmentChange({
       ...assessment,
-      [field]: value
+      [field]: processedValue
     });
   };
 
   const formSections = getFormSections(formType);
+
+  // Helper function to safely convert any value to a string for select components
+  const safeValueToString = (value: any): string => {
+    if (value === undefined || value === null) return '';
+    if (typeof value === 'boolean') return value.toString();
+    return String(value);
+  };
 
   return (
     <div className="space-y-6">
@@ -89,7 +102,7 @@ const DamageFactorForm: React.FC<DamageFactorFormProps> = ({
                 
                 {field.type === 'select' ? (
                   <Select 
-                    value={String(assessment[field.id as keyof RBIAssessment] || '')}
+                    value={safeValueToString(assessment[field.id as keyof RBIAssessment])}
                     onValueChange={(value) => handleSelectChange(field.id as keyof RBIAssessment, value)}
                     disabled={readOnly}
                   >
@@ -260,6 +273,12 @@ const getFormSections = (formType: string): FormSection[] => {
                 { label: "High", value: "High" },
                 { label: "Medium", value: "Medium" },
                 { label: "Low", value: "Low" }
+              ]
+            },
+            { id: "hasCladding", label: "Has Cladding", type: "select",
+              options: [
+                { label: "Yes", value: "true" },
+                { label: "No", value: "false" }
               ]
             }
           ]
