@@ -81,7 +81,7 @@ const InventoryDetailPage: React.FC = () => {
       
       <Card>
         <CardContent className="pt-6">
-          <Tabs defaultValue="inventory" onValueChange={setActiveTab} value={activeTab}>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-6">
               <TabsTrigger value="inventory">Inventory</TabsTrigger>
               <TabsTrigger value="receive">Receive</TabsTrigger>
