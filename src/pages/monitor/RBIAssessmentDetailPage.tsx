@@ -119,7 +119,7 @@ const RBIAssessmentDetailPage: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState({
     pof: 'general',
     cof: 'cofProd',
-    risk: 'summary',  // Add new risk subtab for damage factors
+    risk: 'summary',
   });
   
   const handleInputChange = (
@@ -1003,7 +1003,7 @@ const RBIAssessmentDetailPage: React.FC = () => {
                     </div>
                   </TabsContent>
                   
-                  {/* Damage Factors Subtab */}
+                  {/* Damage Factors Subtab - Make sure this is properly displayed */}
                   <TabsContent value="damagefactors" className="space-y-6">
                     <Card>
                       <CardHeader>
