@@ -1,3 +1,4 @@
+
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
@@ -94,6 +95,10 @@ import RBIAssessmentDetailPage from './pages/monitor/RBIAssessmentDetailPage'
 import RMSAssetListPage from './pages/monitor/RMSAssetListPage'
 import RMSAssetDetailPage from './pages/monitor/RMSAssetDetailPage'
 import RMSDashboardPage from './pages/monitor/RMSDashboardPage'
+
+// New Piping Pages
+import PipingFormPage from './pages/monitor/PipingFormPage'
+import PipingDetailPage from './pages/monitor/PipingDetailPage'
 
 // Vendor Pages
 import VendorDashboardPage from './pages/vendor/VendorDashboardPage'
@@ -194,6 +199,8 @@ function App() {
           <Route path="/monitor/inspection-data" element={<InspectionDataPage />} />
           <Route path="/monitor/integrity" element={<IntegrityPage />} />
           <Route path="/monitor/integrity/pressureVessel/:id" element={<RBIAssessmentPVDetailPage />} />
+          <Route path="/monitor/integrity/piping/new" element={<PipingFormPage />} />
+          <Route path="/monitor/integrity/piping/:id" element={<PipingDetailPage />} />
           <Route path="/monitor/inventory-groups" element={<InventoryGroupsPage />} />
           <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
           <Route path="/monitor/rbi-assessment/:id" element={<RBIAssessmentDetailPage />} />

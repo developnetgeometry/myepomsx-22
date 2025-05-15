@@ -6,7 +6,8 @@ import DataTable, { Column } from '@/components/shared/DataTable';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import StatusBadge from '@/components/shared/StatusBadge';
-import { ShieldIcon } from 'lucide-react';
+import { ShieldIcon, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Sample data for pressure vessels
 const pressureVesselData = [
@@ -94,10 +95,20 @@ const pipingData = [
     system: 'Steam System', 
     status: 'Active' 
   },
+  {
+    id: 'new-piping-1',
+    assetCode: 'PP-2006',
+    assetName: 'Process Fluid Transfer Line',
+    area: 'Process Area A',
+    system: 'Production System',
+    status: 'Active'
+  },
 ];
 
 const IntegrityPage: React.FC = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("pressureVessel");
+  
   const columns: Column[] = [
     { id: 'assetCode', header: 'Asset Code', accessorKey: 'assetCode' },
     { id: 'assetName', header: 'Asset Name', accessorKey: 'assetName' },
@@ -113,9 +124,20 @@ const IntegrityPage: React.FC = () => {
 
   const handleRowClick = (row: any) => {
     // Navigate to the asset integrity detail page with the current tab type and row id
-    const currentTab = document.querySelector('[data-state="active"][role="tab"]')?.getAttribute('data-value');
-    const assetType = currentTab === 'piping' ? 'piping' : 'pressureVessel';
-    navigate(`/monitor/integrity/${assetType}/${row.id}`);
+    if (activeTab === 'piping') {
+      navigate(`/monitor/integrity/piping/${row.id}`);
+    } else {
+      navigate(`/monitor/integrity/pressureVessel/${row.id}`);
+    }
+  };
+  
+  const handleAddNew = () => {
+    if (activeTab === 'piping') {
+      navigate('/monitor/integrity/piping/new');
+    } else {
+      // You can add a similar route for pressure vessels if needed
+      // navigate('/monitor/integrity/pressureVessel/new');
+    }
   };
 
   return (
@@ -127,11 +149,23 @@ const IntegrityPage: React.FC = () => {
         onSearch={(query) => console.log('Search:', query)}
       />
 
-      <Tabs defaultValue="pressureVessel" className="w-full">
-        <TabsList className="grid w-full md:w-[400px] grid-cols-2">
-          <TabsTrigger value="pressureVessel">Pressure Vessel</TabsTrigger>
-          <TabsTrigger value="piping">Piping</TabsTrigger>
-        </TabsList>
+      <Tabs 
+        defaultValue="pressureVessel" 
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value)}
+        className="w-full"
+      >
+        <div className="flex justify-between items-center mb-4">
+          <TabsList className="grid w-full md:w-[400px] grid-cols-2">
+            <TabsTrigger value="pressureVessel">Pressure Vessel</TabsTrigger>
+            <TabsTrigger value="piping">Piping</TabsTrigger>
+          </TabsList>
+          
+          <Button onClick={handleAddNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add New {activeTab === 'piping' ? 'Piping' : 'Pressure Vessel'}
+          </Button>
+        </div>
         
         <TabsContent value="pressureVessel" className="mt-6">
           <Card>
