@@ -85,4 +85,28 @@ export interface RBIAssessment {
   pofValue: number;
   riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
   riskRanking: 'Low' | 'Medium' | 'High' | 'Critical';
+  
+  // Additional fields for DF Forms
+  // Added for DF EXT form
+  extAge?: number;
+  extEnvironment?: string;
+  pipeSupport?: string;
+  soilWaterInterface?: string;
+  crexp?: number;
+  cract?: number;
+  art?: number;
+  fsextcorr?: number;
+  srextcorr?: number;
+  remainingLife?: number;
+  rl?: number;
+  remarks?: string;
+  
+  // Added for DF EXT.CLSCC form
+  agecrack?: number;
+  agecoat?: number;
+  coatadj?: number;
+  extClSccSusc?: string;
+  svi?: number;
+  inspectionEfficiency?: number;
+  dfExtClSccFb?: number;
 }
