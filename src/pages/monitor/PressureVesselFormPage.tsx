@@ -18,14 +18,14 @@ import { CalendarIcon, Save, ArrowLeft } from 'lucide-react';
 import PageHeader from '@/components/shared/PageHeader';
 import { Textarea } from '@/components/ui/textarea';
 
-const PipingFormPage: React.FC = () => {
+const PressureVesselFormPage: React.FC = () => {
   const navigate = useNavigate();
   const [date, setDate] = useState<Date>();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would handle the form submission
-    toast.success("Piping data saved successfully!");
+    toast.success("Pressure Vessel data saved successfully!");
     navigate('/monitor/integrity');
   };
 
@@ -36,8 +36,8 @@ const PipingFormPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Add New Piping" 
-        subtitle="Enter piping details for integrity management"
+        title="Add New Pressure Vessel" 
+        subtitle="Enter pressure vessel details for integrity management"
         backLink="/monitor/integrity"
         icon={<ArrowLeft className="h-6 w-6" />}
       />
@@ -61,17 +61,13 @@ const PipingFormPage: React.FC = () => {
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="asset">Asset</Label>
-                      <Select>
-                        <SelectTrigger id="asset">
-                          <SelectValue placeholder="Select Asset" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="asset1">Asset 1</SelectItem>
-                          <SelectItem value="asset2">Asset 2</SelectItem>
-                          <SelectItem value="asset3">Asset 3</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="assetCode">Asset Code</Label>
+                      <Input id="assetCode" placeholder="Enter asset code" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="assetName">Asset Name</Label>
+                      <Input id="assetName" placeholder="Enter asset name" />
                     </div>
                     
                     <div className="space-y-2">
@@ -125,79 +121,55 @@ const PipingFormPage: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="circuitId">Circuit ID</Label>
+                      <Label htmlFor="pressureClass">Pressure Class</Label>
                       <Select>
-                        <SelectTrigger id="circuitId">
-                          <SelectValue placeholder="Select Circuit ID" />
+                        <SelectTrigger id="pressureClass">
+                          <SelectValue placeholder="Select Pressure Class" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="circuit1">Circuit 1</SelectItem>
-                          <SelectItem value="circuit2">Circuit 2</SelectItem>
-                          <SelectItem value="circuit3">Circuit 3</SelectItem>
+                          <SelectItem value="class1">Class 150</SelectItem>
+                          <SelectItem value="class2">Class 300</SelectItem>
+                          <SelectItem value="class3">Class 600</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="lineNo">Line No</Label>
-                      <Input id="lineNo" placeholder="Enter line number" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="tmin">Tmin</Label>
-                      <Input id="tmin" placeholder="Enter Tmin" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="pipeClass">Pipe Class</Label>
+                      <Label htmlFor="vesselType">Vessel Type</Label>
                       <Select>
-                        <SelectTrigger id="pipeClass">
-                          <SelectValue placeholder="Select Pipe Class" />
+                        <SelectTrigger id="vesselType">
+                          <SelectValue placeholder="Select Vessel Type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="class1">Class 1</SelectItem>
-                          <SelectItem value="class2">Class 2</SelectItem>
-                          <SelectItem value="class3">Class 3</SelectItem>
+                          <SelectItem value="separator">Separator</SelectItem>
+                          <SelectItem value="tank">Tank</SelectItem>
+                          <SelectItem value="reactor">Reactor</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="pipeSchedule">Pipe Schedule</Label>
+                      <Label htmlFor="shellThickness">Shell Thickness</Label>
+                      <Input id="shellThickness" placeholder="Enter shell thickness" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="headType">Head Type</Label>
                       <Select>
-                        <SelectTrigger id="pipeSchedule">
-                          <SelectValue placeholder="Select Pipe Schedule" />
+                        <SelectTrigger id="headType">
+                          <SelectValue placeholder="Select Head Type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="sch10">Schedule 10</SelectItem>
-                          <SelectItem value="sch40">Schedule 40</SelectItem>
-                          <SelectItem value="sch80">Schedule 80</SelectItem>
+                          <SelectItem value="elliptical">Elliptical</SelectItem>
+                          <SelectItem value="hemispherical">Hemispherical</SelectItem>
+                          <SelectItem value="flat">Flat</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="nominalWallThickness">Nominal Wall Thickness</Label>
-                      <Input id="nominalWallThickness" placeholder="Enter nominal wall thickness" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="nominalBoreDiameter">Nominal Bore Diameter</Label>
-                      <Select>
-                        <SelectTrigger id="nominalBoreDiameter">
-                          <SelectValue placeholder="Select Nominal Bore Diameter" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="25mm">25mm</SelectItem>
-                          <SelectItem value="50mm">50mm</SelectItem>
-                          <SelectItem value="100mm">100mm</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="pressureRating">Pressure Rating</Label>
-                      <Input id="pressureRating" placeholder="Enter pressure rating" />
+                      <Label htmlFor="headThickness">Head Thickness</Label>
+                      <Input id="headThickness" placeholder="Enter head thickness" />
                     </div>
                     
                     <div className="space-y-2 md:col-span-2">
@@ -214,8 +186,8 @@ const PipingFormPage: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        <Switch id="lineH2S" />
-                        <Label htmlFor="lineH2S">Line H2S</Label>
+                        <Switch id="h2sService" />
+                        <Label htmlFor="h2sService">H2S Service</Label>
                       </div>
                       
                       <div className="flex items-center space-x-2">
@@ -254,8 +226,8 @@ const PipingFormPage: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="length">Length</Label>
-                      <Input id="length" placeholder="Enter length" />
+                      <Label htmlFor="tangentToTangent">Tangent to Tangent Length</Label>
+                      <Input id="tangentToTangent" placeholder="Enter tangent to tangent length" />
                     </div>
                     
                     <div className="space-y-2">
@@ -308,41 +280,16 @@ const PipingFormPage: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="geometry">Geometry</Label>
+                      <Label htmlFor="orientation">Orientation</Label>
                       <Select>
-                        <SelectTrigger id="geometry">
-                          <SelectValue placeholder="Select Geometry" />
+                        <SelectTrigger id="orientation">
+                          <SelectValue placeholder="Select Orientation" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="straight">Straight</SelectItem>
-                          <SelectItem value="elbow">Elbow</SelectItem>
-                          <SelectItem value="tee">Tee</SelectItem>
+                          <SelectItem value="vertical">Vertical</SelectItem>
+                          <SelectItem value="horizontal">Horizontal</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-                    
-                    <Separator className="md:col-span-2 my-4" />
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
-                      <div className="flex items-center space-x-2">
-                        <Switch id="pipeSupport" />
-                        <Label htmlFor="pipeSupport">Pipe Support</Label>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Switch id="soilWaterInterface" />
-                        <Label htmlFor="soilWaterInterface">Soil Water Interface</Label>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Switch id="deadLegs" />
-                        <Label htmlFor="deadLegs">Dead Legs</Label>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Switch id="mixPoint" />
-                        <Label htmlFor="mixPoint">Mix Point</Label>
-                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -369,15 +316,15 @@ const PipingFormPage: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="isolationSystem">Isolation System</Label>
+                      <Label htmlFor="cathodicProtection">Cathodic Protection</Label>
                       <Select>
-                        <SelectTrigger id="isolationSystem">
-                          <SelectValue placeholder="Select Isolation System" />
+                        <SelectTrigger id="cathodicProtection">
+                          <SelectValue placeholder="Select Cathodic Protection" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="type1">Type 1</SelectItem>
-                          <SelectItem value="type2">Type 2</SelectItem>
-                          <SelectItem value="type3">Type 3</SelectItem>
+                          <SelectItem value="impressed">Impressed Current</SelectItem>
+                          <SelectItem value="sacrificial">Sacrificial Anode</SelectItem>
+                          <SelectItem value="none">None</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -397,28 +344,8 @@ const PipingFormPage: React.FC = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="trd">Trd (mm)</Label>
-                      <Input id="trd" placeholder="Enter Trd" />
-                    </div>
-                    
-                    <div className="space-y-2">
                       <Label htmlFor="minimumThickness">Minimum Thickness (mm)</Label>
                       <Input id="minimumThickness" placeholder="Enter minimum thickness" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="postWeldHeatTreatment">Post Weld Heat Treatment</Label>
-                      <Input id="postWeldHeatTreatment" placeholder="Enter post weld heat treatment" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="lineDescription">Line Description</Label>
-                      <Input id="lineDescription" placeholder="Enter line description" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="replacementLine">Replacement Line</Label>
-                      <Input id="replacementLine" placeholder="Enter replacement line" />
                     </div>
                     
                     <div className="space-y-2">
@@ -442,26 +369,11 @@ const PipingFormPage: React.FC = () => {
                           <SelectValue placeholder="Select Mitigation System" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cathodic">Cathodic Protection</SelectItem>
                           <SelectItem value="inhibitor">Chemical Inhibitor</SelectItem>
+                          <SelectItem value="coating">Protective Coating</SelectItem>
                           <SelectItem value="none">None</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="crExp">CR Exp</Label>
-                      <Input id="crExp" placeholder="Enter CR Exp" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="sretCorr">Sret Corr</Label>
-                      <Input id="sretCorr" placeholder="Enter Sret Corr" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="fsectCorr">Fsect Corr</Label>
-                      <Input id="fsectCorr" placeholder="Enter Fsect Corr" />
                     </div>
                     
                     <div className="flex items-center space-x-2">
@@ -478,6 +390,20 @@ const PipingFormPage: React.FC = () => {
               <Card>
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="fluidService">Fluid Service</Label>
+                      <Select>
+                        <SelectTrigger id="fluidService">
+                          <SelectValue placeholder="Select Fluid Service" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="oil">Oil</SelectItem>
+                          <SelectItem value="gas">Gas</SelectItem>
+                          <SelectItem value="mixed">Mixed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
                     <div className="space-y-2">
                       <Label htmlFor="toxicity">Toxicity</Label>
                       <Select>
@@ -535,7 +461,7 @@ const PipingFormPage: React.FC = () => {
             </Button>
             <Button type="submit">
               <Save className="mr-2 h-4 w-4" />
-              Save Piping
+              Save Pressure Vessel
             </Button>
           </div>
         </div>
@@ -544,4 +470,4 @@ const PipingFormPage: React.FC = () => {
   );
 };
 
-export default PipingFormPage;
+export default PressureVesselFormPage;

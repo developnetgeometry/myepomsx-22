@@ -135,8 +135,7 @@ const IntegrityPage: React.FC = () => {
     if (activeTab === 'piping') {
       navigate('/monitor/integrity/piping/new');
     } else {
-      // You can add a similar route for pressure vessels if needed
-      // navigate('/monitor/integrity/pressureVessel/new');
+      navigate('/monitor/integrity/pressureVessel/new');
     }
   };
 
