@@ -8,7 +8,7 @@ import { ArrowLeft, Store } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 
 interface Vendor {
   id: string;
@@ -100,7 +100,10 @@ const VendorDetailPage: React.FC = () => {
     if (foundVendor) {
       setVendor(foundVendor);
     } else {
-      toast.error("Vendor not found");
+      toast({
+        title: "Vendor not found",
+        variant: "destructive"
+      });
       navigate('/admin/setup/vendor');
     }
   }, [id, navigate]);
