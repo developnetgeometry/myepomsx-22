@@ -264,7 +264,7 @@ export default function RBIAssessmentPVDetailPage() {
       
       <PageHeader
         title={isAddMode ? "Add New RBI Assessment (Pressure Vessel)" : "Pressure Vessel RBI Assessment"}
-        description={isAddMode ? "Create a new RBI assessment for a pressure vessel" : `Viewing details for assessment ${id || ""}`}
+        subtitle={isAddMode ? "Create a new RBI assessment for a pressure vessel" : `Viewing details for assessment ${id || ""}`}
       />
       
       <Form {...form}>

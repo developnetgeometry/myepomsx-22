@@ -12,6 +12,7 @@ interface BreadcrumbItem {
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
+  description?: string; // Added this prop
   icon?: React.ReactNode;
   onAddNew?: () => void;
   addNewLabel?: string;
@@ -25,6 +26,7 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,
+  description, // Added this prop
   icon,
   onAddNew,
   addNewLabel = "+ Add New",
@@ -57,6 +59,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             <div>
               <h1 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h1>
               {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+              {description && <p className="text-sm text-muted-foreground">{description}</p>}
             </div>
           </div>
         </div>
