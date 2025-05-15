@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem
 } from '@/components/ui/dropdown-menu';
-import { useNavigate } from 'react-router-dom';
 import {
   Select,
   SelectContent,
@@ -19,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useProject } from '@/contexts/ProjectContext';
+import { toast } from '@/components/ui/use-toast';
 
 interface HeaderProps {
   title?: string;
@@ -27,25 +28,22 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) => {
-  const navigate = useNavigate();
+  const { currentProject, setCurrentProject, projects } = useProject();
+  
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'Work order WO-2023-4582 is overdue', time: '10 min ago' },
     { id: 2, text: 'Asset PM-102 requires maintenance', time: '1 hour ago' },
     { id: 3, text: 'New task assigned by John Doe', time: '3 hours ago' },
   ]);
 
-  const [currentProject, setCurrentProject] = useState('Project Alpha');
-  const projects = [
-    { id: 1, name: 'Project Alpha', route: '/admin/setup/project/1' },
-    { id: 2, name: 'Project Beta', route: '/admin/setup/project/2' },
-    { id: 3, name: 'Project Gamma', route: '/admin/setup/project/3' },
-  ];
-
   const handleProjectChange = (projectId: string) => {
-    const selectedProject = projects.find(p => p.id.toString() === projectId);
+    const selectedProject = projects.find(p => p.id === projectId);
     if (selectedProject) {
-      setCurrentProject(selectedProject.name);
-      navigate(selectedProject.route);
+      setCurrentProject(selectedProject);
+      toast({
+        title: "Project Changed",
+        description: `Switched to ${selectedProject.name}`,
+      });
     }
   };
 
@@ -139,13 +137,13 @@ const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) 
                 <span>Current Project</span>
               </DropdownMenuLabel>
               <div className="px-2 py-1.5">
-                <Select onValueChange={handleProjectChange} defaultValue="1">
+                <Select onValueChange={handleProjectChange} defaultValue={currentProject.id}>
                   <SelectTrigger className="w-full border focus-visible:ring-0">
-                    <SelectValue placeholder={currentProject} />
+                    <SelectValue placeholder={currentProject.name} />
                   </SelectTrigger>
                   <SelectContent>
                     {projects.map((project) => (
-                      <SelectItem key={project.id} value={project.id.toString()}>
+                      <SelectItem key={project.id} value={project.id}>
                         {project.name}
                       </SelectItem>
                     ))}
