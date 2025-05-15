@@ -55,10 +55,6 @@ const buttonVariants = cva(
         "soft-pink": "bg-epomsx-pink/10 text-epomsx-pink hover:bg-epomsx-pink/20",
         "soft-lime": "bg-epomsx-lime/10 text-epomsx-lime hover:bg-epomsx-lime/20",
         "soft-orange": "bg-epomsx-orange/10 text-epomsx-orange hover:bg-epomsx-orange/20",
-        "solid-success": "bg-epomsx-success text-white hover:bg-epomsx-success/90",
-        "solid-info": "bg-epomsx-info text-white hover:bg-epomsx-info/90",
-        "solid-warning": "bg-epomsx-warning text-white hover:bg-epomsx-warning/90",
-        "solid-danger": "bg-epomsx-danger text-white hover:bg-epomsx-danger/90",
       },
       size: {
         default: "h-10 px-4 py-2",
