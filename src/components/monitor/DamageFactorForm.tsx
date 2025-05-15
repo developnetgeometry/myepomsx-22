@@ -294,16 +294,96 @@ const getFormSections = (formType: string): FormSection[] => {
       ];
     // Add more form types as needed
     case 'mfat':
-    case 'scc-ssc':
-    case 'scc-sohic':
-    case 'lin':
-    case 'cui-clscc':
-      // Default empty form with just asset ID for now
       return [
         {
-          title: "Form Under Development",
+          title: "General Information",
           fields: [
-            { id: "asset", label: "EQ. ID", type: "text" }
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
+              options: [
+                { label: "High", value: "High" },
+                { label: "Medium", value: "Medium" },
+                { label: "Low", value: "Low" }
+              ]
+            },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
+          ]
+        },
+        {
+          title: "Mechanical Fatigue Parameters",
+          fields: [
+            { id: "dmfat", label: "Damage Factor (MFAT)", type: "number", isCritical: true }
+          ]
+        }
+      ];
+    case 'scc-ssc':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
+          ]
+        },
+        {
+          title: "SCC SSC Parameters",
+          fields: [
+            { id: "dmsccssc", label: "Damage Factor (SCC SSC)", type: "number", isCritical: true }
+          ]
+        }
+      ];
+    case 'scc-sohic':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
+          ]
+        },
+        {
+          title: "SCC SOHIC Parameters",
+          fields: [
+            { id: "dpSCCSOHIC", label: "Damage Factor (SCC SOHIC)", type: "number", isCritical: true }
+          ]
+        }
+      ];
+    case 'lin':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
+          ]
+        },
+        {
+          title: "Linear Thinning Parameters",
+          fields: [
+            { id: "dfthin", label: "Damage Factor (Linear Thinning)", type: "number", isCritical: true }
+          ]
+        }
+      ];
+    case 'cui-clscc':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "hasCladding", label: "Has Cladding", type: "select",
+              options: [
+                { label: "Yes", value: "true" },
+                { label: "No", value: "false" }
+              ]
+            }
+          ]
+        },
+        {
+          title: "CUI CLSCC Parameters",
+          fields: [
+            { id: "dfcuiiff", label: "DF CUI IFF", type: "number", isCritical: true },
+            { id: "dfextclsc", label: "DF CLSCC", type: "number", isCritical: true }
           ]
         }
       ];
