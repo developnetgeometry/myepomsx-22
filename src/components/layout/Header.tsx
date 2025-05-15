@@ -136,19 +136,22 @@ const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) 
               
               <DropdownMenuLabel className="flex items-center space-x-2">
                 <Building className="h-4 w-4" />
-                <span>Current Project: {currentProject}</span>
+                <span>Current Project</span>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              
-              {projects.map((project) => (
-                <DropdownMenuItem 
-                  key={project.id} 
-                  className="cursor-pointer"
-                  onClick={() => handleProjectChange(project.id.toString())}
-                >
-                  {project.name}
-                </DropdownMenuItem>
-              ))}
+              <div className="px-2 py-1.5">
+                <Select onValueChange={handleProjectChange} defaultValue="1">
+                  <SelectTrigger className="w-full border focus-visible:ring-0">
+                    <SelectValue placeholder={currentProject} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id.toString()}>
+                        {project.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               
               <DropdownMenuSeparator />
               <DropdownMenuItem>Sign out</DropdownMenuItem>
