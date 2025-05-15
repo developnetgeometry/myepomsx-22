@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import StatusBadge from '@/components/shared/StatusBadge';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
+import DamageFactorTab from '@/components/monitor/DamageFactorTab';
 
 // Sample data for asset integrity details
 const getAssetDetails = (assetId: string, assetType: string) => {
@@ -61,6 +62,87 @@ const getAssetDetails = (assetId: string, assetType: string) => {
   }
 };
 
+// Sample data for RBI Assessment
+const getSampleRBIData = (assetId: string) => {
+  return {
+    id: "RBI-" + assetId,
+    rbiId: "RBI-" + assetId + "-001",
+    asset: `PV-${assetId}`,
+    eqId: `PV-${assetId}`,
+    likelihood: 'Medium',
+    consequence: 'Medium',
+    riskRank: 'Medium',
+    nextAssessmentDate: '2024-12-15',
+    status: 'Active',
+    coatingQuality: 'Fair',
+    dataConfidence: 'Medium',
+    hasCladding: true,
+    nominalThickness: 12.5,
+    tMin: 6.4,
+    currentThickness: 10.2,
+    description: 'Pressure vessel used for primary separation',
+    lastInspectionDate: '2023-10-15',
+    lastCoatingDate: '2022-08-20',
+    nthinA: 0.85,
+    nthinB: 0.75,
+    fsThin: 0.65,
+    srThin: 0.55,
+    dfThin1: 0.65,
+    dfThin2: 0.45,
+    creep: 0.3,
+    pothin1: 0.4,
+    agerc: 1.5,
+    bhthin: 0.75,
+    dfhta: 0.4,
+    dbrint: 0.5,
+    dfmat: 0.35,
+    dfextclsc: 0.65,
+    dfcuiiff: 0.55,
+    dmsccssc: 0.45,
+    dmfat: 0.35,
+    dpSCCSOHIC: 0.6,
+    cofFinancial: 3500000,
+    cofArea: 250,
+    dfthin: 0.55,
+    pof: 0.0045,
+    pofValue: 0.0045,
+    riskLevel: 'Medium',
+    riskRanking: 'Medium',
+    fcommd: 1.25,
+    fatta: 0.3,
+    outagehrs: 24,
+    outagemult: 1.5,
+    lrapprod: 0.75,
+    fprodd: 1.2,
+    popdens: 0.5,
+    injcost: 100000,
+    facexp: 2500000,
+    volinv: 120,
+    fc: 2.5,
+    ftotal: 3.2,
+    envcost: 500000,
+    fatality: 0.001,
+    evacuation: 0.01,
+    isoSys: 'Semi-Auto',
+    detSys: 'Semi-Auto',
+    mitigationSystem: 'Basic',
+    idealGasSpecificHeatEQ: 'Standard',
+    pkkpa: 1000,
+    prtankKpa: 950,
+    wtkg: 5500,
+    releaseType: 'Gas',
+    ratton: 1.2,
+    inventorykg: 5000,
+    caCmdfail: 0.25,
+    caInjfail: 0.3,
+    caInjfatal: 0.2,
+    caCmdfatal: 0.15,
+    k: 1.3,
+    timemstep: 60,
+    ldmax: 150
+  };
+};
+
 const IntegrityStatusCard = ({ value, label, icon, colorClass }: { value: string; label: string; icon: React.ReactNode; colorClass: string }) => (
   <Card>
     <CardContent className="p-6">
@@ -92,6 +174,7 @@ const AssetIntegrityDetailPage: React.FC = () => {
   }
   
   const asset = getAssetDetails(id, type);
+  const rbiAssessment = getSampleRBIData(id);
   const integrityColorClass = getIntegrityColorClass(asset.integrity.integrity);
   
   return (
@@ -178,9 +261,10 @@ const AssetIntegrityDetailPage: React.FC = () => {
       </div>
       
       <Tabs defaultValue="inspections" className="w-full">
-        <TabsList className="grid w-full md:w-[400px] grid-cols-2">
+        <TabsList className="grid w-full md:w-[600px] grid-cols-3">
           <TabsTrigger value="inspections">Inspection History</TabsTrigger>
           <TabsTrigger value="findings">Findings</TabsTrigger>
+          <TabsTrigger value="damagefactors">Damage Factors</TabsTrigger>
         </TabsList>
         
         <TabsContent value="inspections" className="mt-6">
@@ -259,6 +343,17 @@ const AssetIntegrityDetailPage: React.FC = () => {
                   ))}
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="damagefactors" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Damage Factor Assessment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DamageFactorTab assessment={rbiAssessment} />
             </CardContent>
           </Card>
         </TabsContent>
