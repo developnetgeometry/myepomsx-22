@@ -66,6 +66,7 @@ import AssetIntegrityDetailPage from '@/pages/monitor/AssetIntegrityDetailPage';
 import IMSDashboardPage from '@/pages/monitor/IMSDashboardPage';
 import RBIAssessmentPage from '@/pages/monitor/RBIAssessmentPage';
 import RBIAssessmentDetailPage from '@/pages/monitor/RBIAssessmentDetailPage';
+import DFRiskFactorDetailPage from '@/pages/monitor/DFRiskFactorDetailPage';
 import CorrosionStudiesPage from '@/pages/monitor/CorrosionStudiesPage';
 import CorrosionStudiesDetailPage from '@/pages/monitor/CorrosionStudiesDetailPage';
 import InspectionDataPage from '@/pages/monitor/InspectionDataPage';
@@ -153,6 +154,7 @@ function App() {
             <Route path="/monitor/ims-dashboard" element={<IMSDashboardPage />} />
             <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
             <Route path="/monitor/rbi-assessment/:id" element={<RBIAssessmentDetailPage />} />
+            <Route path="/monitor/rbi-assessment/:id/df-risk-factor" element={<DFRiskFactorDetailPage />} />
             <Route path="/monitor/corrosion-studies" element={<CorrosionStudiesPage />} />
             <Route path="/monitor/corrosion-studies/:id" element={<CorrosionStudiesDetailPage />} />
             <Route path="/monitor/inspection-data" element={<InspectionDataPage />} />
