@@ -11,21 +11,33 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 export type DamageFactorFormProps = {
-  formType: 'ext' | 'ext.clscc' | 'thin' | 'hta' | 'brit' | 'mfat' | 'scc-ssc' | 'scc-sohic' | 'lin' | 'cui-clscc';
+  formType: 'ext' | 'ext.clscc' | 'thin' | 'hta' | 'brit' | 'mfat' | 'scc-ssc' | 'scc-sohic' | 'lin' | 'cui' | 'cui-clscc';
   assessment?: RBIAssessment;
-  onSubmit: (data: any) => void;
+  onSubmit?: (data: any) => void;
+  onAssessmentChange?: (assessment: RBIAssessment) => void;
   isSubmitting?: boolean;
+  readOnly?: boolean;
 }
 
 // Helper function to convert any value to string safely
-const toStringValue = (value: string | number | boolean): string => {
+const toStringValue = (value: string | number | boolean | undefined): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
   if (typeof value === 'boolean') {
     return value ? 'true' : 'false';
   }
   return String(value);
 };
 
-export default function DamageFactorForm({ formType, assessment, onSubmit, isSubmitting = false }: DamageFactorFormProps) {
+export default function DamageFactorForm({ 
+  formType, 
+  assessment, 
+  onSubmit, 
+  onAssessmentChange,
+  isSubmitting = false,
+  readOnly = false
+}: DamageFactorFormProps) {
   const [selectedTab, setSelectedTab] = useState("form");
   
   const formSchema = z.object({
@@ -41,10 +53,17 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
   });
 
   const handleFormSubmit = (data: any) => {
-    onSubmit({
-      ...data,
-      formType
-    });
+    if (onSubmit) {
+      onSubmit({
+        ...data,
+        formType
+      });
+    }
+  };
+
+  const handleAssessmentChange = (updatedAssessment: RBIAssessment) => {
+    if (readOnly || !onAssessmentChange) return;
+    onAssessmentChange(updatedAssessment);
   };
 
   // Handle select changes specifically for boolean conversions
@@ -54,6 +73,14 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
       field.onChange(value === 'true');
     } else {
       field.onChange(value);
+    }
+
+    // If we have onAssessmentChange, call it too
+    if (onAssessmentChange && assessment) {
+      onAssessmentChange({
+        ...assessment,
+        [field.name]: value === 'true' ? true : value === 'false' ? false : value
+      });
     }
   };
 
@@ -79,7 +106,7 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
                       <FormField
                         key={field.id}
                         control={form.control}
-                        name={field.id}
+                        name={field.id as any} // Cast to any for now to avoid TypeScript errors
                         render={({ field: formField }) => (
                           <FormItem>
                             <FormLabel className={field.isCritical ? "text-red-500 font-medium" : ""}>
@@ -88,9 +115,10 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
                             <FormControl>
                               {field.type === "select" ? (
                                 <Select 
-                                  // Fixed TypeScript error by ensuring string values
+                                  // Convert all values to string to avoid type errors
                                   value={toStringValue(formField.value)} 
                                   onValueChange={(value) => handleSelectChange(formField, value)}
+                                  disabled={readOnly}
                                 >
                                   <SelectTrigger>
                                     <SelectValue placeholder={`Select ${field.label}`} />
@@ -106,12 +134,35 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
                               ) : field.type === "date" ? (
                                 <Input 
                                   type="date" 
-                                  {...formField} 
+                                  value={toStringValue(formField.value)}
+                                  onChange={(e) => {
+                                    formField.onChange(e);
+                                    if (onAssessmentChange && assessment) {
+                                      onAssessmentChange({
+                                        ...assessment,
+                                        [formField.name]: e.target.value
+                                      });
+                                    }
+                                  }}
+                                  readOnly={readOnly}
                                 />
                               ) : (
                                 <Input 
                                   type={field.type} 
-                                  {...formField}
+                                  value={toStringValue(formField.value)}
+                                  onChange={(e) => {
+                                    formField.onChange(e);
+                                    if (onAssessmentChange && assessment) {
+                                      const value = field.type === "number" 
+                                        ? Number(e.target.value) 
+                                        : e.target.value;
+                                      onAssessmentChange({
+                                        ...assessment,
+                                        [formField.name]: value
+                                      });
+                                    }
+                                  }}
+                                  readOnly={readOnly}
                                 />
                               )}
                             </FormControl>
@@ -125,12 +176,14 @@ export default function DamageFactorForm({ formType, assessment, onSubmit, isSub
               </Card>
             ))}
 
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" type="button">Cancel</Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save"}
-              </Button>
-            </div>
+            {!readOnly && (
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" type="button">Cancel</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Saving..." : "Save"}
+                </Button>
+              </div>
+            )}
           </form>
         </Form>
       </TabsContent>
@@ -263,7 +316,6 @@ function getFormConfig(formType: DamageFactorFormProps["formType"]) {
           ]
         }
       ];
-    // Add more form types as needed
     case 'mfat':
       return [
         {
@@ -332,6 +384,22 @@ function getFormConfig(formType: DamageFactorFormProps["formType"]) {
           title: "Linear Thinning Parameters",
           fields: [
             { id: "dfthin", label: "Damage Factor (Linear Thinning)", type: "number", isCritical: true }
+          ]
+        }
+      ];
+    case 'cui':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
+          ]
+        },
+        {
+          title: "CUI Parameters",
+          fields: [
+            { id: "dfcui", label: "Damage Factor (CUI)", type: "number", isCritical: true }
           ]
         }
       ];

@@ -263,7 +263,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               assessment={assessment}
               onAssessmentChange={handleAssessmentChange}
               readOnly={readOnly}
-              formType="ext-clscc"
+              formType="ext.clscc"
             />
           </AccordionContent>
         </AccordionItem>
