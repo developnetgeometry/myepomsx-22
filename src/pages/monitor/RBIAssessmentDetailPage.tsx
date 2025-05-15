@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -354,7 +355,7 @@ const RBIAssessmentDetailPage: React.FC = () => {
                     </div>
                   </TabsContent>
                   
-                  {/* Damage Factor Subtab - Now using the DamageFactorTab component */}
+                  {/* Damage Factor Subtab - Using the DamageFactorTab component */}
                   <TabsContent value="damageFactor">
                     <Card>
                       <CardHeader>
@@ -672,7 +673,7 @@ const RBIAssessmentDetailPage: React.FC = () => {
                 </Tabs>
               </TabsContent>
               
-              {/* Risk & IRP Tab - Removed DamageFactorTab from here */}
+              {/* Risk & IRP Tab */}
               <TabsContent value="risk">
                 <Tabs value={activeSubTab.risk} onValueChange={(value) => setActiveSubTab(prev => ({ ...prev, risk: value }))}>
                   <TabsList className="mb-4">

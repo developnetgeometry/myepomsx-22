@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -327,9 +328,18 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="RL" value="N/A" isCritical={true} />
             </FieldGroup>
             
-            <FieldGroup title="Additional Information">
-              <FieldItem label="Remarks" value="N/A" />
-            </FieldGroup>
+            <div className="mt-4">
+              <Label htmlFor="dfextclsc">DFextclsc</Label>
+              <Input 
+                id="dfextclsc"
+                type="number"
+                value={assessment.dfextclsc || 0}
+                onChange={(e) => handleInputChange('dfextclsc', e.target.value)}
+                readOnly={readOnly}
+                className="w-full"
+                step="0.01"
+              />
+            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -359,11 +369,6 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="SVI" value="N/A" tooltip="Severity index" />
               <FieldItem label="Inspection Efficiency" value="N/A" />
             </FieldGroup>
-            
-            <FieldGroup title="Damage Factors">
-              <FieldItem label="DF Ext CL SCC FB" value="N/A" isCritical={true} />
-              <FieldItem label="DF Ext CL SCC" value="N/A" isCritical={true} />
-            </FieldGroup>
           </AccordionContent>
         </AccordionItem>
 
@@ -384,18 +389,18 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="Cyclic Load Type" value="N/A" />
             </FieldGroup>
             
-            <FieldGroup title="System Design">
-              <FieldItem label="Corrective Action" value="N/A" />
-              <FieldItem label="Pipe Complexity" value="N/A" />
-              <FieldItem label="Pipe Condition" value="N/A" />
-              <FieldItem label="Joint/Branch Design" value="N/A" />
-              <FieldItem label="Branch Diameter" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Damage Factors">
-              <FieldItem label="D MFAT FB" value={assessment.dmfat || "N/A"} isCritical={true} tooltip="Fatigue damage factor base" />
-              <FieldItem label="D MFAT" value={assessment.dmfat || "N/A"} isCritical={true} tooltip="Fatigue damage factor" />
-            </FieldGroup>
+            <div className="mt-4">
+              <Label htmlFor="dmfat">DMFAT</Label>
+              <Input 
+                id="dmfat"
+                type="number"
+                value={assessment.dmfat || 0}
+                onChange={(e) => handleInputChange('dmfat', e.target.value)}
+                readOnly={readOnly}
+                className="w-full"
+                step="0.01"
+              />
+            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -412,40 +417,21 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
             </FieldGroup>
             
-            <FieldGroup title="Age & Environment">
-              <FieldItem label="Trd (mm)" value="N/A" tooltip="Thickness reduction" />
-              <FieldItem label="Agetk (year)" value="N/A" tooltip="Age of thickness" />
-              <FieldItem label="Agecoat (year)" value="N/A" tooltip="Age of coating" />
-              <FieldItem label="Coatadj" value="N/A" tooltip="Coating adjustment" />
-              <FieldItem label="Age" value="N/A" />
-              <FieldItem label="External Environment" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Insulation Properties">
-              <FieldItem label="Insulation Type" value="N/A" />
-              <FieldItem label="Insulation Complexity" value="N/A" />
-              <FieldItem label="Insulation Condition" value="N/A" />
-              <FieldItem label="Equipment Design & Fabrication" value="N/A" />
-              <FieldItem label="Interface" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Corrosion Parameters">
-              <FieldItem label="CRexp (mm/year)" value="N/A" tooltip="Expected corrosion rate" />
-              <FieldItem label="CRact (mm/year)" value="N/A" tooltip="Actual corrosion rate" />
-              <FieldItem label="Art" value="N/A" />
-              <FieldItem label="FSCUIF" value="N/A" tooltip="Factor of safety for CUI" />
-              <FieldItem label="SRCUIF" value="N/A" tooltip="Severity ratio for CUI" />
-            </FieldGroup>
-            
-            <FieldGroup title="Damage Factors">
-              <FieldItem label="DATA CONFIDENCE" value={assessment.dataConfidence} />
-              <FieldItem label="DFCUIFF" value={assessment.dfcuiiff || "N/A"} isCritical={true} tooltip="Damage factor for CUI" />
-              <FieldItem label="Remaining Life" value="N/A" isCritical={true} />
-            </FieldGroup>
+            <div className="mt-4">
+              <Label htmlFor="dfcuiiff">DFCUIIFF</Label>
+              <Input 
+                id="dfcuiiff"
+                type="number"
+                value={assessment.dfcuiiff || 0}
+                onChange={(e) => handleInputChange('dfcuiiff', e.target.value)}
+                readOnly={readOnly}
+                className="w-full"
+                step="0.01"
+              />
+            </div>
           </AccordionContent>
         </AccordionItem>
 
-        {/* Continuing with other accordion items... */}
         {/* DF SCC SSC */}
         <AccordionItem value="df-scc-ssc" className="border rounded-lg overflow-hidden">
           <AccordionTrigger className="px-4 py-3 bg-muted/50 hover:bg-muted">
@@ -458,24 +444,18 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="Last Inspection" value={assessment.lastInspectionDate} />
             </FieldGroup>
             
-            <FieldGroup title="Environmental Factors">
-              <FieldItem label="H2S in Water (ppm)" value="N/A" />
-              <FieldItem label="pH" value="N/A" />
-              <FieldItem label="Environmental Severity" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Material Properties">
-              <FieldItem label="PWHT?" value="N/A" tooltip="Post-weld heat treatment" />
-              <FieldItem label="Hardness (Brinnell)" value="N/A" />
-              <FieldItem label="SSC Susceptibility to Heat Treatment" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Inspection & Damage Factors">
-              <FieldItem label="SVI" value="N/A" tooltip="Severity Index" />
-              <FieldItem label="Inspection Efficiency" value="N/A" />
-              <FieldItem label="DF SCC FB" value="N/A" isCritical={true} tooltip="Damage factor for stress corrosion cracking base" />
-              <FieldItem label="DF SCC" value={assessment.dpSCCSOHIC || "N/A"} isCritical={true} tooltip="Damage factor for stress corrosion cracking" />
-            </FieldGroup>
+            <div className="mt-4">
+              <Label htmlFor="dmsccssc">DMSCCSSC</Label>
+              <Input 
+                id="dmsccssc"
+                type="number"
+                value={assessment.dmsccssc || 0}
+                onChange={(e) => handleInputChange('dmsccssc', e.target.value)}
+                readOnly={readOnly}
+                className="w-full"
+                step="0.01"
+              />
+            </div>
           </AccordionContent>
         </AccordionItem>
 
@@ -492,85 +472,18 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({
               <FieldItem label="Online Monitoring" value="N/A" />
             </FieldGroup>
             
-            <FieldGroup title="Environmental Factors">
-              <FieldItem label="H2S in Water (ppm)" value="N/A" />
-              <FieldItem label="pH" value="N/A" />
-              <FieldItem label="Environmental Severity" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Material Properties">
-              <FieldItem label="PWHT?" value="N/A" tooltip="Post-weld heat treatment" />
-              <FieldItem label="Steel S Content" value="N/A" tooltip="Steel sulfur content" />
-              <FieldItem label="Susceptibility To Crack" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Inspection & Damage Factors">
-              <FieldItem label="SVI" value="N/A" tooltip="Severity Index" />
-              <FieldItem label="Inspection Efficiency" value="N/A" />
-              <FieldItem label="DF SOHIC FB" value="N/A" isCritical={true} tooltip="Damage factor for SOHIC base" />
-              <FieldItem label="DF SCC" value={assessment.dpSCCSOHIC || "N/A"} isCritical={true} tooltip="Damage factor for stress corrosion cracking" />
-            </FieldGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* DF LIN (DF LIN <DMG>) */}
-        <AccordionItem value="df-lin" className="border rounded-lg overflow-hidden">
-          <AccordionTrigger className="px-4 py-3 bg-muted/50 hover:bg-muted">
-            <span className="text-base font-medium">DF LIN (DF LIN &lt;DMG&gt;)</span>
-          </AccordionTrigger>
-          <AccordionContent className="p-4 pt-6">
-            <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.asset} />
-              <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
-            </FieldGroup>
-            
-            <FieldGroup title="Lining Properties">
-              <FieldItem label="Lining Type" value="N/A" />
-              <FieldItem label="Lining Condition" value="N/A" />
-              <FieldItem label="Lining Monitoring" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Damage Factors">
-              <FieldItem label="DF Elin" value="N/A" isCritical={true} tooltip="Damage factor for lining" />
-            </FieldGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* DF CUI CLSCC */}
-        <AccordionItem value="df-cui-clscc" className="border rounded-lg overflow-hidden">
-          <AccordionTrigger className="px-4 py-3 bg-muted/50 hover:bg-muted">
-            <span className="text-base font-medium">DF CUI CLSCC</span>
-          </AccordionTrigger>
-          <AccordionContent className="p-4 pt-6">
-            <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.asset} />
-              <FieldItem label="Coating Quality" value={assessment.coatingQuality} />
-              <FieldItem label="New Coat Date" value={assessment.lastCoatingDate} />
-              <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
-            </FieldGroup>
-            
-            <FieldGroup title="Age & Environment">
-              <FieldItem label="Agecrack" value="N/A" tooltip="Age of crack" />
-              <FieldItem label="Agecoat" value="N/A" tooltip="Age of coating" />
-              <FieldItem label="Coatadj" value="N/A" tooltip="Coating adjustment factor" />
-              <FieldItem label="Age" value="N/A" />
-              <FieldItem label="External Environment" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="System & Material Properties">
-              <FieldItem label="CUI CL SCC Susceptibility" value="N/A" tooltip="CUI chloride stress corrosion cracking susceptibility" />
-              <FieldItem label="Piping Complexity" value="N/A" />
-              <FieldItem label="Insulation Condition" value="N/A" />
-              <FieldItem label="Chloride Free Insulation" value="N/A" />
-              <FieldItem label="CUI CL SCC Susceptibility Final" value="N/A" />
-            </FieldGroup>
-            
-            <FieldGroup title="Inspection & Damage Factors">
-              <FieldItem label="SVI" value="N/A" tooltip="Severity Index" />
-              <FieldItem label="Inspection Efficiency" value="N/A" />
-              <FieldItem label="DF CUI CL SCC FB" value="N/A" isCritical={true} tooltip="Damage factor for CUI chloride SCC base" />
-              <FieldItem label="DF Ext CL SCC" value="N/A" isCritical={true} tooltip="Damage factor for external chloride SCC" />
-            </FieldGroup>
+            <div className="mt-4">
+              <Label htmlFor="dpSCCSOHIC">DP SCC SOHIC</Label>
+              <Input 
+                id="dpSCCSOHIC"
+                type="number"
+                value={assessment.dpSCCSOHIC || 0}
+                onChange={(e) => handleInputChange('dpSCCSOHIC', e.target.value)}
+                readOnly={readOnly}
+                className="w-full"
+                step="0.01"
+              />
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
