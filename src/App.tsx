@@ -1,4 +1,3 @@
-
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
@@ -180,6 +179,7 @@ function App() {
           <Route path="/maintain/wo-history" element={<WOHistoryPage />} />
           <Route path="/maintain/wo-history/:id" element={<WOHistoryDetailPage />} />
           <Route path="/maintain/work-orders" element={<WorkOrderListPage />} />
+          <Route path="/maintain/work-order-list" element={<WorkOrderListPage />} />
           <Route path="/maintain/work-orders/:id" element={<WorkOrderDetailPage />} />
           <Route path="/maintain/work-request" element={<WorkRequestPage />} />
           <Route path="/maintain/work-request/:id" element={<WorkRequestDetailPage />} />
