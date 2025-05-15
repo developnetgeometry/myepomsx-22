@@ -320,6 +320,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionContent>
         </AccordionItem>
 
+        {/* Continuing with other accordion items... */}
         {/* DF SCC SSC */}
         <AccordionItem value="df-scc-ssc" className="border rounded-lg overflow-hidden">
           <AccordionTrigger className="px-4 py-3 bg-muted/50 hover:bg-muted">

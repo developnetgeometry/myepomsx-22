@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, ShieldAlert } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import DamageFactorTab from '@/components/monitor/DamageFactorTab';
 import {
   Accordion,
   AccordionContent,
@@ -118,6 +119,7 @@ const RBIAssessmentDetailPage: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState({
     pof: 'general',
     cof: 'cofProd',
+    risk: 'summary',  // Add new risk subtab for damage factors
   });
   
   const handleInputChange = (
@@ -811,186 +813,208 @@ const RBIAssessmentDetailPage: React.FC = () => {
               </TabsContent>
               
               {/* Risk & IRP Tab */}
-              <TabsContent value="risk" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <Label htmlFor="dfhta">Dfhta</Label>
-                    <Input 
-                      id="dfhta" 
-                      name="dfhta" 
-                      type="number"
-                      value={formData.dfhta} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dbrint">Dbrint</Label>
-                    <Input 
-                      id="dbrint" 
-                      name="dbrint" 
-                      type="number"
-                      value={formData.dbrint} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dfmat">Dfmat</Label>
-                    <Input 
-                      id="dfmat" 
-                      name="dfmat" 
-                      type="number"
-                      value={formData.dfmat} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dfextclsc">Dfextclsc</Label>
-                    <Input 
-                      id="dfextclsc" 
-                      name="dfextclsc" 
-                      type="number"
-                      value={formData.dfextclsc} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dfcuiiff">Dfcuiiff</Label>
-                    <Input 
-                      id="dfcuiiff" 
-                      name="dfcuiiff" 
-                      type="number"
-                      value={formData.dfcuiiff} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dmsccssc">Dmsccssc</Label>
-                    <Input 
-                      id="dmsccssc" 
-                      name="dmsccssc" 
-                      type="number"
-                      value={formData.dmsccssc} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dmfat">Dmfat</Label>
-                    <Input 
-                      id="dmfat" 
-                      name="dmfat" 
-                      type="number"
-                      value={formData.dmfat} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dpSCCSOHIC">DP SCC SOHIC</Label>
-                    <Input 
-                      id="dpSCCSOHIC" 
-                      name="dpSCCSOHIC" 
-                      type="number"
-                      value={formData.dpSCCSOHIC} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cofFinancial">Cof (Financial)</Label>
-                    <Input 
-                      id="cofFinancial" 
-                      name="cofFinancial" 
-                      type="number"
-                      value={formData.cofFinancial} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cofArea">Cof (Area)</Label>
-                    <Input 
-                      id="cofArea" 
-                      name="cofArea" 
-                      type="number"
-                      value={formData.cofArea} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dfthin">Dfthin</Label>
-                    <Input 
-                      id="dfthin" 
-                      name="dfthin" 
-                      type="number"
-                      value={formData.dfthin} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="pof">PoF</Label>
-                    <Input 
-                      id="pof" 
-                      name="pof" 
-                      type="number"
-                      value={formData.pof} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="pofValue">PoF Value</Label>
-                    <Input 
-                      id="pofValue" 
-                      name="pofValue" 
-                      type="number"
-                      value={formData.pofValue} 
-                      onChange={handleInputChange}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="riskLevel">Risk Level</Label>
-                    <Select 
-                      value={formData.riskLevel} 
-                      onValueChange={(value) => handleSelectChange('riskLevel', value)}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select Risk Level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Low">Low</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="High">High</SelectItem>
-                        <SelectItem value="Critical">Critical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="riskRanking">Risk Ranking</Label>
-                    <Select 
-                      value={formData.riskRanking} 
-                      onValueChange={(value) => handleSelectChange('riskRanking', value)}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select Risk Ranking" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Low">Low</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="High">High</SelectItem>
-                        <SelectItem value="Critical">Critical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+              <TabsContent value="risk">
+                <Tabs value={activeSubTab.risk} onValueChange={(value) => setActiveSubTab(prev => ({ ...prev, risk: value }))}>
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="summary">Risk Summary</TabsTrigger>
+                    <TabsTrigger value="damagefactors">Damage Factors</TabsTrigger>
+                  </TabsList>
+                  
+                  {/* Risk Summary Subtab */}
+                  <TabsContent value="summary" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div>
+                        <Label htmlFor="dfhta">Dfhta</Label>
+                        <Input 
+                          id="dfhta" 
+                          name="dfhta" 
+                          type="number"
+                          value={formData.dfhta} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dbrint">Dbrint</Label>
+                        <Input 
+                          id="dbrint" 
+                          name="dbrint" 
+                          type="number"
+                          value={formData.dbrint} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dfmat">Dfmat</Label>
+                        <Input 
+                          id="dfmat" 
+                          name="dfmat" 
+                          type="number"
+                          value={formData.dfmat} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dfextclsc">Dfextclsc</Label>
+                        <Input 
+                          id="dfextclsc" 
+                          name="dfextclsc" 
+                          type="number"
+                          value={formData.dfextclsc} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dfcuiiff">Dfcuiiff</Label>
+                        <Input 
+                          id="dfcuiiff" 
+                          name="dfcuiiff" 
+                          type="number"
+                          value={formData.dfcuiiff} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dmsccssc">Dmsccssc</Label>
+                        <Input 
+                          id="dmsccssc" 
+                          name="dmsccssc" 
+                          type="number"
+                          value={formData.dmsccssc} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dmfat">Dmfat</Label>
+                        <Input 
+                          id="dmfat" 
+                          name="dmfat" 
+                          type="number"
+                          value={formData.dmfat} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dpSCCSOHIC">DP SCC SOHIC</Label>
+                        <Input 
+                          id="dpSCCSOHIC" 
+                          name="dpSCCSOHIC" 
+                          type="number"
+                          value={formData.dpSCCSOHIC} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cofFinancial">Cof (Financial)</Label>
+                        <Input 
+                          id="cofFinancial" 
+                          name="cofFinancial" 
+                          type="number"
+                          value={formData.cofFinancial} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cofArea">Cof (Area)</Label>
+                        <Input 
+                          id="cofArea" 
+                          name="cofArea" 
+                          type="number"
+                          value={formData.cofArea} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="dfthin">Dfthin</Label>
+                        <Input 
+                          id="dfthin" 
+                          name="dfthin" 
+                          type="number"
+                          value={formData.dfthin} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="pof">PoF</Label>
+                        <Input 
+                          id="pof" 
+                          name="pof" 
+                          type="number"
+                          value={formData.pof} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="pofValue">PoF Value</Label>
+                        <Input 
+                          id="pofValue" 
+                          name="pofValue" 
+                          type="number"
+                          value={formData.pofValue} 
+                          onChange={handleInputChange}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="riskLevel">Risk Level</Label>
+                        <Select 
+                          value={formData.riskLevel} 
+                          onValueChange={(value) => handleSelectChange('riskLevel', value)}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select Risk Level" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Low">Low</SelectItem>
+                            <SelectItem value="Medium">Medium</SelectItem>
+                            <SelectItem value="High">High</SelectItem>
+                            <SelectItem value="Critical">Critical</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="riskRanking">Risk Ranking</Label>
+                        <Select 
+                          value={formData.riskRanking} 
+                          onValueChange={(value) => handleSelectChange('riskRanking', value)}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select Risk Ranking" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Low">Low</SelectItem>
+                            <SelectItem value="Medium">Medium</SelectItem>
+                            <SelectItem value="High">High</SelectItem>
+                            <SelectItem value="Critical">Critical</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  {/* Damage Factors Subtab */}
+                  <TabsContent value="damagefactors" className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Damage Factor Assessment</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <DamageFactorTab assessment={formData} />
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
               </TabsContent>
             </Tabs>
           </CardContent>
