@@ -89,7 +89,7 @@ const DamageFactorForm: React.FC<DamageFactorFormProps> = ({
                 
                 {field.type === 'select' ? (
                   <Select 
-                    value={(assessment[field.id as keyof RBIAssessment] as string) || ''}
+                    value={String(assessment[field.id as keyof RBIAssessment] || '')}
                     onValueChange={(value) => handleSelectChange(field.id as keyof RBIAssessment, value)}
                     disabled={readOnly}
                   >
@@ -248,7 +248,46 @@ const getFormSections = (formType: string): FormSection[] => {
           ]
         }
       ];
+    case 'cui':
+      return [
+        {
+          title: "General Information",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
+              options: [
+                { label: "High", value: "High" },
+                { label: "Medium", value: "Medium" },
+                { label: "Low", value: "Low" }
+              ]
+            }
+          ]
+        },
+        {
+          title: "CUI Assessment Parameters",
+          fields: [
+            { id: "currentThickness", label: "Current Thickness", type: "number" },
+            { id: "nominalThickness", label: "Nominal Thickness", type: "number" },
+            { id: "dfcuiiff", label: "DF CUI IFF", type: "number", isCritical: true }
+          ]
+        }
+      ];
     // Add more form types as needed
+    case 'mfat':
+    case 'scc-ssc':
+    case 'scc-sohic':
+    case 'lin':
+    case 'cui-clscc':
+      // Default empty form with just asset ID for now
+      return [
+        {
+          title: "Form Under Development",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" }
+          ]
+        }
+      ];
     default:
       return [];
   }
