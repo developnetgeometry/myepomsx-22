@@ -180,6 +180,7 @@ function App() {
           <Route path="/maintain/wo-history/:id" element={<WOHistoryDetailPage />} />
           <Route path="/maintain/work-orders" element={<WorkOrderListPage />} />
           <Route path="/maintain/work-order-list" element={<WorkOrderListPage />} />
+          <Route path="/maintain/work-order-list/:id" element={<WorkOrderDetailPage />} />
           <Route path="/maintain/work-orders/:id" element={<WorkOrderDetailPage />} />
           <Route path="/maintain/work-request" element={<WorkRequestPage />} />
           <Route path="/maintain/work-request/:id" element={<WorkRequestDetailPage />} />
