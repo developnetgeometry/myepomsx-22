@@ -60,8 +60,8 @@ const UserManagementPage = () => {
     }
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
   };
 
   const filteredUsers = users.filter(user =>
@@ -88,19 +88,19 @@ const UserManagementPage = () => {
   };
 
   return (
-    <BlankPageTemplate>
+    <div className="space-y-6">
       <PageHeader
         title="User Management"
         subtitle="Manage system users, roles and permissions"
-        buttonLabel="Create User"
-        buttonIcon={<UserPlus size={16} />}
-        onButtonClick={() => {
+        onAddNew={() => {
           // This will be implemented in the future
           toast({
             title: "Coming Soon",
             description: "User creation functionality is coming soon."
           });
         }}
+        addNewLabel="Create User"
+        icon={<UserPlus size={16} />}
       />
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -110,7 +110,7 @@ const UserManagementPage = () => {
             <Input 
               placeholder="Search users by email, role or ID" 
               value={searchTerm} 
-              onChange={handleSearch} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
               className="pl-10"
             />
           </div>
@@ -179,7 +179,7 @@ const UserManagementPage = () => {
           </Table>
         </div>
       </div>
-    </BlankPageTemplate>
+    </div>
   );
 };
 
