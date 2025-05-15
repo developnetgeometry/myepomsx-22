@@ -10,6 +10,7 @@ import StatusBadge from '@/components/shared/StatusBadge';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import DamageFactorTab from '@/components/monitor/DamageFactorTab';
+import { RBIAssessment } from '@/types/monitoring';
 
 // Sample data for asset integrity details
 const getAssetDetails = (assetId: string, assetType: string) => {
@@ -63,19 +64,18 @@ const getAssetDetails = (assetId: string, assetType: string) => {
 };
 
 // Sample data for RBI Assessment
-const getSampleRBIData = (assetId: string) => {
+const getSampleRBIData = (assetId: string): RBIAssessment => {
   return {
     id: "RBI-" + assetId,
     rbiId: "RBI-" + assetId + "-001",
     asset: `PV-${assetId}`,
-    eqId: `PV-${assetId}`,
-    likelihood: 'Medium',
-    consequence: 'Medium',
-    riskRank: 'Medium',
+    likelihood: 'Medium' as 'Medium',
+    consequence: 'Medium' as 'Medium',
+    riskRank: 'Medium' as 'Medium',
     nextAssessmentDate: '2024-12-15',
-    status: 'Active',
-    coatingQuality: 'Fair',
-    dataConfidence: 'Medium',
+    status: 'Active' as 'Active',
+    coatingQuality: 'Fair' as 'Fair',
+    dataConfidence: 'Medium' as 'Medium',
     hasCladding: true,
     nominalThickness: 12.5,
     tMin: 6.4,
@@ -106,8 +106,8 @@ const getSampleRBIData = (assetId: string) => {
     dfthin: 0.55,
     pof: 0.0045,
     pofValue: 0.0045,
-    riskLevel: 'Medium',
-    riskRanking: 'Medium',
+    riskLevel: 'Medium' as 'Medium',
+    riskRanking: 'Medium' as 'Medium',
     fcommd: 1.25,
     fatta: 0.3,
     outagehrs: 24,
@@ -123,14 +123,14 @@ const getSampleRBIData = (assetId: string) => {
     envcost: 500000,
     fatality: 0.001,
     evacuation: 0.01,
-    isoSys: 'Semi-Auto',
-    detSys: 'Semi-Auto',
-    mitigationSystem: 'Basic',
-    idealGasSpecificHeatEQ: 'Standard',
+    isoSys: 'Semi-Auto' as 'Semi-Auto',
+    detSys: 'Semi-Auto' as 'Semi-Auto',
+    mitigationSystem: 'Basic' as 'Basic',
+    idealGasSpecificHeatEQ: 'Standard' as 'Standard',
     pkkpa: 1000,
     prtankKpa: 950,
     wtkg: 5500,
-    releaseType: 'Gas',
+    releaseType: 'Gas' as 'Gas',
     ratton: 1.2,
     inventorykg: 5000,
     caCmdfail: 0.25,

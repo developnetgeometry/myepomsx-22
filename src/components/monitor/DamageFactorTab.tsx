@@ -6,7 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { RBIAssessment } from '@/types/monitoring';
-import { InfoCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DamageFactorTabProps {
@@ -47,7 +47,7 @@ const FieldItem: React.FC<FieldItemProps> = ({ label, value, tooltip, isCritical
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-sm font-medium">
-                {label} <InfoCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                {label} <Info className="h-3.5 w-3.5 text-muted-foreground" />
               </span>
             </TooltipTrigger>
             <TooltipContent>
@@ -99,7 +99,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
               <FieldItem label="Last Coating Date" value={assessment.lastCoatingDate} />
             </FieldGroup>
@@ -174,7 +174,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Coating Quality" value={assessment.coatingQuality} />
               <FieldItem label="New Coat Date" value={assessment.lastCoatingDate} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
@@ -215,7 +215,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Coating Quality" value={assessment.coatingQuality} />
               <FieldItem label="New Coat Date" value={assessment.lastCoatingDate} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
@@ -249,7 +249,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Previous Failure" value="N/A" />
             </FieldGroup>
             
@@ -281,7 +281,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Coating Quality" value={assessment.coatingQuality} />
               <FieldItem label="New Coat Date" value={assessment.lastCoatingDate} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
@@ -327,7 +327,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Susceptibility?" value="N/A" />
               <FieldItem label="Last Inspection" value={assessment.lastInspectionDate} />
             </FieldGroup>
@@ -360,7 +360,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Susceptibility?" value="N/A" />
               <FieldItem label="Last Inspection" value={assessment.lastInspectionDate} />
               <FieldItem label="Online Monitoring" value="N/A" />
@@ -394,7 +394,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
             </FieldGroup>
             
@@ -417,7 +417,7 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
             <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.eqId || assessment.asset} />
+              <FieldItem label="EQ. ID" value={assessment.asset} />
               <FieldItem label="Coating Quality" value={assessment.coatingQuality} />
               <FieldItem label="New Coat Date" value={assessment.lastCoatingDate} />
               <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
