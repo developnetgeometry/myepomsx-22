@@ -67,22 +67,6 @@ const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) 
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-2">
-            <Building className="h-5 w-5 text-gray-500" />
-            <Select onValueChange={handleProjectChange} defaultValue="1">
-              <SelectTrigger className="w-[180px] h-9 border-none focus-visible:ring-0 focus-visible:ring-offset-0">
-                <SelectValue placeholder="Select Project" />
-              </SelectTrigger>
-              <SelectContent>
-                {projects.map((project) => (
-                  <SelectItem key={project.id} value={project.id.toString()}>
-                    {project.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
           <div className="hidden md:block relative w-64">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
             <Input 
@@ -142,12 +126,30 @@ const Header: React.FC<HeaderProps> = ({ title, isSidebarOpen, toggleSidebar }) 
                 <span className="hidden md:inline-block text-sm font-medium">John Doe</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Activity Log</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              
+              <DropdownMenuLabel className="flex items-center space-x-2">
+                <Building className="h-4 w-4" />
+                <span>Current Project: {currentProject}</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              
+              {projects.map((project) => (
+                <DropdownMenuItem 
+                  key={project.id} 
+                  className="cursor-pointer"
+                  onClick={() => handleProjectChange(project.id.toString())}
+                >
+                  {project.name}
+                </DropdownMenuItem>
+              ))}
+              
               <DropdownMenuSeparator />
               <DropdownMenuItem>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
