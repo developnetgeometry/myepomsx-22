@@ -1,273 +1,215 @@
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RBIAssessment } from "@/types/monitoring";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import React from 'react';
-import { RBIAssessment } from '@/types/monitoring';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Info } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-
-interface DamageFactorFormProps {
-  assessment: RBIAssessment;
-  onAssessmentChange: (assessment: RBIAssessment) => void;
-  readOnly?: boolean;
-  formType: 'ext' | 'ext-clscc' | 'mfat' | 'cui' | 'scc-ssc' | 'scc-sohic' | 'lin' | 'cui-clscc';
+export type DamageFactorFormProps = {
+  formType: 'ext' | 'ext.clscc' | 'thin' | 'hta' | 'brit' | 'mfat' | 'scc-ssc' | 'scc-sohic' | 'lin' | 'cui-clscc';
+  assessment?: RBIAssessment;
+  onSubmit: (data: any) => void;
+  isSubmitting?: boolean;
 }
 
-interface FormSection {
-  title: string;
-  fields: FormField[];
-}
+// Helper function to convert any value to string safely
+const toStringValue = (value: string | number | boolean): string => {
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  return String(value);
+};
 
-interface FormField {
-  id: string;
-  label: string;
-  tooltip?: string;
-  type: 'text' | 'number' | 'date' | 'select';
-  options?: { label: string; value: string }[];
-  isCritical?: boolean;
-}
+export default function DamageFactorForm({ formType, assessment, onSubmit, isSubmitting = false }: DamageFactorFormProps) {
+  const [selectedTab, setSelectedTab] = useState("form");
+  
+  const formSchema = z.object({
+    // We'll keep this schema flexible as each form type has different fields
+    // The validation will be minimal for now
+  });
 
-const DamageFactorForm: React.FC<DamageFactorFormProps> = ({
-  assessment,
-  onAssessmentChange,
-  readOnly = false,
-  formType
-}) => {
-  const handleInputChange = (field: keyof RBIAssessment, value: string | number) => {
-    if (readOnly) return;
-    
-    // Convert string numbers to actual numbers
-    let processedValue: any = value;
-    if (typeof value === 'string' && !isNaN(Number(value)) && field !== 'asset') {
-      processedValue = Number(value);
-    }
-    
-    onAssessmentChange({
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       ...assessment,
-      [field]: processedValue
+    },
+  });
+
+  const handleFormSubmit = (data: any) => {
+    onSubmit({
+      ...data,
+      formType
     });
   };
 
-  const handleSelectChange = (field: keyof RBIAssessment, value: string) => {
-    if (readOnly) return;
-    
-    // Convert to boolean if the field is hasCladding
-    let processedValue: any = value;
-    if (field === 'hasCladding') {
-      processedValue = value === 'true';
+  // Handle select changes specifically for boolean conversions
+  const handleSelectChange = (field: any, value: string) => {
+    // Convert string "true"/"false" back to boolean for boolean fields
+    if (value === 'true' || value === 'false') {
+      field.onChange(value === 'true');
+    } else {
+      field.onChange(value);
     }
-    
-    onAssessmentChange({
-      ...assessment,
-      [field]: processedValue
-    });
   };
 
-  const formSections = getFormSections(formType);
-
-  // Helper function to safely convert any value to a string for select components
-  const safeValueToString = (value: any): string => {
-    if (value === undefined || value === null) return '';
-    if (typeof value === 'boolean') return value.toString();
-    return String(value);
-  };
+  const formConfig = getFormConfig(formType);
 
   return (
-    <div className="space-y-6">
-      {formSections.map((section, index) => (
-        <div key={index} className="space-y-4">
-          <h3 className="text-base font-medium text-muted-foreground">{section.title}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {section.fields.map((field) => (
-              <div key={field.id} className="space-y-2">
-                <Label htmlFor={field.id}>
-                  <span className="flex items-center gap-1">
-                    {field.label}
-                    {field.tooltip && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="max-w-xs text-xs">{field.tooltip}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </span>
-                </Label>
-                
-                {field.type === 'select' ? (
-                  <Select 
-                    value={safeValueToString(assessment[field.id as keyof RBIAssessment])}
-                    onValueChange={(value) => handleSelectChange(field.id as keyof RBIAssessment, value)}
-                    disabled={readOnly}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {field.options?.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    id={field.id}
-                    type={field.type}
-                    value={assessment[field.id as keyof RBIAssessment] || ''}
-                    onChange={(e) => handleInputChange(field.id as keyof RBIAssessment, e.target.value)}
-                    readOnly={readOnly}
-                    className="w-full"
-                    step={field.type === 'number' ? "0.01" : undefined}
-                  />
-                )}
-                
-                {field.isCritical && (
-                  <Badge 
-                    className={getCriticalBadgeClass(assessment[field.id as keyof RBIAssessment])} 
-                    variant="outline"
-                  >
-                    {assessment[field.id as keyof RBIAssessment] || 'N/A'}
-                  </Badge>
-                )}
-              </div>
+    <Tabs defaultValue="form" value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="form">Form</TabsTrigger>
+        <TabsTrigger value="summary">Summary</TabsTrigger>
+      </TabsList>
+      <TabsContent value="form" className="space-y-4 py-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+            {formConfig.map((section, idx) => (
+              <Card key={idx} className="shadow-md">
+                <CardHeader className="bg-slate-50">
+                  <CardTitle className="text-lg">{section.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {section.fields.map((field) => (
+                      <FormField
+                        key={field.id}
+                        control={form.control}
+                        name={field.id}
+                        render={({ field: formField }) => (
+                          <FormItem>
+                            <FormLabel className={field.isCritical ? "text-red-500 font-medium" : ""}>
+                              {field.label}
+                            </FormLabel>
+                            <FormControl>
+                              {field.type === "select" ? (
+                                <Select 
+                                  // Fixed TypeScript error by ensuring string values
+                                  value={toStringValue(formField.value)} 
+                                  onValueChange={(value) => handleSelectChange(formField, value)}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder={`Select ${field.label}`} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {field.options?.map((option) => (
+                                      <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              ) : field.type === "date" ? (
+                                <Input 
+                                  type="date" 
+                                  {...formField} 
+                                />
+                              ) : (
+                                <Input 
+                                  type={field.type} 
+                                  {...formField}
+                                />
+                              )}
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-        </div>
-      ))}
-    </div>
+
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" type="button">Cancel</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </TabsContent>
+      <TabsContent value="summary">
+        <Card>
+          <CardHeader className="bg-slate-50">
+            <CardTitle>Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="prose">
+              <p>Summary of the damage factor assessment will be displayed here.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
-};
+}
 
-// Helper function to determine badge color based on value
-const getCriticalBadgeClass = (value: any): string => {
-  if (!value || value === 'N/A') return "bg-gray-100 text-gray-700";
-  
-  if (typeof value === 'number') {
-    if (value > 0.75) return "bg-red-100 text-red-700";
-    else if (value > 0.45) return "bg-yellow-100 text-yellow-700";
-    return "bg-green-100 text-green-700";
-  }
-  
-  return "bg-green-100 text-green-700";
-};
-
-// Helper function to get form sections based on form type
-const getFormSections = (formType: string): FormSection[] => {
+function getFormConfig(formType: DamageFactorFormProps["formType"]) {
   switch (formType) {
     case 'ext':
       return [
         {
-          title: "General Information",
+          title: "External Corrosion Parameters",
           fields: [
             { id: "asset", label: "EQ. ID", type: "text" },
-            { id: "coatingQuality", label: "Coating Quality", type: "select", 
-              options: [
-                { label: "Good", value: "Good" },
-                { label: "Fair", value: "Fair" },
-                { label: "Poor", value: "Poor" }
-              ] 
-            },
-            { id: "lastCoatingDate", label: "New Coat Date", type: "date" },
-            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
-            { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
+            { id: "dataConfidence", label: "Data Confidence", type: "select", 
               options: [
                 { label: "High", value: "High" },
                 { label: "Medium", value: "Medium" },
                 { label: "Low", value: "Low" }
               ]
-            }
-          ]
-        },
-        {
-          title: "Age & Environment",
-          fields: [
-            { id: "extAge", label: "Age (year)", type: "number" },
+            },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "extAge", label: "External Age (years)", type: "number" },
             { id: "extEnvironment", label: "External Environment", type: "text" },
             { id: "pipeSupport", label: "Pipe Support", type: "text" },
-            { id: "soilWaterInterface", label: "Soil/Water Interface", type: "text" }
-          ]
-        },
-        {
-          title: "Corrosion Parameters",
-          fields: [
-            { id: "crexp", label: "CRexp (mm/year)", type: "number", tooltip: "Expected corrosion rate" },
-            { id: "cract", label: "CRact (mm/year)", type: "number", tooltip: "Actual corrosion rate" },
-            { id: "art", label: "Art", type: "number" },
-            { id: "fsextcorr", label: "FSextcorr", type: "number", tooltip: "Factor of safety for external corrosion" },
-            { id: "srextcorr", label: "SRextcorr", type: "number", tooltip: "Severity ratio for external corrosion" }
-          ]
-        },
-        {
-          title: "Damage Factor",
-          fields: [
-            { id: "dfextclsc", label: "DFextcorrF", type: "number", isCritical: true },
-            { id: "remainingLife", label: "Remaining Life", type: "number", isCritical: true },
-            { id: "rl", label: "RL", type: "number", isCritical: true }
-          ]
-        },
-        {
-          title: "Additional Information",
-          fields: [
-            { id: "remarks", label: "Remarks", type: "text" }
+            { id: "soilWaterInterface", label: "Soil Water Interface", type: "text" },
+            { id: "crexp", label: "Expected Corrosion Rate", type: "number", isCritical: true },
+            { id: "cract", label: "Actual Corrosion Rate", type: "number", isCritical: true },
+            { id: "art", label: "Remaining Thickness (RT)", type: "number" },
+            { id: "fsextcorr", label: "Severity Factor", type: "number" },
+            { id: "srextcorr", label: "Surface Ratio", type: "number" },
+            { id: "remainingLife", label: "Remaining Life (yrs)", type: "number" },
+            { id: "rl", label: "Rate of Loss", type: "number" },
+            { id: "remarks", label: "Remarks", type: "text" },
           ]
         }
       ];
-    case 'ext-clscc':
+    case 'ext.clscc':
       return [
         {
-          title: "General Information",
+          title: "External CLSCC Parameters",
           fields: [
             { id: "asset", label: "EQ. ID", type: "text" },
-            { id: "coatingQuality", label: "Coating Quality", type: "select",
+            { id: "dataConfidence", label: "Data Confidence", type: "select", 
               options: [
-                { label: "Good", value: "Good" },
-                { label: "Fair", value: "Fair" },
-                { label: "Poor", value: "Poor" }
-              ] 
+                { label: "High", value: "High" },
+                { label: "Medium", value: "Medium" },
+                { label: "Low", value: "Low" }
+              ]
             },
-            { id: "lastCoatingDate", label: "New Coat Date", type: "date" },
-            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" }
-          ]
-        },
-        {
-          title: "Age Parameters",
-          fields: [
-            { id: "agecrack", label: "Agecrack", type: "number", tooltip: "Age of crack" },
-            { id: "agecoat", label: "Agecoat", type: "number", tooltip: "Age of coating" },
-            { id: "coatadj", label: "Coatadj", type: "number", tooltip: "Coating adjustment factor" },
-            { id: "extAge", label: "Age", type: "number" }
-          ]
-        },
-        {
-          title: "Environment & Susceptibility",
-          fields: [
-            { id: "extEnvironment", label: "External Environment", type: "text" },
-            { id: "extClSccSusc", label: "Ext CL SCC Susc.", type: "text", tooltip: "External Chloride SCC susceptibility" },
-            { id: "svi", label: "SVI", type: "number", tooltip: "Severity index" },
-            { id: "inspectionEfficiency", label: "Inspection Efficiency", type: "number" }
-          ]
-        },
-        {
-          title: "Damage Factors",
-          fields: [
-            { id: "dfExtClSccFb", label: "DF Ext CL SCC FB", type: "number", isCritical: true },
-            { id: "dfextclsc", label: "DF Ext CL SCC", type: "number", isCritical: true }
+            { id: "agecrack", label: "Age Since Last Cracking (yrs)", type: "number" },
+            { id: "agecoat", label: "Age Since Last Coating (yrs)", type: "number" },
+            { id: "coatadj", label: "Coating Adjustment", type: "number" },
+            { id: "extClSccSusc", label: "CLSCC Susceptibility", type: "text" },
+            { id: "svi", label: "Shell/Support Interface", type: "number" },
+            { id: "inspectionEfficiency", label: "Inspection Efficiency", type: "number" },
+            { id: "dfExtClSccFb", label: "DF EXT CLSCC FB", type: "number", isCritical: true },
           ]
         }
       ];
-    case 'cui':
+    case 'thin':
       return [
         {
-          title: "General Information",
+          title: "Thinning Parameters",
           fields: [
             { id: "asset", label: "EQ. ID", type: "text" },
-            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
             { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
               options: [
                 { label: "High", value: "High" },
@@ -275,20 +217,49 @@ const getFormSections = (formType: string): FormSection[] => {
                 { label: "Low", value: "Low" }
               ]
             },
-            { id: "hasCladding", label: "Has Cladding", type: "select",
-              options: [
-                { label: "Yes", value: "true" },
-                { label: "No", value: "false" }
-              ]
-            }
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "nthinA", label: "N THIN A", type: "number" },
+            { id: "nthinB", label: "N THIN B", type: "number" },
+            { id: "fsThin", label: "FS THIN", type: "number" },
+            { id: "srThin", label: "SR THIN", type: "number" },
+            { id: "dfThin1", label: "DF THIN 1", type: "number" },
+            { id: "dfThin2", label: "DF THIN 2", type: "number", isCritical: true }
           ]
-        },
+        }
+      ];
+    case 'hta':
+      return [
         {
-          title: "CUI Assessment Parameters",
+          title: "High Temperature Attack Parameters",
           fields: [
-            { id: "currentThickness", label: "Current Thickness", type: "number" },
-            { id: "nominalThickness", label: "Nominal Thickness", type: "number" },
-            { id: "dfcuiiff", label: "DF CUI IFF", type: "number", isCritical: true }
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
+              options: [
+                { label: "High", value: "High" },
+                { label: "Medium", value: "Medium" },
+                { label: "Low", value: "Low" }
+              ]
+            },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "dfhta", label: "DF HTA", type: "number", isCritical: true },
+          ]
+        }
+      ];
+    case 'brit':
+      return [
+        {
+          title: "Brittle Fracture Parameters",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" },
+            { id: "dataConfidence", label: "DATA CONFIDENCE", type: "select",
+              options: [
+                { label: "High", value: "High" },
+                { label: "Medium", value: "Medium" },
+                { label: "Low", value: "Low" }
+              ]
+            },
+            { id: "lastInspectionDate", label: "Last Inspection Date", type: "date" },
+            { id: "dbrint", label: "DF BRIT", type: "number", isCritical: true },
           ]
         }
       ];
@@ -388,8 +359,13 @@ const getFormSections = (formType: string): FormSection[] => {
         }
       ];
     default:
-      return [];
+      return [
+        {
+          title: "Form Under Development",
+          fields: [
+            { id: "asset", label: "EQ. ID", type: "text" }
+          ]
+        }
+      ];
   }
-};
-
-export default DamageFactorForm;
+}

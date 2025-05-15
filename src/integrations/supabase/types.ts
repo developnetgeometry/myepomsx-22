@@ -1197,15 +1197,7 @@ export type Database = {
           location_name?: string | null
           project_id?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "e_facility_e_project_fk"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "e_project"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       e_fluid_phase: {
         Row: {
