@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -7,9 +7,13 @@ import { Separator } from '@/components/ui/separator';
 import { RBIAssessment } from '@/types/monitoring';
 import { Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface DamageFactorTabProps {
   assessment: RBIAssessment;
+  onAssessmentChange?: (assessment: RBIAssessment) => void;
+  readOnly?: boolean;
 }
 
 interface FieldGroupProps {
@@ -87,82 +91,204 @@ const FieldItem: React.FC<FieldItemProps> = ({ label, value, tooltip, isCritical
   );
 };
 
-const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
+const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ 
+  assessment, 
+  onAssessmentChange,
+  readOnly = false 
+}) => {
+  const handleInputChange = (
+    field: keyof RBIAssessment,
+    value: string | number | boolean
+  ) => {
+    if (readOnly || !onAssessmentChange) return;
+    
+    let processedValue: any = value;
+    if (typeof value === 'string' && !isNaN(Number(value))) {
+      processedValue = Number(value);
+    }
+    
+    onAssessmentChange({
+      ...assessment,
+      [field]: processedValue
+    });
+  };
+
   return (
     <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Last Inspection Date */}
+        <div>
+          <Label htmlFor="lastInspectionDate">Last Inspection Date</Label>
+          <Input 
+            id="lastInspectionDate"
+            type="date"
+            value={assessment.lastInspectionDate || ''}
+            onChange={(e) => handleInputChange('lastInspectionDate', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+          />
+        </div>
+        
+        {/* Last Coating Date */}
+        <div>
+          <Label htmlFor="lastCoatingDate">Last Coating Date</Label>
+          <Input 
+            id="lastCoatingDate"
+            type="date"
+            value={assessment.lastCoatingDate || ''}
+            onChange={(e) => handleInputChange('lastCoatingDate', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+          />
+        </div>
+        
+        {/* Nthin A */}
+        <div>
+          <Label htmlFor="nthinA">Nthin A</Label>
+          <Input 
+            id="nthinA"
+            type="number"
+            value={assessment.nthinA || 0}
+            onChange={(e) => handleInputChange('nthinA', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* Nthin B */}
+        <div>
+          <Label htmlFor="nthinB">Nthin B</Label>
+          <Input 
+            id="nthinB"
+            type="number"
+            value={assessment.nthinB || 0}
+            onChange={(e) => handleInputChange('nthinB', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* FS Thin */}
+        <div>
+          <Label htmlFor="fsThin">FS Thin</Label>
+          <Input 
+            id="fsThin"
+            type="number"
+            value={assessment.fsThin || 0}
+            onChange={(e) => handleInputChange('fsThin', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* SR Thin */}
+        <div>
+          <Label htmlFor="srThin">SR Thin</Label>
+          <Input 
+            id="srThin"
+            type="number"
+            value={assessment.srThin || 0}
+            onChange={(e) => handleInputChange('srThin', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* DFThin1 */}
+        <div>
+          <Label htmlFor="dfThin1">DFThin1</Label>
+          <Input 
+            id="dfThin1"
+            type="number"
+            value={assessment.dfThin1 || 0}
+            onChange={(e) => handleInputChange('dfThin1', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* DFThin2 */}
+        <div>
+          <Label htmlFor="dfThin2">DFThin2</Label>
+          <Input 
+            id="dfThin2"
+            type="number"
+            value={assessment.dfThin2 || 0}
+            onChange={(e) => handleInputChange('dfThin2', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+        
+        {/* Creep */}
+        <div>
+          <Label htmlFor="creep">Creep</Label>
+          <Input 
+            id="creep"
+            type="number"
+            value={assessment.creep || 0}
+            onChange={(e) => handleInputChange('creep', e.target.value)}
+            readOnly={readOnly}
+            className="w-full"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      {/* Additional fields could be added in accordion sections if needed */}
       <Accordion type="multiple" className="w-full space-y-4">
         {/* DF THIN */}
         <AccordionItem value="df-thin" className="border rounded-lg overflow-hidden">
           <AccordionTrigger className="px-4 py-3 bg-muted/50 hover:bg-muted">
-            <span className="text-base font-medium">DF THIN</span>
+            <span className="text-base font-medium">Additional DF THIN Parameters</span>
           </AccordionTrigger>
           <AccordionContent className="p-4 pt-6">
-            <FieldGroup title="General Information">
-              <FieldItem label="EQ. ID" value={assessment.asset} />
-              <FieldItem label="Last Inspection Date" value={assessment.lastInspectionDate} />
-              <FieldItem label="Last Coating Date" value={assessment.lastCoatingDate} />
-            </FieldGroup>
-            
-            <FieldGroup title="Thickness Measurements">
-              <FieldItem 
-                label="NThin A" 
-                value={assessment.nthinA} 
-                tooltip="Thickness parameter A"
-              />
-              <FieldItem 
-                label="NThin B" 
-                value={assessment.nthinB} 
-                tooltip="Thickness parameter B"
-              />
-              <FieldItem 
-                label="FS Thin" 
-                value={assessment.fsThin} 
-                tooltip="Factor of safety for thinning"
-              />
-              <FieldItem 
-                label="SR Thin" 
-                value={assessment.srThin} 
-                tooltip="Severity ratio for thinning"
-              />
-            </FieldGroup>
-            
-            <FieldGroup title="Damage Factors">
-              <FieldItem 
-                label="DFThin1" 
-                value={assessment.dfThin1} 
-                isCritical={true}
-                tooltip="Primary damage factor for thinning"
-              />
-              <FieldItem 
-                label="DFThin2" 
-                value={assessment.dfThin2} 
-                isCritical={true}
-                tooltip="Secondary damage factor for thinning"
-              />
-              <FieldItem 
-                label="Creep" 
-                value={assessment.creep} 
-                tooltip="Creep factor"
-              />
-              <FieldItem 
-                label="POThin1" 
-                value={assessment.pothin1} 
-                tooltip="Probability of thinning 1"
-              />
-            </FieldGroup>
-            
-            <FieldGroup title="Additional Parameters">
-              <FieldItem 
-                label="Age RC" 
-                value={assessment.agerc}
-                tooltip="Age factor for remaining corrosion"
-              />
-              <FieldItem 
-                label="BHThin" 
-                value={assessment.bhthin}
-                tooltip="Base hazard for thinning"
-              />
-            </FieldGroup>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="pothin1">POThin1</Label>
+                <Input 
+                  id="pothin1"
+                  type="number"
+                  value={assessment.pothin1 || 0}
+                  onChange={(e) => handleInputChange('pothin1', e.target.value)}
+                  readOnly={readOnly}
+                  className="w-full"
+                  step="0.01"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="agerc">Age RC</Label>
+                <Input 
+                  id="agerc"
+                  type="number"
+                  value={assessment.agerc || 0}
+                  onChange={(e) => handleInputChange('agerc', e.target.value)}
+                  readOnly={readOnly}
+                  className="w-full"
+                  step="0.01"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="bhthin">BHThin</Label>
+                <Input 
+                  id="bhthin"
+                  type="number"
+                  value={assessment.bhthin || 0}
+                  onChange={(e) => handleInputChange('bhthin', e.target.value)}
+                  readOnly={readOnly}
+                  className="w-full"
+                  step="0.01"
+                />
+              </div>
+            </div>
           </AccordionContent>
         </AccordionItem>
         
@@ -449,9 +575,9 @@ const DamageFactorTab: React.FC<DamageFactorTabProps> = ({ assessment }) => {
         </AccordionItem>
       </Accordion>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-6">
         <div className="text-sm text-muted-foreground">
-          <p>Note: Values showing as "N/A" indicate that the data is not available in the assessment record.</p>
+          <p>Enter values for all required fields to calculate damage factors.</p>
         </div>
       </div>
     </div>
