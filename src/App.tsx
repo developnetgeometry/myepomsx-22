@@ -193,6 +193,7 @@ function App() {
           <Route path="/monitor/ims-dashboard" element={<IMSDashboardPage />} />
           <Route path="/monitor/inspection-data" element={<InspectionDataPage />} />
           <Route path="/monitor/integrity" element={<IntegrityPage />} />
+          <Route path="/monitor/integrity/pressureVessel/:id" element={<RBIAssessmentPVDetailPage />} />
           <Route path="/monitor/inventory-groups" element={<InventoryGroupsPage />} />
           <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
           <Route path="/monitor/rbi-assessment/:id" element={<RBIAssessmentDetailPage />} />
