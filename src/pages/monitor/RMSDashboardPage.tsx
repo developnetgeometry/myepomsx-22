@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from 'recharts';
 import KpiCard from '@/components/shared/KpiCard';
 import { Calendar, Database, Activity, AlertTriangle, Gauge } from 'lucide-react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
@@ -81,8 +80,8 @@ const systemReliabilityData = [
   },
 ];
 
-// Custom tooltip for bar charts
-const CustomTooltip = ({ active, payload, label }) => {
+// Custom tooltip for bar charts - Fixed with proper typing
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 border border-gray-200 rounded shadow-sm">

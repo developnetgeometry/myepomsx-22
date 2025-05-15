@@ -59,7 +59,10 @@ const IMSDashboardPage: React.FC = () => {
         </TabsList>
         
         <TabsContent value="risk" className="mt-6">
-          <RiskMatrix />
+          {/* Resize the risk matrix by wrapping it in a container with max-width and mx-auto */}
+          <div className="max-w-3xl mx-auto">
+            <RiskMatrix />
+          </div>
         </TabsContent>
         
         <TabsContent value="integrity" className="mt-6">
