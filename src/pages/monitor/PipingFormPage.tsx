@@ -33,13 +33,17 @@ const PipingFormPage: React.FC = () => {
     navigate('/monitor/integrity');
   };
 
+  const handleBackClick = () => {
+    navigate('/monitor/integrity');
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader 
         title="Add New Piping" 
         subtitle="Enter piping details for integrity management"
-        backLink="/monitor/integrity"
-        icon={<ArrowLeft className="h-6 w-6" />}
+        description="Complete the form below to add a new piping record to the system"
+        icon={<ArrowLeft className="h-6 w-6" onClick={handleBackClick} />}
       />
       
       <form onSubmit={handleSubmit}>
