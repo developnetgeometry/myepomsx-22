@@ -446,10 +446,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             <div className={cn("flex items-center", {
             "justify-center": isCollapsed
           })}>
-              <span className={cn("text-xl font-bold text-white", {
-              "sr-only": isCollapsed
-            })}>MyEPOMSX</span>
-              {isCollapsed && <span className="font-bold text-white text-2xl">E</span>}
+              {!isCollapsed ? (
+                <img 
+                  src="/lovable-uploads/aab3e771-b0d1-477c-8a42-390b37ca14e1.png" 
+                  alt="EPOMS Logo" 
+                  className="h-10" 
+                />
+              ) : (
+                <span className="font-bold text-white text-2xl">E</span>
+              )}
             </div>
             
             {!isMobile && <button onClick={onToggle} className={cn("ml-auto p-1 rounded-md text-white hover:bg-[#2a314a] focus:outline-none transition-colors duration-200", {
