@@ -1,10 +1,12 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
 import { Toaster } from '@/components/ui/toaster';
 import { ProjectProvider } from './contexts/ProjectContext';
+
+// Manage imports
 import FacilitiesPage from '@/pages/manage/FacilitiesPage';
 import FacilityDetailPage from '@/pages/manage/FacilityDetailPage';
 import SystemPage from '@/pages/manage/SystemPage';
@@ -88,7 +90,7 @@ function App() {
     <ProjectProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Layout><Outlet /></Layout>}>
             <Route index element={<Index />} />
             {/* Manage Routes */}
             <Route path="/manage/facilities" element={<FacilitiesPage />} />
