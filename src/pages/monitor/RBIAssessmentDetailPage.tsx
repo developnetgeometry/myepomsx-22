@@ -176,6 +176,10 @@ const RBIAssessmentDetailPage: React.FC = () => {
     navigate('/monitor/rbi-assessment');
   };
 
+  const handleAssessmentChange = (updatedAssessment: RBIAssessment) => {
+    setFormData(updatedAssessment);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -350,164 +354,20 @@ const RBIAssessmentDetailPage: React.FC = () => {
                     </div>
                   </TabsContent>
                   
-                  {/* Damage Factor Subtab */}
+                  {/* Damage Factor Subtab - Now using the DamageFactorTab component */}
                   <TabsContent value="damageFactor">
-                    <Accordion type="multiple" className="w-full">
-                      <AccordionItem value="dfThin">
-                        <AccordionTrigger className="text-lg font-medium">DF THIN</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                              <Label htmlFor="lastInspectionDate">Last Inspection Date</Label>
-                              <Input 
-                                id="lastInspectionDate" 
-                                name="lastInspectionDate" 
-                                type="date"
-                                value={formData.lastInspectionDate} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="lastCoatingDate">Last Coating Date</Label>
-                              <Input 
-                                id="lastCoatingDate" 
-                                name="lastCoatingDate" 
-                                type="date"
-                                value={formData.lastCoatingDate} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="nthinA">Nthin A</Label>
-                              <Input 
-                                id="nthinA" 
-                                name="nthinA" 
-                                type="number"
-                                value={formData.nthinA} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="nthinB">Nthin B</Label>
-                              <Input 
-                                id="nthinB" 
-                                name="nthinB" 
-                                type="number"
-                                value={formData.nthinB} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="fsThin">FS Thin</Label>
-                              <Input 
-                                id="fsThin" 
-                                name="fsThin" 
-                                type="number"
-                                value={formData.fsThin} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="srThin">SR Thin</Label>
-                              <Input 
-                                id="srThin" 
-                                name="srThin" 
-                                type="number"
-                                value={formData.srThin} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="dfThin1">DFthin1</Label>
-                              <Input 
-                                id="dfThin1" 
-                                name="dfThin1" 
-                                type="number"
-                                value={formData.dfThin1} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="dfThin2">DFthin2</Label>
-                              <Input 
-                                id="dfThin2" 
-                                name="dfThin2" 
-                                type="number"
-                                value={formData.dfThin2} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="creep">Creep</Label>
-                              <Input 
-                                id="creep" 
-                                name="creep" 
-                                type="number"
-                                value={formData.creep} 
-                                onChange={handleInputChange}
-                                className="mt-1"
-                              />
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfEXT">
-                        <AccordionTrigger className="text-lg font-medium">DF EXT</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF EXT factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfEXTCLSCC">
-                        <AccordionTrigger className="text-lg font-medium">DF EXT.CLSCC</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF EXT.CLSCC factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfMFAT">
-                        <AccordionTrigger className="text-lg font-medium">DF MFAT</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF MFAT factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfCUI">
-                        <AccordionTrigger className="text-lg font-medium">DF CUI</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF CUI factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfSCCSSC">
-                        <AccordionTrigger className="text-lg font-medium">DF SCC SSC</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF SCC SSC factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                      <AccordionItem value="dfSCCSOHIC">
-                        <AccordionTrigger className="text-lg font-medium">DF SCC SOHIC</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-4 bg-muted/30 rounded-md">
-                            <p>DF SCC SOHIC factors would be entered here.</p>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Damage Factor Assessment</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <DamageFactorTab 
+                          assessment={formData} 
+                          onAssessmentChange={handleAssessmentChange}
+                          readOnly={false}
+                        />
+                      </CardContent>
+                    </Card>
                   </TabsContent>
                 </Tabs>
               </TabsContent>
@@ -812,12 +672,11 @@ const RBIAssessmentDetailPage: React.FC = () => {
                 </Tabs>
               </TabsContent>
               
-              {/* Risk & IRP Tab */}
+              {/* Risk & IRP Tab - Removed DamageFactorTab from here */}
               <TabsContent value="risk">
                 <Tabs value={activeSubTab.risk} onValueChange={(value) => setActiveSubTab(prev => ({ ...prev, risk: value }))}>
                   <TabsList className="mb-4">
                     <TabsTrigger value="summary">Risk Summary</TabsTrigger>
-                    <TabsTrigger value="damagefactors">Damage Factors</TabsTrigger>
                   </TabsList>
                   
                   {/* Risk Summary Subtab */}
@@ -1001,18 +860,6 @@ const RBIAssessmentDetailPage: React.FC = () => {
                         </Select>
                       </div>
                     </div>
-                  </TabsContent>
-                  
-                  {/* Damage Factors Subtab - Make sure this is properly displayed */}
-                  <TabsContent value="damagefactors" className="space-y-6">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Damage Factor Assessment</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <DamageFactorTab assessment={formData} />
-                      </CardContent>
-                    </Card>
                   </TabsContent>
                 </Tabs>
               </TabsContent>
