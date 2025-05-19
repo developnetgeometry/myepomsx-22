@@ -295,7 +295,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         "mr-0": isCollapsed
       })} />
           {!isCollapsed && <>
-            <span className="flex-1">{item.name}</span>
+            <span className="flex-1 text-sm">{item.name}</span>
             {item.children && <div className="ml-auto">
               <ChevronRight size={16} />
             </div>}
