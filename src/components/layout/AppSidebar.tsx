@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Settings, ClipboardList, Wrench, LineChart, Gauge, ChevronRight, Menu, X, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, Monitor, Shield } from 'lucide-react';
+import { 
+  Settings, ClipboardList, Wrench, LineChart, 
+  Home, Database, Box, ListOrdered, Calendar, 
+  Users, ChevronLeft, ChevronRight, Menu, X, 
+  Shield, Monitor, Package, Layers
+} from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -22,7 +27,7 @@ type SidebarItemType = {
   }[];
 };
 
-// Sidebar structure
+// Sidebar structure with updated icons
 const sidebarItems: SidebarItemType[] = [{
   name: 'Dashboard',
   icon: Home,
@@ -33,15 +38,15 @@ const sidebarItems: SidebarItemType[] = [{
   children: [{
     name: 'Facilities',
     path: '/manage/facilities',
-    icon: Database
+    icon: Package
   }, {
     name: 'System',
     path: '/manage/system',
-    icon: Database
+    icon: Layers
   }, {
     name: 'Package',
     path: '/manage/package',
-    icon: Database
+    icon: Box
   }, {
     name: 'Assets',
     path: '/manage/assets',
@@ -53,19 +58,19 @@ const sidebarItems: SidebarItemType[] = [{
   children: [{
     name: 'Items Master',
     path: '/manage/items-master',
-    icon: Box
+    icon: ListOrdered
   }, {
     name: 'Inventory',
     path: '/manage/inventory',
-    icon: Box
+    icon: Package
   }, {
     name: 'BOM Assembly',
     path: '/manage/bom-assembly',
-    icon: Box
+    icon: Layers
   }]
 }, {
   name: 'Work Orders',
-  icon: ListOrdered,
+  icon: ClipboardList,
   children: [{
     name: 'Work Request',
     path: '/maintain/work-request',
@@ -73,11 +78,11 @@ const sidebarItems: SidebarItemType[] = [{
   }, {
     name: 'Work Order List',
     path: '/maintain/work-order-list',
-    icon: ClipboardList
+    icon: ListOrdered
   }, {
     name: 'WO History',
     path: '/maintain/wo-history',
-    icon: ClipboardList
+    icon: Calendar
   }]
 }, {
   name: 'Maintenance Planning',
@@ -92,7 +97,7 @@ const sidebarItems: SidebarItemType[] = [{
     icon: Wrench
   }]
 },
-// Updated Monitor section with IMS and RMS as children
+// Monitor section with IMS and RMS as children
 {
   name: 'Monitor',
   icon: Monitor,
@@ -142,7 +147,7 @@ const sidebarItems: SidebarItemType[] = [{
     }]
   }]
 }, 
-// Combined Admin module with Setup and Settings as submodules
+// Admin module with Setup and Settings as submodules
 {
   name: 'Admin',
   icon: Shield,
@@ -171,13 +176,7 @@ const sidebarItems: SidebarItemType[] = [{
         {
           name: 'Client',
           path: '/admin/setup/client',
-          icon: () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h9"></path>
-              <circle cx="13" cy="7" r="3"></circle>
-              <path d="M22 10c0 4-3.5 7-8 8"></path>
-            </svg>
-          )
+          icon: Users
         }, 
         {
           name: 'Project',
@@ -193,13 +192,7 @@ const sidebarItems: SidebarItemType[] = [{
         {
           name: 'Vendor',
           path: '/admin/setup/vendor',
-          icon: () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m7 9 4-6 4 6"></path>
-              <path d="M3 18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3H3v3Z"></path>
-              <path d="M5 15V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8"></path>
-            </svg>
-          )
+          icon: Users
         }, 
         {
           name: 'Sensor',
@@ -215,14 +208,7 @@ const sidebarItems: SidebarItemType[] = [{
         {
           name: 'Work Center',
           path: '/admin/setup/work-center',
-          icon: () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="5" r="1"></circle>
-              <path d="M9 4c0-1 1-2 3-2 2 0 3 1 3 2 0 1.7-3 3-3 3s-3-1.3-3-3z"></path>
-              <path d="m7 14 3-3 2 2 3-3 2 2"></path>
-              <circle cx="12" cy="17" r="3"></circle>
-            </svg>
-          )
+          icon: Wrench
         },
       ]
     },
@@ -234,42 +220,42 @@ const sidebarItems: SidebarItemType[] = [{
         {
           name: 'Data Category',
           path: '/admin/settings/data-category',
-          icon: Settings
+          icon: Database
         }, 
         {
           name: 'Asset Tag',
           path: '/admin/settings/asset-tag',
-          icon: Settings
+          icon: Package
         }, 
         {
           name: 'Asset Class',
           path: '/admin/settings/asset-class',
-          icon: Settings
+          icon: Database
         }, 
         {
           name: 'Discipline',
           path: '/admin/settings/discipline',
-          icon: Settings
+          icon: Wrench
         }, 
         {
           name: 'Maintenance Type',
           path: '/admin/settings/maintenance-type',
-          icon: Settings
+          icon: Wrench
         }, 
         {
           name: 'Frequency Setup',
           path: '/admin/settings/frequency-setup',
-          icon: Settings
+          icon: Calendar
         }, 
         {
           name: 'Average UARS',
           path: '/admin/settings/average-uars',
-          icon: Settings
+          icon: LineChart
         }, 
         {
           name: 'Corrosion Group',
           path: '/admin/settings/corrosion-group',
-          icon: Settings
+          icon: CorrosionStudiesIcon
         },
         {
           name: 'Users',
