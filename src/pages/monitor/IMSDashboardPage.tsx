@@ -4,6 +4,7 @@ import BlankPageTemplate from '@/components/shared/BlankPageTemplate';
 import { Monitor, Activity, AlertCircle, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import KpiCard from '@/components/shared/KpiCard';
+import RiskMatrix from '@/components/monitor/RiskMatrix';
 
 const IMSDashboardPage: React.FC = () => {
   return (
@@ -51,6 +52,11 @@ const IMSDashboardPage: React.FC = () => {
           changeDirection="up"
           changeLabel="vs target"
         />
+      </div>
+      
+      {/* Add Risk Matrix component */}
+      <div className="grid grid-cols-1 gap-6">
+        <RiskMatrix className="w-full" />
       </div>
       
       <Card>
