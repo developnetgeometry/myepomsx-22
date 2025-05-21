@@ -200,6 +200,7 @@ export type Database = {
           maker_no: string | null
           manufacturer_id: number | null
           model: string | null
+          parent_asset_id: number | null
           serial_number: string | null
           specification: string | null
           type_id: number | null
@@ -217,6 +218,7 @@ export type Database = {
           maker_no?: string | null
           manufacturer_id?: number | null
           model?: string | null
+          parent_asset_id?: number | null
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
@@ -234,6 +236,7 @@ export type Database = {
           maker_no?: string | null
           manufacturer_id?: number | null
           model?: string | null
+          parent_asset_id?: number | null
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
@@ -258,6 +261,13 @@ export type Database = {
             columns: ["asset_class_id"]
             isOneToOne: false
             referencedRelation: "e_asset_class"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_asset_detail_e_asset_detail_fk"
+            columns: ["parent_asset_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
             referencedColumns: ["id"]
           },
           {

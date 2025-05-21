@@ -12,6 +12,7 @@ interface KpiCardProps {
   changeDirection?: 'up' | 'down' | 'neutral';
   positiveChange?: 'up' | 'down';
   className?: string;
+  children?: React.ReactNode; // Added children prop
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
@@ -22,7 +23,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
   changeLabel,
   changeDirection,
   positiveChange = 'up',
-  className
+  className,
+  children
 }) => {
   const getChangeColor = () => {
     if (!changeDirection) return 'text-gray-500';
@@ -69,6 +71,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
           </div>
         )}
       </div>
+      {children}
     </div>
   );
 };

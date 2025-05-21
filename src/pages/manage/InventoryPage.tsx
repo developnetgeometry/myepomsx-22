@@ -47,6 +47,39 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
         <span>RM {value.toFixed(2)}</span>
       ) 
     },
+    { 
+      id: 'actions', 
+      header: 'Actions', 
+      accessorKey: 'id',
+      cell: (value) => (
+        <div className="flex items-center space-x-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 border-blue-500 text-blue-500 hover:bg-blue-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Handle request action
+              console.log('Request for item', value);
+            }}
+          >
+            Request
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 border-purple-500 text-purple-500 hover:bg-purple-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Handle adjust action
+              console.log('Adjust item', value);
+            }}
+          >
+            Adjust
+          </Button>
+        </div>
+      ) 
+    },
   ];
 
   // Calculate inventory metrics
@@ -113,27 +146,25 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           value={`${lowStockItems} items low`}
           icon={<AlertTriangle className="h-5 w-5" />}
           className="relative"
-          children={
-            <div className="mt-2 text-xs text-gray-500">
-              <div>Control Valve: 8 units</div>
-              <div>Pressure Transmitter: 12 units</div>
-            </div>
-          }
-        />
+        >
+          <div className="mt-2 text-xs text-gray-500">
+            <div>Control Valve: 8 units</div>
+            <div>Pressure Transmitter: 12 units</div>
+          </div>
+        </KpiCard>
 
         <KpiCard
           title="Stores"
           value={`${totalStores} Stores`}
           icon={<Warehouse className="h-5 w-5" />}
           className="relative"
-          children={
-            <div className="mt-2 text-xs text-gray-500">
-              <div>Main Warehouse</div>
-              <div>Secondary Store</div>
-              <div>Instrumentation Store</div>
-            </div>
-          }
-        />
+        >
+          <div className="mt-2 text-xs text-gray-500">
+            <div>Main Warehouse</div>
+            <div>Secondary Store</div>
+            <div>Instrumentation Store</div>
+          </div>
+        </KpiCard>
       </div>
       
       <Card>
