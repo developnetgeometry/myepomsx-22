@@ -56,7 +56,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           <Button 
             variant="outline" 
             size="sm" 
-            className="h-8 border-blue-500 text-blue-500 hover:bg-blue-50"
+            className="h-8 border-blue-500 text-blue-500"
             onClick={(e) => {
               e.stopPropagation();
               // Handle request action
@@ -68,7 +68,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           <Button 
             variant="outline" 
             size="sm" 
-            className="h-8 border-purple-500 text-purple-500 hover:bg-purple-50"
+            className="h-8 border-purple-500 text-purple-500"
             onClick={(e) => {
               e.stopPropagation();
               // Handle adjust action
