@@ -21,7 +21,7 @@ export interface Column {
   id: string;
   header: string;
   accessorKey: string;
-  cell?: (value: any) => React.ReactNode;
+  cell?: (value: any, row?: any) => React.ReactNode;
 }
 
 interface DataTableProps {
@@ -136,7 +136,7 @@ const DataTable: React.FC<DataTableProps> = ({
     
     // If a custom cell renderer is defined, use it
     if (column.cell) {
-      return column.cell(value);
+      return column.cell(value, row);
     }
     
     // Check if this is a monetary field (based on column name)

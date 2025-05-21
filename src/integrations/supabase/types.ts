@@ -727,67 +727,103 @@ export type Database = {
       }
       e_circuit_id: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_client: {
         Row: {
           code: string
+          created_at: string | null
+          created_by: string | null
           email: string | null
           id: number
           name: string | null
           office_no: string | null
           onboard_date: string | null
           type: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           code: string
+          created_at?: string | null
+          created_by?: string | null
           email?: string | null
           id?: number
           name?: string | null
           office_no?: string | null
           onboard_date?: string | null
           type?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           code?: string
+          created_at?: string | null
+          created_by?: string | null
           email?: string | null
           id?: number
           name?: string | null
           office_no?: string | null
           onboard_date?: string | null
           type?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_cm_actual_labour: {
         Row: {
           cm_general_id: number | null
+          created_at: string | null
+          created_by: string | null
           duration: number | null
           employee_id: number | null
           id: number
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           duration?: number | null
           employee_id?: number | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           duration?: number | null
           employee_id?: number | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -809,21 +845,33 @@ export type Database = {
       e_cm_actual_material: {
         Row: {
           cm_general_id: number | null
+          created_at: string | null
+          created_by: string | null
           id: number
           item_id: number | null
           quantity: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           item_id?: number | null
           quantity?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           item_id?: number | null
           quantity?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
