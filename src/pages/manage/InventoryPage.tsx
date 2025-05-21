@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import DataTable, { Column } from '@/components/shared/DataTable';
-import { Package, AlertTriangle, Warehouse, Plus } from 'lucide-react';
+import { Package, AlertTriangle, Warehouse, Plus, ArrowRight } from 'lucide-react';
 import { inventory } from '@/data/sampleData';
 import { Button } from '@/components/ui/button';
 import KpiCard from '@/components/shared/KpiCard';
+import { formatCurrency } from '@/utils/formatters';
+import LowStockAlertModal from '@/components/inventory/LowStockAlertModal';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -17,6 +19,32 @@ interface InventoryPageProps {
 const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRowClick }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
+  
+  // Sample low stock items data
+  const lowStockItems = [
+    {
+      id: '1',
+      itemName: 'Control Valve',
+      store: 'Main Warehouse',
+      balance: 8,
+      minLevel: 20,
+      unitPrice: 350.00,
+      totalPrice: 2800.00,
+      averageMonthlyUsage: 5
+    },
+    {
+      id: '2',
+      itemName: 'Pressure Transmitter',
+      store: 'Secondary Store',
+      balance: 12,
+      minLevel: 25,
+      unitPrice: 275.50,
+      totalPrice: 3306.00,
+      averageMonthlyUsage: 6
+    }
+  ];
   
   // Sample columns for inventory items
   const columns: Column[] = [
@@ -47,12 +75,27 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
         <span>RM {value.toFixed(2)}</span>
       ) 
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      accessorKey: 'id',
+      cell: (value) => (
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm" className="h-8">
+            Request
+          </Button>
+          <Button variant="outline" size="sm" className="h-8">
+            Adjust
+          </Button>
+        </div>
+      )
+    }
   ];
 
   // Calculate inventory metrics
   const totalItems = 5; // Fixed value as per requirements
   const totalInventoryValue = 12372.50; // Fixed value as per requirements
-  const lowStockItems = 2; // Fixed value as per requirements
+  const lowStockItemsCount = 2; // Fixed value as per requirements
   const totalStores = 3; // Fixed value as per requirements
 
   // Handle search
@@ -72,6 +115,12 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
   // Handle create PO click
   const handleCreatePO = () => {
     navigate('/manage/inventory/create-po');
+  };
+
+  // Handle open low stock modal
+  const handleOpenLowStockModal = (item: any) => {
+    setSelectedItem(item);
+    setIsLowStockModalOpen(true);
   };
 
   return (
@@ -110,30 +159,40 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
 
         <KpiCard
           title="Low Stock Alerts"
-          value={`${lowStockItems} items low`}
-          icon={<AlertTriangle className="h-5 w-5" />}
+          value={`${lowStockItemsCount} items low`}
+          icon={<AlertTriangle className="h-5 w-5 text-amber-500" />}
           className="relative"
-          children={
-            <div className="mt-2 text-xs text-gray-500">
-              <div>Control Valve: 8 units</div>
-              <div>Pressure Transmitter: 12 units</div>
-            </div>
-          }
-        />
+        >
+          <div className="mt-2 text-xs text-gray-500 space-y-1">
+            {lowStockItems.map((item) => (
+              <div key={item.id} className="flex items-center justify-between">
+                <div>{item.itemName}: {item.balance} units</div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 p-0 text-blue-600 hover:text-blue-800"
+                  onClick={() => handleOpenLowStockModal(item)}
+                >
+                  <span className="text-xs mr-1">Learn more</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </KpiCard>
 
         <KpiCard
           title="Stores"
           value={`${totalStores} Stores`}
           icon={<Warehouse className="h-5 w-5" />}
           className="relative"
-          children={
-            <div className="mt-2 text-xs text-gray-500">
-              <div>Main Warehouse</div>
-              <div>Secondary Store</div>
-              <div>Instrumentation Store</div>
-            </div>
-          }
-        />
+        >
+          <div className="mt-2 text-xs text-gray-500">
+            <div>Main Warehouse</div>
+            <div>Secondary Store</div>
+            <div>Instrumentation Store</div>
+          </div>
+        </KpiCard>
       </div>
       
       <Card>
@@ -145,6 +204,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           />
         </CardContent>
       </Card>
+
+      {/* Low Stock Alert Modal */}
+      <LowStockAlertModal
+        isOpen={isLowStockModalOpen}
+        onClose={() => setIsLowStockModalOpen(false)}
+        item={selectedItem}
+      />
     </div>
   );
 };
