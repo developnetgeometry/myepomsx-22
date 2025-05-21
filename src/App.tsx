@@ -1,3 +1,4 @@
+
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
@@ -51,6 +52,7 @@ import FacilityDetailPage from './pages/manage/FacilityDetailPage'
 import InventoryPage from './pages/manage/InventoryPage'
 import InventoryDetailPage from './pages/manage/InventoryDetailPage'
 import InventoryItemDetailPage from './pages/manage/InventoryItemDetailPage'
+import CreatePurchaseOrderPage from './pages/manage/CreatePurchaseOrderPage'
 import ItemsMasterPage from './pages/manage/ItemsMasterPage'
 import ItemsMasterDetailPage from './pages/manage/ItemsMasterDetailPage'
 import MaterialPage from './pages/manage/MaterialPage'
@@ -160,6 +162,7 @@ function App() {
           <Route path="/manage/inventory" element={<InventoryPage />} />
           <Route path="/manage/inventory/:id" element={<InventoryDetailPage />} />
           <Route path="/manage/inventory/item/:id" element={<InventoryItemDetailPage />} />
+          <Route path="/manage/inventory/create-po" element={<CreatePurchaseOrderPage />} />
           <Route path="/manage/items-master" element={<ItemsMasterPage />} />
           <Route path="/manage/items-master/:id" element={<ItemsMasterDetailPage />} />
           <Route path="/manage/material" element={<MaterialPage />} />

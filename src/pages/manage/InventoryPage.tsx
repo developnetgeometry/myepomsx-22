@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import DataTable, { Column } from '@/components/shared/DataTable';
-import { Package } from 'lucide-react';
+import { Package, AlertTriangle, Warehouse, Plus } from 'lucide-react';
 import { inventory } from '@/data/sampleData';
+import { Button } from '@/components/ui/button';
+import KpiCard from '@/components/shared/KpiCard';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -34,7 +36,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       header: 'Unit Price', 
       accessorKey: 'unitPrice',
       cell: (value) => (
-        <span>${value.toFixed(2)}</span>
+        <span>RM {value.toFixed(2)}</span>
       ) 
     },
     { 
@@ -42,10 +44,16 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       header: 'Total Price', 
       accessorKey: 'totalPrice',
       cell: (value) => (
-        <span>${value.toFixed(2)}</span>
+        <span>RM {value.toFixed(2)}</span>
       ) 
     },
   ];
+
+  // Calculate inventory metrics
+  const totalItems = 5; // Fixed value as per requirements
+  const totalInventoryValue = 12372.50; // Fixed value as per requirements
+  const lowStockItems = 2; // Fixed value as per requirements
+  const totalStores = 3; // Fixed value as per requirements
 
   // Handle search
   const handleSearch = (query: string) => {
@@ -61,6 +69,11 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
     }
   };
 
+  // Handle create PO click
+  const handleCreatePO = () => {
+    navigate('/manage/inventory/create-po');
+  };
+
   return (
     <div className="space-y-6">
       {!hideHeader && (
@@ -69,10 +82,59 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           subtitle="Manage spare parts inventory"
           icon={<Package className="h-6 w-6" />}
           onSearch={handleSearch}
-          onAddNew={() => navigate('/manage/inventory/new')}
           addNewLabel="+ Add New Item"
+          onAddNew={() => navigate('/manage/inventory/new')}
+          actions={
+            <Button onClick={handleCreatePO} className="gap-2">
+              <Plus className="h-4 w-4" /> PO
+            </Button>
+          }
         />
       )}
+      
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KpiCard
+          title="Total Items"
+          value={totalItems}
+          icon={<Package className="h-5 w-5" />}
+          changeLabel="Listed spare parts"
+        />
+
+        <KpiCard
+          title="Total Inventory Value"
+          value={`RM ${totalInventoryValue.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          icon={<Package className="h-5 w-5" />}
+          changeLabel="Sum of all items"
+        />
+
+        <KpiCard
+          title="Low Stock Alerts"
+          value={`${lowStockItems} items low`}
+          icon={<AlertTriangle className="h-5 w-5" />}
+          className="relative"
+          children={
+            <div className="mt-2 text-xs text-gray-500">
+              <div>Control Valve: 8 units</div>
+              <div>Pressure Transmitter: 12 units</div>
+            </div>
+          }
+        />
+
+        <KpiCard
+          title="Stores"
+          value={`${totalStores} Stores`}
+          icon={<Warehouse className="h-5 w-5" />}
+          className="relative"
+          children={
+            <div className="mt-2 text-xs text-gray-500">
+              <div>Main Warehouse</div>
+              <div>Secondary Store</div>
+              <div>Instrumentation Store</div>
+            </div>
+          }
+        />
+      </div>
       
       <Card>
         <CardContent className="p-6">
