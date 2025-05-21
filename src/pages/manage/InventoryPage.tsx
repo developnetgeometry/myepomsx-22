@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import KpiCard from '@/components/shared/KpiCard';
 import { formatCurrency } from '@/utils/formatters';
 import LowStockAlertModal from '@/components/inventory/LowStockAlertModal';
+import RequestPOModal from '@/components/inventory/RequestPOModal';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -21,6 +22,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
+  const [isRequestPOModalOpen, setIsRequestPOModalOpen] = useState(false);
   
   // Sample low stock items data
   const lowStockItems = [
@@ -79,9 +81,14 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       id: 'actions',
       header: 'Actions',
       accessorKey: 'id',
-      cell: (value) => (
+      cell: (value, row) => (
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="h-8">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8"
+            onClick={(e) => handleRequestClick(row, e)}
+          >
             Request
           </Button>
           <Button variant="outline" size="sm" className="h-8">
@@ -121,6 +128,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
   const handleOpenLowStockModal = (item: any) => {
     setSelectedItem(item);
     setIsLowStockModalOpen(true);
+  };
+
+  // Handle request click for a specific row
+  const handleRequestClick = (row: any, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click event
+    setSelectedItem(row);
+    setIsRequestPOModalOpen(true);
   };
 
   return (
@@ -209,6 +223,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
       <LowStockAlertModal
         isOpen={isLowStockModalOpen}
         onClose={() => setIsLowStockModalOpen(false)}
+        item={selectedItem}
+      />
+
+      {/* Request PO Modal */}
+      <RequestPOModal
+        isOpen={isRequestPOModalOpen}
+        onClose={() => setIsRequestPOModalOpen(false)}
         item={selectedItem}
       />
     </div>

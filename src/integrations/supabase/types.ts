@@ -38,16 +38,28 @@ export type Database = {
       }
       e_adjustment_type: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -60,11 +72,15 @@ export type Database = {
           asset_sce_id: number | null
           asset_tag_id: number | null
           commission_date: string | null
+          created_at: string | null
+          created_by: string | null
           facility_id: number | null
           id: number
           package_id: number | null
           status_id: number | null
           system_id: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           asset_detail_id?: number | null
@@ -74,11 +90,15 @@ export type Database = {
           asset_sce_id?: number | null
           asset_tag_id?: number | null
           commission_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
           facility_id?: number | null
           id?: number
           package_id?: number | null
           status_id?: number | null
           system_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           asset_detail_id?: number | null
@@ -88,11 +108,15 @@ export type Database = {
           asset_sce_id?: number | null
           asset_tag_id?: number | null
           commission_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
           facility_id?: number | null
           id?: number
           package_id?: number | null
           status_id?: number | null
           system_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -155,46 +179,82 @@ export type Database = {
       }
       e_asset_area: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_asset_category: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_asset_class: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -203,6 +263,8 @@ export type Database = {
           area_id: number | null
           asset_class_id: number | null
           category_id: number | null
+          created_at: string | null
+          created_by: string | null
           hs_code: string | null
           id: number
           iot_sensor_id: number | null
@@ -216,11 +278,15 @@ export type Database = {
           serial_number: string | null
           specification: string | null
           type_id: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           area_id?: number | null
           asset_class_id?: number | null
           category_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           hs_code?: string | null
           id?: number
           iot_sensor_id?: number | null
@@ -234,11 +300,15 @@ export type Database = {
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           area_id?: number | null
           asset_class_id?: number | null
           category_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           hs_code?: string | null
           id?: number
           iot_sensor_id?: number | null
@@ -252,6 +322,8 @@ export type Database = {
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -307,37 +379,61 @@ export type Database = {
       }
       e_asset_group: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           is_active: boolean | null
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           is_active?: boolean | null
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           is_active?: boolean | null
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_asset_image: {
         Row: {
           asset_detail_id: number | null
+          created_at: string | null
+          created_by: string | null
           id: number
           image_file_path: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           image_file_path?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           image_file_path?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -354,6 +450,8 @@ export type Database = {
           actual_installation_date: string | null
           actual_startup_date: string | null
           asset_id: number | null
+          created_at: string | null
+          created_by: string | null
           description: string | null
           detection_service_class_id: number | null
           detection_system_desc: string | null
@@ -368,12 +466,16 @@ export type Database = {
           overall_height: number | null
           overall_length: number | null
           overall_width: number | null
+          updated_at: string | null
+          updated_by: string | null
           warranty_date: string | null
         }
         Insert: {
           actual_installation_date?: string | null
           actual_startup_date?: string | null
           asset_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           detection_service_class_id?: number | null
           detection_system_desc?: string | null
@@ -388,12 +490,16 @@ export type Database = {
           overall_height?: number | null
           overall_length?: number | null
           overall_width?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
           warranty_date?: string | null
         }
         Update: {
           actual_installation_date?: string | null
           actual_startup_date?: string | null
           asset_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           detection_service_class_id?: number | null
           detection_system_desc?: string | null
@@ -408,6 +514,8 @@ export type Database = {
           overall_height?: number | null
           overall_length?: number | null
           overall_width?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
           warranty_date?: string | null
         }
         Relationships: [
@@ -437,21 +545,33 @@ export type Database = {
       e_asset_sce: {
         Row: {
           asset_detail_id: number | null
+          created_at: string | null
+          created_by: string | null
           group_name: string | null
           id: number
           sce_code: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           group_name?: string | null
           id?: number
           sce_code: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           group_name?: string | null
           id?: number
           sce_code?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -465,55 +585,91 @@ export type Database = {
       }
       e_asset_status: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           is_active: boolean
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           is_active: boolean
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           is_active?: boolean
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_asset_tag: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           is_active: boolean
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           is_active: boolean
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           is_active?: boolean
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_asset_type: {
         Row: {
           asset_category_id: number | null
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           asset_category_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           asset_category_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -529,23 +685,35 @@ export type Database = {
         Row: {
           bom_code: string
           bom_name: string | null
+          created_at: string | null
+          created_by: string | null
           description: string | null
           id: number
           item_master_id: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           bom_code: string
           bom_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: number
           item_master_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           bom_code?: string
           bom_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: number
           item_master_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
