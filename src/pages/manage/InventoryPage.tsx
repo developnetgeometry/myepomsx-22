@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import DataTable, { Column } from '@/components/shared/DataTable';
 import { Package, AlertTriangle, Warehouse, Plus, ArrowRight, ListChecks } from 'lucide-react';
 import { inventory } from '@/data/sampleData';
@@ -242,6 +241,17 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
             onRowClick={handleRowClick}
           />
         </CardContent>
+        <CardFooter className="flex justify-end gap-2 border-t p-4">
+          {/* Existing Download/Export buttons would go here */}
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+            <Button variant="outline" size="sm" onClick={handleTrackAllPOs} className="gap-2">
+              <ListChecks className="h-4 w-4" /> Track POs
+            </Button>
+            <Button size="sm" onClick={handleCreatePO} className="gap-2">
+              <Plus className="h-4 w-4" /> PO
+            </Button>
+          </div>
+        </CardFooter>
       </Card>
 
       {/* Low Stock Alert Modal */}

@@ -1323,21 +1323,33 @@ export type Database = {
       e_cm_task_detail: {
         Row: {
           cm_general_id: number | null
+          created_at: string | null
+          created_by: string | null
           id: number
           task_list: string | null
           task_sequence: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           task_list?: string | null
           task_sequence?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           task_list?: string | null
           task_sequence?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -1351,135 +1363,231 @@ export type Database = {
       }
       e_coating_quality: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_criticality: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_data_confidence: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_design_fabrication: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_detection_service_class: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_detection_system: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_discipline: {
         Row: {
           code: string
+          created_at: string | null
+          created_by: string | null
           description: string | null
           id: number
           name: string | null
           type: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           code: string
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: number
           name?: string | null
           type?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           code?: string
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           id?: number
           name?: string | null
           type?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_employee: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string | null
           uid_employee: string
+          updated_at: string | null
+          updated_by: string | null
           work_center_code: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
           uid_employee: string
+          updated_at?: string | null
+          updated_by?: string | null
           work_center_code?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
           uid_employee?: string
+          updated_at?: string | null
+          updated_by?: string | null
           work_center_code?: string | null
         }
         Relationships: [
@@ -1494,40 +1602,64 @@ export type Database = {
       }
       e_ext_env: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_facility: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           is_active: boolean | null
           location_code: string
           location_name: string | null
           project_id: number | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           is_active?: boolean | null
           location_code: string
           location_name?: string | null
           project_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           is_active?: boolean | null
           location_code?: string
           location_name?: string | null
           project_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -1541,52 +1673,88 @@ export type Database = {
       }
       e_fluid_phase: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_fluid_representive: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_frequency: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           frequency_code: string
           frequency_type_id: number | null
           id: number
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           frequency_code: string
           frequency_type_id?: number | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           frequency_code?: string
           frequency_type_id?: number | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -1600,91 +1768,163 @@ export type Database = {
       }
       e_frequency_type: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_general_maintenance: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_geometry: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_ideal_gas_specific_heat_eq: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_insulation_type: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_interface: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -2521,6 +2761,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "e_asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_new_work_request_cm_sce_code_fkey"
+            columns: ["cm_sce_code"]
+            isOneToOne: false
+            referencedRelation: "e_cm_sce"
             referencedColumns: ["id"]
           },
           {
