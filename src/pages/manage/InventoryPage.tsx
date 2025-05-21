@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import DataTable, { Column } from '@/components/shared/DataTable';
-import { Package, AlertTriangle, Warehouse, Plus, ArrowRight } from 'lucide-react';
+import { Package, AlertTriangle, Warehouse, Plus, ArrowRight, ListChecks } from 'lucide-react';
 import { inventory } from '@/data/sampleData';
 import { Button } from '@/components/ui/button';
 import KpiCard from '@/components/shared/KpiCard';
 import { formatCurrency } from '@/utils/formatters';
 import LowStockAlertModal from '@/components/inventory/LowStockAlertModal';
 import RequestPOModal from '@/components/inventory/RequestPOModal';
+import PurchaseOrderTracker from '@/components/inventory/PurchaseOrderTracker';
 
 interface InventoryPageProps {
   hideHeader?: boolean;
@@ -23,6 +24,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
   const [isRequestPOModalOpen, setIsRequestPOModalOpen] = useState(false);
+  const [isPOTrackerModalOpen, setIsPOTrackerModalOpen] = useState(false);
   
   // Sample low stock items data
   const lowStockItems = [
@@ -91,8 +93,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           >
             Request
           </Button>
-          <Button variant="outline" size="sm" className="h-8">
-            Adjust
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8"
+            onClick={(e) => handleTrackPOClick(row, e)}
+          >
+            Track POs
           </Button>
         </div>
       )
@@ -124,6 +131,19 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
     navigate('/manage/inventory/create-po');
   };
 
+  // Handle track PO click
+  const handleTrackPOClick = (row: any, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click event
+    setSelectedItem(row);
+    setIsPOTrackerModalOpen(true);
+  };
+  
+  // Handle open track all POs
+  const handleTrackAllPOs = () => {
+    setSelectedItem(null);
+    setIsPOTrackerModalOpen(true);
+  };
+
   // Handle open low stock modal
   const handleOpenLowStockModal = (item: any) => {
     setSelectedItem(item);
@@ -148,9 +168,14 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
           addNewLabel="+ Add New Item"
           onAddNew={() => navigate('/manage/inventory/new')}
           actions={
-            <Button onClick={handleCreatePO} className="gap-2">
-              <Plus className="h-4 w-4" /> PO
-            </Button>
+            <div className="flex space-x-2">
+              <Button onClick={handleTrackAllPOs} className="gap-2" variant="outline">
+                <ListChecks className="h-4 w-4" /> Track POs
+              </Button>
+              <Button onClick={handleCreatePO} className="gap-2">
+                <Plus className="h-4 w-4" /> PO
+              </Button>
+            </div>
           }
         />
       )}
@@ -231,6 +256,13 @@ const InventoryPage: React.FC<InventoryPageProps> = ({ hideHeader = false, onRow
         isOpen={isRequestPOModalOpen}
         onClose={() => setIsRequestPOModalOpen(false)}
         item={selectedItem}
+      />
+
+      {/* Purchase Order Tracker Modal */}
+      <PurchaseOrderTracker
+        isOpen={isPOTrackerModalOpen}
+        onClose={() => setIsPOTrackerModalOpen(false)}
+        selectedItem={selectedItem?.itemName}
       />
     </div>
   );

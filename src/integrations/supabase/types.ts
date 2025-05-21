@@ -892,21 +892,33 @@ export type Database = {
       }
       e_cm_attachment: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           description: string | null
           file_path: string | null
           id: number
+          updated_at: string | null
+          updated_by: string | null
           work_request_attachment_id: number | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
           work_request_attachment_id?: number | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
           work_request_attachment_id?: number | null
         }
         Relationships: [
@@ -922,27 +934,39 @@ export type Database = {
       e_cm_defer: {
         Row: {
           cm_general_id: number | null
+          created_at: string | null
+          created_by: string | null
           id: number
           new_due_date: string | null
           previous_due_date: string | null
           remarks: string | null
           requested_by: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           new_due_date?: string | null
           previous_due_date?: string | null
           remarks?: string | null
           requested_by?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           cm_general_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           new_due_date?: string | null
           previous_due_date?: string | null
           remarks?: string | null
           requested_by?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -959,21 +983,33 @@ export type Database = {
           action_taken: string | null
           cm_general_id: number | null
           corrective_action: string | null
+          created_at: string | null
+          created_by: string | null
           id: number
+          updated_at: string | null
+          updated_by: string | null
           wo_finding_failure: string | null
         }
         Insert: {
           action_taken?: string | null
           cm_general_id?: number | null
           corrective_action?: string | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
           wo_finding_failure?: string | null
         }
         Update: {
           action_taken?: string | null
           cm_general_id?: number | null
           corrective_action?: string | null
+          created_at?: string | null
+          created_by?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
           wo_finding_failure?: string | null
         }
         Relationships: [
@@ -994,6 +1030,8 @@ export type Database = {
           closed_by: string | null
           cm_sce_code: number | null
           completed_by: string | null
+          created_at: string | null
+          created_by: string | null
           date_finding: string | null
           downtime: number | null
           due_date: string | null
@@ -1005,6 +1043,8 @@ export type Database = {
           system_id: number | null
           target_end_date: string | null
           target_start_date: string | null
+          updated_at: string | null
+          updated_by: string | null
           work_center_id: number | null
           work_order_no: string | null
           work_request_id: number | null
@@ -1016,6 +1056,8 @@ export type Database = {
           closed_by?: string | null
           cm_sce_code?: number | null
           completed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
           date_finding?: string | null
           downtime?: number | null
           due_date?: string | null
@@ -1027,6 +1069,8 @@ export type Database = {
           system_id?: number | null
           target_end_date?: string | null
           target_start_date?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
           work_center_id?: number | null
           work_order_no?: string | null
           work_request_id?: number | null
@@ -1038,6 +1082,8 @@ export type Database = {
           closed_by?: string | null
           cm_sce_code?: number | null
           completed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
           date_finding?: string | null
           downtime?: number | null
           due_date?: string | null
@@ -1049,6 +1095,8 @@ export type Database = {
           system_id?: number | null
           target_end_date?: string | null
           target_start_date?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
           work_center_id?: number | null
           work_order_no?: string | null
           work_request_id?: number | null
@@ -1115,6 +1163,8 @@ export type Database = {
       e_cm_report: {
         Row: {
           alarm_trigger: string | null
+          created_at: string | null
+          created_by: string | null
           design_code: string | null
           id: number
           material_class_id: number | null
@@ -1130,6 +1180,8 @@ export type Database = {
           time_failed: string | null
           time_in_servicehr: number | null
           time_resume: string | null
+          updated_at: string | null
+          updated_by: string | null
           visibility: string | null
           weather_condition: string | null
           wind_speed_direction: string | null
@@ -1137,6 +1189,8 @@ export type Database = {
         }
         Insert: {
           alarm_trigger?: string | null
+          created_at?: string | null
+          created_by?: string | null
           design_code?: string | null
           id?: number
           material_class_id?: number | null
@@ -1152,6 +1206,8 @@ export type Database = {
           time_failed?: string | null
           time_in_servicehr?: number | null
           time_resume?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
           visibility?: string | null
           weather_condition?: string | null
           wind_speed_direction?: string | null
@@ -1159,6 +1215,8 @@ export type Database = {
         }
         Update: {
           alarm_trigger?: string | null
+          created_at?: string | null
+          created_by?: string | null
           design_code?: string | null
           id?: number
           material_class_id?: number | null
@@ -1174,6 +1232,8 @@ export type Database = {
           time_failed?: string | null
           time_in_servicehr?: number | null
           time_resume?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
           visibility?: string | null
           weather_condition?: string | null
           wind_speed_direction?: string | null
@@ -1207,32 +1267,56 @@ export type Database = {
         Row: {
           cm_group_name: string | null
           cm_sce_code: string
+          created_at: string | null
+          created_by: string | null
           id: number
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
           cm_group_name?: string | null
           cm_sce_code: string
+          created_at?: string | null
+          created_by?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
           cm_group_name?: string | null
           cm_sce_code?: string
+          created_at?: string | null
+          created_by?: string | null
           id?: number
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       e_cm_status: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: never
           name?: string
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
