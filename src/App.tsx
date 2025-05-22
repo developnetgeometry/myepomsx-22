@@ -104,6 +104,17 @@ import PipingDetailPage from './pages/monitor/PipingDetailPage'
 // Vendor Pages
 import VendorDashboardPage from './pages/vendor/VendorDashboardPage'
 
+// Purchasing Pages
+import PurchaseRequestPage from './pages/purchasing/PurchaseRequestPage'
+import PurchaseRequestDetailPage from './pages/purchasing/PurchaseRequestDetailPage'
+import PurchaseRequestFormPage from './pages/purchasing/PurchaseRequestFormPage'
+import PurchaseOrderPage from './pages/purchasing/PurchaseOrderPage'
+import PurchaseOrderDetailPage from './pages/purchasing/PurchaseOrderDetailPage'
+import PurchaseOrderFormPage from './pages/purchasing/PurchaseOrderFormPage'
+import GoodsReceivePage from './pages/purchasing/GoodsReceivePage'
+import GoodsReceiveDetailPage from './pages/purchasing/GoodsReceiveDetailPage'
+import GoodsReceiveFormPage from './pages/purchasing/GoodsReceiveFormPage'
+
 // Additional Pages
 import './App.css'
 import { Toaster } from "@/components/ui/sonner"
@@ -215,6 +226,20 @@ function App() {
 
           {/* Vendor Routes */}
           <Route path="/vendor/dashboard" element={<VendorDashboardPage />} />
+
+          {/* Purchasing Routes */}
+          <Route path="/purchasing/request" element={<PurchaseRequestPage />} />
+          <Route path="/purchasing/request/:id" element={<PurchaseRequestDetailPage />} />
+          <Route path="/purchasing/request/new" element={<PurchaseRequestFormPage />} />
+          <Route path="/purchasing/request/:id/edit" element={<PurchaseRequestFormPage />} />
+          <Route path="/purchasing/orders" element={<PurchaseOrderPage />} />
+          <Route path="/purchasing/orders/:id" element={<PurchaseOrderDetailPage />} />
+          <Route path="/purchasing/orders/new" element={<PurchaseOrderFormPage />} />
+          <Route path="/purchasing/orders/:id/edit" element={<PurchaseOrderFormPage />} />
+          <Route path="/purchasing/goods-receive" element={<GoodsReceivePage />} />
+          <Route path="/purchasing/goods-receive/:id" element={<GoodsReceiveDetailPage />} />
+          <Route path="/purchasing/goods-receive/new" element={<GoodsReceiveFormPage />} />
+          <Route path="/purchasing/goods-receive/:id/receive" element={<GoodsReceiveFormPage />} />
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />

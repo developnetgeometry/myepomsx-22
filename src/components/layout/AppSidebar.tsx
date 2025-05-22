@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Settings, ClipboardList, Wrench, LineChart, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, ChevronRight, Menu, X, Shield, Monitor, Package, Layers } from 'lucide-react';
+import { Settings, ClipboardList, Wrench, LineChart, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, ChevronRight, Menu, X, Shield, Monitor, Package, Layers, FileText, ShoppingCart, Truck } from 'lucide-react';
 import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -139,6 +139,24 @@ const sidebarItems: SidebarItemType[] = [{
       path: '/monitor/rms-dashboard',
       icon: RMSDashboardIcon
     }]
+  }]
+},
+// New Purchasing module
+{
+  name: 'Purchasing',
+  icon: ShoppingCart,
+  children: [{
+    name: 'Purchase Request',
+    path: '/purchasing/request',
+    icon: ClipboardList
+  }, {
+    name: 'Purchase Order',
+    path: '/purchasing/orders',
+    icon: FileText
+  }, {
+    name: 'Goods Receive',
+    path: '/purchasing/goods-receive',
+    icon: Truck
   }]
 },
 // Admin module with Setup and Settings as submodules
