@@ -45,7 +45,11 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
       case 'partial': return 'Partially Received';
       case 'completed': return 'Completed';
       case 'pending': return 'Pending';
-      default: return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown';
+      default: {
+        // Handle the default case safely by ensuring status is a string before using string methods
+        const statusStr = String(status); // Convert to string to ensure string methods work
+        return statusStr ? statusStr.charAt(0).toUpperCase() + statusStr.slice(1) : 'Unknown';
+      }
     }
   };
 
