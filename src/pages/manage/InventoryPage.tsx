@@ -80,9 +80,7 @@ const InventoryPage: React.FC<InventoryPageProps> = ({
     header: 'Actions',
     accessorKey: 'id',
     cell: (value, row) => <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="h-8" onClick={e => handleRequestClick(row, e)}>
-            Request
-          </Button>
+          
           <Button variant="outline" size="sm" className="h-8" onClick={e => handleTrackPOClick(row, e)}>
             Track POs
           </Button>
