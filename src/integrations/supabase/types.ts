@@ -348,6 +348,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "e_asset_detail_e_asset_detail_fk"
+            columns: ["parent_asset_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "e_asset_detail_e_asset_type_fk"
             columns: ["type_id"]
             isOneToOne: false
@@ -366,13 +373,6 @@ export type Database = {
             columns: ["manufacturer_id"]
             isOneToOne: false
             referencedRelation: "e_manufacturer"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "e_asset_detail_parent_asset_id_fkey"
-            columns: ["parent_asset_id"]
-            isOneToOne: false
-            referencedRelation: "e_asset_detail"
             referencedColumns: ["id"]
           },
         ]
@@ -2711,8 +2711,7 @@ export type Database = {
           target_due_date: string | null
           work_center_id: number | null
           work_request_date: string | null
-          work_request_no: string | null
-          work_request_prefix: string | null
+          work_request_no: string
         }
         Insert: {
           anomaly_report?: boolean | null
@@ -2733,8 +2732,7 @@ export type Database = {
           target_due_date?: string | null
           work_center_id?: number | null
           work_request_date?: string | null
-          work_request_no?: string | null
-          work_request_prefix?: string | null
+          work_request_no: string
         }
         Update: {
           anomaly_report?: boolean | null
@@ -2755,8 +2753,7 @@ export type Database = {
           target_due_date?: string | null
           work_center_id?: number | null
           work_request_date?: string | null
-          work_request_no?: string | null
-          work_request_prefix?: string | null
+          work_request_no?: string
         }
         Relationships: [
           {
@@ -2781,24 +2778,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "e_new_work_request_criticality_id_fkey"
-            columns: ["criticality_id"]
-            isOneToOne: false
-            referencedRelation: "e_criticality"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "e_new_work_request_facility_id_fkey"
             columns: ["facility_id"]
             isOneToOne: false
             referencedRelation: "e_facility"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "e_new_work_request_maintenance_type_fkey"
-            columns: ["maintenance_type"]
-            isOneToOne: false
-            referencedRelation: "e_maintenance"
             referencedColumns: ["id"]
           },
           {
@@ -2813,13 +2796,6 @@ export type Database = {
             columns: ["system_id"]
             isOneToOne: false
             referencedRelation: "e_system"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "e_new_work_request_work_center_id_fkey"
-            columns: ["work_center_id"]
-            isOneToOne: false
-            referencedRelation: "e_work_center"
             referencedColumns: ["id"]
           },
         ]
@@ -3824,42 +3800,6 @@ export type Database = {
           name?: string
         }
         Relationships: []
-      }
-      e_spare_parts: {
-        Row: {
-          bom_id: number
-          description: string | null
-          id: number
-          item_master_id: number
-        }
-        Insert: {
-          bom_id: number
-          description?: string | null
-          id?: number
-          item_master_id: number
-        }
-        Update: {
-          bom_id?: number
-          description?: string | null
-          id?: number
-          item_master_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "e_spare_parts_bom_id_fkey"
-            columns: ["bom_id"]
-            isOneToOne: false
-            referencedRelation: "e_bom_assembly"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "e_spare_parts_item_master_id_fkey"
-            columns: ["item_master_id"]
-            isOneToOne: false
-            referencedRelation: "e_item_master"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       e_store: {
         Row: {

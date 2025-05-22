@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Settings, ClipboardList, Wrench, LineChart, Home, Database, Box, 
-  ListOrdered, Calendar, Users, ChevronLeft, ChevronRight, Menu, 
-  X, Shield, Monitor, Package, Layers, FileText 
-} from 'lucide-react';
-import { 
-  IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, 
-  InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, 
-  CriticalAssetsIcon, RMSDashboardIcon 
-} from '@/components/ui/custom-icons';
+import { Settings, ClipboardList, Wrench, LineChart, Home, Database, Box, ListOrdered, Calendar, Users, ChevronLeft, ChevronRight, Menu, X, Shield, Monitor, Package, Layers } from 'lucide-react';
+import { IMSIcon, IntegrityIcon, RBIAssessmentIcon, CorrosionStudiesIcon, InspectionDataIcon, InventoryGroupsIcon, RMSIcon, RMSAssetListIcon, CriticalAssetsIcon, RMSDashboardIcon } from '@/components/ui/custom-icons';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -69,22 +61,6 @@ const sidebarItems: SidebarItemType[] = [{
     name: 'BOM Assembly',
     path: '/manage/bom-assembly',
     icon: Layers
-  }]
-}, {
-  name: 'Purchasing',
-  icon: ClipboardList,
-  children: [{
-    name: 'Purchase Record',
-    path: '/purchasing/purchase-record',
-    icon: FileText
-  }, {
-    name: 'Purchase Order',
-    path: '/purchasing/purchase-order',
-    icon: FileText
-  }, {
-    name: 'Goods Receive',
-    path: '/purchasing/goods-receive',
-    icon: Package
   }]
 }, {
   name: 'Work Orders',

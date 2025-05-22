@@ -179,7 +179,17 @@ const InventoryPage: React.FC<InventoryPageProps> = ({
         <CardContent className="p-6">
           <DataTable columns={columns} data={inventory} onRowClick={handleRowClick} />
         </CardContent>
-        
+        <CardFooter className="flex justify-between items-center border-t p-4">
+          {/* Existing Download/Export buttons would go here */}
+          <div className="w-full flex flex-wrap gap-2 sm:flex-nowrap">
+            <Button variant="outline" size="lg" onClick={handleTrackAllPOs} className="gap-2 flex-1 justify-center text-base font-medium">
+              <ListChecks className="h-5 w-5" /> Track POs
+            </Button>
+            <Button size="lg" onClick={handleCreatePO} className="gap-2 flex-1 justify-center text-base font-medium">
+              <Plus className="h-5 w-5" /> Create PO
+            </Button>
+          </div>
+        </CardFooter>
       </Card>
 
       {/* Low Stock Alert Modal */}
