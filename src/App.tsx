@@ -1,4 +1,3 @@
-
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
@@ -100,6 +99,16 @@ import RMSDashboardPage from './pages/monitor/RMSDashboardPage'
 // New Piping Pages
 import PipingFormPage from './pages/monitor/PipingFormPage'
 import PipingDetailPage from './pages/monitor/PipingDetailPage'
+
+// Purchasing Pages
+import PurchaseRecordPage from './pages/purchasing/PurchaseRecordPage'
+import PurchaseRecordDetailPage from './pages/purchasing/PurchaseRecordDetailPage'
+import PurchaseOrderPage from './pages/purchasing/PurchaseOrderPage'
+import PurchaseOrderDetailPage from './pages/purchasing/PurchaseOrderDetailPage'
+import PurchaseOrderFormPage from './pages/purchasing/PurchaseOrderFormPage'
+import GoodsReceivePage from './pages/purchasing/GoodsReceivePage'
+import GoodsReceiveDetailPage from './pages/purchasing/GoodsReceiveDetailPage'
+import GoodsReceiveFormPage from './pages/purchasing/GoodsReceiveFormPage'
 
 // Vendor Pages
 import VendorDashboardPage from './pages/vendor/VendorDashboardPage'
@@ -212,6 +221,17 @@ function App() {
           <Route path="/monitor/rms-asset-list" element={<RMSAssetListPage />} />
           <Route path="/monitor/rms-asset-detail/:id" element={<RMSAssetDetailPage />} />
           <Route path="/monitor/rms-dashboard" element={<RMSDashboardPage />} />
+
+          {/* Purchasing Routes */}
+          <Route path="/purchasing/purchase-record" element={<PurchaseRecordPage />} />
+          <Route path="/purchasing/purchase-record/:id" element={<PurchaseRecordDetailPage />} />
+          <Route path="/purchasing/purchase-order" element={<PurchaseOrderPage />} />
+          <Route path="/purchasing/purchase-order/new" element={<PurchaseOrderFormPage />} />
+          <Route path="/purchasing/purchase-order/:id" element={<PurchaseOrderDetailPage />} />
+          <Route path="/purchasing/purchase-order/:id/edit" element={<PurchaseOrderFormPage />} />
+          <Route path="/purchasing/goods-receive" element={<GoodsReceivePage />} />
+          <Route path="/purchasing/goods-receive/new" element={<GoodsReceiveFormPage />} />
+          <Route path="/purchasing/goods-receive/:id" element={<GoodsReceiveDetailPage />} />
 
           {/* Vendor Routes */}
           <Route path="/vendor/dashboard" element={<VendorDashboardPage />} />
