@@ -10,6 +10,21 @@ import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
+// Define GoodsReceiveData type that matches the expected structure
+type GoodsReceiveData = {
+  id: string;
+  grNumber: string;
+  poNumber: string;
+  poId: string;
+  vendor: string;
+  deliveryDate: string;
+  receivedBy: string;
+  receiverEmail: string;
+  items: Array<any>;
+  attachments?: Array<any>;
+  status: 'pending' | 'partial' | 'completed';
+};
+
 interface TimelineEvent {
   id: string;
   type: 'delivered' | 'checked' | 'uploaded' | 'confirmed';
@@ -25,7 +40,9 @@ interface TimelineEvent {
 const GoodsReceiveDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [receipt, setReceipt] = useState(goodsReceive.find(gr => gr.id === id));
+  const [receipt, setReceipt] = useState<GoodsReceiveData | undefined>(
+    goodsReceive.find(gr => gr.id === id) as GoodsReceiveData | undefined
+  );
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   
   // Find related PO
@@ -85,7 +102,7 @@ const GoodsReceiveDetailPage: React.FC = () => {
       // Update the receipt status
       const updatedReceipt = { 
         ...receipt, 
-        status: 'completed' as PurchasingStatus
+        status: 'completed' as 'completed' | 'partial' | 'pending'
       };
       setReceipt(updatedReceipt);
       

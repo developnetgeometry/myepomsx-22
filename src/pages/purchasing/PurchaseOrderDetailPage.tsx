@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { purchaseOrders, goodsReceive } from '@/data/purchasingSampleData';
@@ -9,6 +8,23 @@ import StatusBadge, { PurchasingStatus } from '@/components/purchasing/StatusBad
 import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+
+// Define PurchaseOrderData type with the correct status values
+type PurchaseOrderData = {
+  id: string;
+  poNumber: string;
+  date: string;
+  deliveryDate: string;
+  vendor: string;
+  vendorEmail: string;
+  items: any[];
+  totalCost: number;
+  terms?: string;
+  notes?: string;
+  requestId?: string;
+  attachments?: { id: string; name: string; type: string; url: string; }[];
+  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'partial' | 'completed';
+};
 
 interface TimelineEvent {
   id: string;
@@ -25,7 +41,9 @@ interface TimelineEvent {
 const PurchaseOrderDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [order, setOrder] = useState(purchaseOrders.find(po => po.id === id));
+  const [order, setOrder] = useState<PurchaseOrderData | undefined>(
+    purchaseOrders.find(po => po.id === id) as PurchaseOrderData | undefined
+  );
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   
   // Find related goods receive records
@@ -105,7 +123,7 @@ const PurchaseOrderDetailPage: React.FC = () => {
       // Update the order status
       const updatedOrder = { 
         ...order, 
-        status: 'submitted' as PurchasingStatus
+        status: 'submitted' as 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'partial' | 'completed'
       };
       setOrder(updatedOrder);
       
@@ -140,7 +158,7 @@ const PurchaseOrderDetailPage: React.FC = () => {
       // Update the order status
       const updatedOrder = { 
         ...order, 
-        status: 'approved' as PurchasingStatus
+        status: 'approved' as 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'partial' | 'completed'
       };
       setOrder(updatedOrder);
       

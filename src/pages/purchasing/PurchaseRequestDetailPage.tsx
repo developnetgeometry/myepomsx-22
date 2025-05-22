@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { purchaseRequests, purchaseOrders } from '@/data/purchasingSampleData';
@@ -9,6 +8,21 @@ import StatusBadge, { PurchasingStatus } from '@/components/purchasing/StatusBad
 import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+
+// Define PurchaseRequestData type with the correct status values
+type PurchaseRequestData = {
+  id: string;
+  requestNumber: string;
+  date: string;
+  department: string;
+  requestedBy: string;
+  requesterEmail: string;
+  priority: "low" | "medium" | "high";
+  items: any[];
+  notes?: string;
+  poNumber?: string;
+  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'converted';
+};
 
 interface TimelineEvent {
   id: string;
@@ -25,7 +39,9 @@ interface TimelineEvent {
 const PurchaseRequestDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [request, setRequest] = useState(purchaseRequests.find(req => req.id === id));
+  const [request, setRequest] = useState<PurchaseRequestData | undefined>(
+    purchaseRequests.find(req => req.id === id) as PurchaseRequestData | undefined
+  );
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
 
   // Generate timeline events
@@ -89,7 +105,7 @@ const PurchaseRequestDetailPage: React.FC = () => {
       // Update the request status
       const updatedRequest = { 
         ...request, 
-        status: 'converted' as PurchasingStatus, 
+        status: 'converted' as 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'converted', 
         poNumber: newPONumber 
       };
       setRequest(updatedRequest);
@@ -116,7 +132,7 @@ const PurchaseRequestDetailPage: React.FC = () => {
       // Update the request status
       const updatedRequest = { 
         ...request, 
-        status: 'submitted' as PurchasingStatus 
+        status: 'submitted' as 'draft' | 'submitted' | 'approved' | 'rejected' | 'cancelled' | 'converted'
       };
       setRequest(updatedRequest);
       
