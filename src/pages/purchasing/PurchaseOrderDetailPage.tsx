@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText, Download, Edit, CheckCircle } from 'lucide-react';
@@ -40,7 +39,7 @@ const PurchaseOrderDetailPage = () => {
       case 'Draft':
         return 'secondary';
       case 'Submitted':
-        return 'primary';
+        return 'default'; // Changed from 'primary' to 'default'
       case 'Partially Received':
         return 'warning';
       case 'Fully Received':
@@ -88,7 +87,8 @@ const PurchaseOrderDetailPage = () => {
       <div className="flex items-center justify-between">
         <div>
           <Breadcrumbs
-            items={[
+            showHome
+            overrideItems={[
               { label: 'Home', href: '/' },
               { label: 'Purchasing', href: '/purchasing/purchase-order' },
               { label: 'Purchase Orders', href: '/purchasing/purchase-order' },

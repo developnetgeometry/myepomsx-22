@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -124,7 +123,8 @@ const PurchaseOrderFormPage = () => {
       <div className="flex items-center justify-between">
         <div>
           <Breadcrumbs
-            items={[
+            showHome
+            overrideItems={[
               { label: 'Home', href: '/' },
               { label: 'Purchasing', href: '/purchasing/purchase-order' },
               { label: 'Purchase Orders', href: '/purchasing/purchase-order' },

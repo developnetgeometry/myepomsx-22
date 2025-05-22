@@ -20,7 +20,7 @@ const PurchaseOrderPage = () => {
       case 'Draft':
         return 'secondary';
       case 'Submitted':
-        return 'primary';
+        return 'default'; // Changed from 'primary' to 'default'
       case 'Partially Received':
         return 'warning';
       case 'Fully Received':

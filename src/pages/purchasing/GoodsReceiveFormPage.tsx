@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Package, Save, X, Search } from 'lucide-react';
@@ -122,8 +121,9 @@ const GoodsReceiveFormPage = () => {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <Breadcrumbs
-            items={[
+          <Breadcrumbs 
+            showHome
+            overrideItems={[
               { label: 'Home', href: '/' },
               { label: 'Purchasing', href: '/purchasing/goods-receive' },
               { label: 'Goods Receive', href: '/purchasing/goods-receive' },

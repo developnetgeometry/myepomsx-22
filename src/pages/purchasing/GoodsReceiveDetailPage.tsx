@@ -94,7 +94,8 @@ const GoodsReceiveDetailPage = () => {
       <div className="flex items-center justify-between">
         <div>
           <Breadcrumbs
-            items={[
+            showHome
+            overrideItems={[
               { label: 'Home', href: '/' },
               { label: 'Purchasing', href: '/purchasing/goods-receive' },
               { label: 'Goods Receive', href: '/purchasing/goods-receive' },
