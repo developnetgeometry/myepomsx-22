@@ -20,7 +20,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from '@/components/ui/radio-group';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
 
 const GoodsReceiveFormPage: React.FC = () => {
@@ -261,7 +261,7 @@ const GoodsReceiveFormPage: React.FC = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{isEdit ? 'Edit' : 'New'} Goods Receipt</BreadcrumbPage>
+            {isEdit ? 'Edit' : 'New'} Goods Receipt
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -5,10 +5,10 @@ import { purchaseOrders, goodsReceive } from '@/data/purchasingSampleData';
 import { FileText, PaperclipIcon, Clock, User, CheckCircle, Truck, Download, Upload } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import StatusBadge from '@/components/purchasing/StatusBadge';
+import StatusBadge, { PurchasingStatus } from '@/components/purchasing/StatusBadge';
 import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface TimelineEvent {
   id: string;
@@ -103,7 +103,10 @@ const PurchaseOrderDetailPage: React.FC = () => {
   const handleSubmit = () => {
     if (order && order.status === 'draft') {
       // Update the order status
-      const updatedOrder = { ...order, status: 'submitted' };
+      const updatedOrder = { 
+        ...order, 
+        status: 'submitted' as PurchasingStatus
+      };
       setOrder(updatedOrder);
       
       // Send notification
@@ -135,10 +138,13 @@ const PurchaseOrderDetailPage: React.FC = () => {
   const handleApprove = () => {
     if (order && order.status === 'submitted') {
       // Update the order status
-      const updatedOrder = { ...order, status: 'approved' };
+      const updatedOrder = { 
+        ...order, 
+        status: 'approved' as PurchasingStatus
+      };
       setOrder(updatedOrder);
       
-      // Send notification to vendor
+      // Send notification
       sendEmailNotification({
         to: order.vendorEmail,
         subject: createSubject('Purchase Order', order.poNumber, 'Approved and Ready'),
@@ -185,7 +191,7 @@ const PurchaseOrderDetailPage: React.FC = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{order.poNumber}</BreadcrumbPage>
+            {order.poNumber}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -209,7 +215,7 @@ const PurchaseOrderDetailPage: React.FC = () => {
             </Button>
           )}
           {(order.status === 'approved' || order.status === 'partial') && (
-            <Button onClick={handleReceiveGoods} variant="primary">
+            <Button onClick={handleReceiveGoods} variant="default">
               <Truck className="h-4 w-4 mr-2" />
               Receive Goods
             </Button>

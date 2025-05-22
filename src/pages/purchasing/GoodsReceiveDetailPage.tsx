@@ -5,10 +5,10 @@ import { goodsReceive, purchaseOrders } from '@/data/purchasingSampleData';
 import { FileText, PaperclipIcon, Truck, CheckCircle, Download, Upload } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import StatusBadge from '@/components/purchasing/StatusBadge';
+import StatusBadge, { PurchasingStatus } from '@/components/purchasing/StatusBadge';
 import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface TimelineEvent {
   id: string;
@@ -83,7 +83,10 @@ const GoodsReceiveDetailPage: React.FC = () => {
   const handleConfirmReceipt = () => {
     if (receipt && receipt.status === 'pending') {
       // Update the receipt status
-      const updatedReceipt = { ...receipt, status: 'completed' };
+      const updatedReceipt = { 
+        ...receipt, 
+        status: 'completed' as PurchasingStatus
+      };
       setReceipt(updatedReceipt);
       
       // Send notification
@@ -126,7 +129,7 @@ const GoodsReceiveDetailPage: React.FC = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{receipt.grNumber}</BreadcrumbPage>
+            {receipt.grNumber}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

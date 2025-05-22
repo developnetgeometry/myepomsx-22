@@ -3962,7 +3962,15 @@ export type Database = {
           task_id?: number
           task_list?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "e_task_detail_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "e_task"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       e_toxicity: {
         Row: {

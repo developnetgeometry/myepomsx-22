@@ -5,10 +5,10 @@ import { purchaseRequests, purchaseOrders } from '@/data/purchasingSampleData';
 import { PaperclipIcon, FileText, Clock, User, CheckCircle, ArrowRightCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import StatusBadge from '@/components/purchasing/StatusBadge';
+import StatusBadge, { PurchasingStatus } from '@/components/purchasing/StatusBadge';
 import PurchasingTimeline from '@/components/purchasing/PurchasingTimeline';
 import { sendEmailNotification, createSubject } from '@/components/purchasing/EmailNotification';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface TimelineEvent {
   id: string;
@@ -89,7 +89,7 @@ const PurchaseRequestDetailPage: React.FC = () => {
       // Update the request status
       const updatedRequest = { 
         ...request, 
-        status: 'converted', 
+        status: 'converted' as PurchasingStatus, 
         poNumber: newPONumber 
       };
       setRequest(updatedRequest);
@@ -114,7 +114,10 @@ const PurchaseRequestDetailPage: React.FC = () => {
   const handleSubmit = () => {
     if (request && request.status === 'draft') {
       // Update the request status
-      const updatedRequest = { ...request, status: 'submitted' };
+      const updatedRequest = { 
+        ...request, 
+        status: 'submitted' as PurchasingStatus 
+      };
       setRequest(updatedRequest);
       
       // Send notification
@@ -157,7 +160,7 @@ const PurchaseRequestDetailPage: React.FC = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{request.requestNumber}</BreadcrumbPage>
+            {request.requestNumber}
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

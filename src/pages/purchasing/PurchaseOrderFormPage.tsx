@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { purchaseOrders, vendors, purchaseRequests } from '@/data/purchasingSampleData';
@@ -16,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 interface FormItem {
   id: string;
@@ -222,7 +221,7 @@ const PurchaseOrderFormPage: React.FC = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{isEdit ? 'Edit' : 'New'} Purchase Order</BreadcrumbPage>
+            {isEdit ? 'Edit' : 'New'} Purchase Order
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
