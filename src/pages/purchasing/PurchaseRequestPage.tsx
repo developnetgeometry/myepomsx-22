@@ -52,7 +52,7 @@ const PurchaseRequestPage: React.FC = () => {
       cell: (value) => `${value.length} item(s)`,
     },
     {
-      id: 'requestedBy1111',
+      id: 'requestedBy',
       header: 'Requested By',
       accessorKey: 'requestedBy',
     },
