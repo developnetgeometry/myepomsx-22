@@ -88,7 +88,9 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, size = 'md
     if (lowercaseStatus === 'po created') {
       return 'bg-red-100 text-red-800 border-red-200';
     }
-    
+    if (lowercaseStatus === 'draft') {
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    }
     if (lowercaseStatus.includes('under maintenance')) {
       return 'bg-amber-100 text-amber-800 border-amber-200';
     }
