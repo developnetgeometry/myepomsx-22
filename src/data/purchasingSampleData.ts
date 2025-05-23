@@ -30,7 +30,7 @@ export interface PurchaseRequestData {
   requestedBy: string;
   requesterEmail: string;
   priority: 'low' | 'medium' | 'high';
-  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'converted' | 'cancelled';
+  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'PO created' | 'cancelled';
   items: PurchaseItem[];
   notes?: string;
   poNumber?: string; // If converted to PO
@@ -123,7 +123,7 @@ export const purchaseRequests: PurchaseRequestData[] = [
     requestedBy: 'Ahmad Faiz',
     requesterEmail: 'ahmad.faiz@example.com',
     priority: 'high',
-    status: 'converted',
+    status: 'PO created',
     poNumber: 'PO-2025-001',
     items: [
       {
