@@ -41,7 +41,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
       case 'approved': return 'Approved';
       case 'rejected': return 'Rejected';
       case 'cancelled': return 'Cancelled';
-      case 'converted': return 'Converted';
+      case 'converted': return 'PO Created';
       case 'partial': return 'Partially Received';
       case 'completed': return 'Completed';
       case 'pending': return 'Pending';
