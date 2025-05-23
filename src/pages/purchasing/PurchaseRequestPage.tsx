@@ -148,7 +148,7 @@ const PurchaseRequestPage: React.FC = () => {
                 <DropdownMenuItem onClick={() => setFilterStatus('approved')}>
                   Approved
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterStatus('PO created')}>
+                <DropdownMenuItem onClick={() => setFilterStatus('converted')}>
                   PO Created
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setFilterStatus('cancelled')}>
