@@ -21,17 +21,17 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const getVariant = () => {
     switch (status) {
-      // Use specific color variants for each status
-      case 'draft': return 'status-draft';
-      case 'submitted': return 'status-submitted';
-      case 'approved': return 'status-approved';
-      case 'rejected': return 'status-destructive';
-      case 'cancelled': return 'status-destructive';
-      case 'converted': return 'status-converted';
-      case 'partial': return 'status-warning';
-      case 'completed': return 'status-success';
-      case 'pending': return 'status-pending';
-      default: return 'default';
+      // Enhanced colors for each status
+      case 'draft': return 'bg-gray-500 text-white';
+      case 'submitted': return 'bg-blue-500 text-white';
+      case 'approved': return 'bg-green-600 text-white';
+      case 'rejected': return 'bg-red-500 text-white';
+      case 'cancelled': return 'bg-red-500 text-white';
+      case 'converted': return 'bg-emerald-500 text-white';
+      case 'partial': return 'bg-amber-500 text-white';
+      case 'completed': return 'bg-green-600 text-white';
+      case 'pending': return 'bg-yellow-500 text-white';
+      default: return 'bg-gray-500 text-white';
     }
   };
 
@@ -56,8 +56,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
 
   return (
     <Badge 
-      variant={getVariant()} 
-      className={className}
+      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${getVariant()} ${className}`}
     >
       {getLabel()}
     </Badge>
