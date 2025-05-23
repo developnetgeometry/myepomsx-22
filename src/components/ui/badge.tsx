@@ -53,7 +53,7 @@ const badgeVariants = cva(
         "outline-pink": "bg-transparent border-epomsx-pink text-epomsx-pink",
         "outline-lime": "bg-transparent border-epomsx-lime text-epomsx-lime",
         "outline-orange": "bg-transparent border-epomsx-orange text-epomsx-orange",
-        // New status-specific variants with distinct colors
+        // Status-specific variants with distinct colors
         "status-draft": "border-transparent bg-gray-500 text-white",
         "status-submitted": "border-transparent bg-blue-500 text-white",
         "status-approved": "border-transparent bg-green-600 text-white",
