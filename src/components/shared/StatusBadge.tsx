@@ -78,6 +78,13 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, size = 'md
       return 'bg-red-100 text-red-800 border-red-200';
     }
 
+    //for purchase order request status
+    if (lowercaseStatus === 'po created') {
+      return 'bg-red-100 text-red-800 border-red-200';
+    }
+    if (lowercaseStatus === 'submitted') {
+      return 'bg-green-100 text-green-800 border-green-200';
+    }
     if (lowercaseStatus === 'po created') {
       return 'bg-red-100 text-red-800 border-red-200';
     }
