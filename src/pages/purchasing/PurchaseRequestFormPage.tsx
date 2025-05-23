@@ -195,17 +195,6 @@ const PurchaseRequestFormPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="requesterEmail">Email</Label>
-                <Input
-                  id="requesterEmail"
-                  type="email"
-                  value={formData.requesterEmail}
-                  onChange={e => setFormData({...formData, requesterEmail: e.target.value})}
-                  placeholder="your.email@example.com"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="department">Department</Label>
                 <Select
                   value={formData.department}
