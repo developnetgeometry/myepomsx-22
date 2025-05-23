@@ -132,7 +132,7 @@ const PurchaseRequestPage: React.FC = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="ml-2">
                   <ArrowUpDown className="mr-2 h-4 w-4" />
-                  {filterStatus ? `Status: ${filterStatus === 'converted' ? 'PO Created' : filterStatus}` : 'Filter by Status'}
+                  {filterStatus ? `Status: ${filterStatus}` : 'Filter by Status'}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -149,7 +149,7 @@ const PurchaseRequestPage: React.FC = () => {
                   Approved
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setFilterStatus('converted')}>
-                  PO Created
+                  Converted
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setFilterStatus('cancelled')}>
                   Cancelled

@@ -21,17 +21,16 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const getVariant = () => {
     switch (status) {
-      // Enhanced colors for each status
-      case 'draft': return 'bg-gray-500 text-white';
-      case 'submitted': return 'bg-blue-500 text-white';
-      case 'approved': return 'bg-green-600 text-white';
-      case 'rejected': return 'bg-red-500 text-white';
-      case 'cancelled': return 'bg-red-500 text-white';
-      case 'converted': return 'bg-emerald-500 text-white';
-      case 'partial': return 'bg-amber-500 text-white';
-      case 'completed': return 'bg-green-600 text-white';
-      case 'pending': return 'bg-yellow-500 text-white';
-      default: return 'bg-gray-500 text-white';
+      case 'draft': return 'default';
+      case 'submitted': return 'info';
+      case 'approved': return 'success';
+      case 'rejected': return 'destructive';
+      case 'cancelled': return 'destructive';
+      case 'converted': return 'secondary';
+      case 'partial': return 'warning';
+      case 'completed': return 'success';
+      case 'pending': return 'outline';
+      default: return 'default';
     }
   };
 
@@ -42,7 +41,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
       case 'approved': return 'Approved';
       case 'rejected': return 'Rejected';
       case 'cancelled': return 'Cancelled';
-      case 'converted': return 'PO Created';
+      case 'converted': return 'Converted';
       case 'partial': return 'Partially Received';
       case 'completed': return 'Completed';
       case 'pending': return 'Pending';
@@ -56,7 +55,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
 
   return (
     <Badge 
-      className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${getVariant()} ${className}`}
+      variant={getVariant()} 
+      className={className}
     >
       {getLabel()}
     </Badge>

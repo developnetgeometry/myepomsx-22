@@ -53,7 +53,7 @@ const getTitle = (type: TimelineEvent['type']) => {
     case 'created': return 'Created';
     case 'updated': return 'Updated';
     case 'submitted': return 'Submitted';
-    case 'converted': return 'PO Created';
+    case 'converted': return 'Converted to PO';
     case 'approved': return 'Approved';
     case 'delivered': return 'Goods Delivered';
     case 'checked': return 'Checked By';
