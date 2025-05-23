@@ -53,6 +53,15 @@ const badgeVariants = cva(
         "outline-pink": "bg-transparent border-epomsx-pink text-epomsx-pink",
         "outline-lime": "bg-transparent border-epomsx-lime text-epomsx-lime",
         "outline-orange": "bg-transparent border-epomsx-orange text-epomsx-orange",
+        // New status-specific variants with distinct colors
+        "status-draft": "border-transparent bg-gray-500 text-white",
+        "status-submitted": "border-transparent bg-blue-500 text-white",
+        "status-approved": "border-transparent bg-green-600 text-white",
+        "status-destructive": "border-transparent bg-red-500 text-white",
+        "status-converted": "border-transparent bg-emerald-500 text-white",
+        "status-warning": "border-transparent bg-amber-500 text-white",
+        "status-success": "border-transparent bg-green-600 text-white",
+        "status-pending": "border-transparent bg-yellow-500 text-white",
       },
     },
     defaultVariants: {

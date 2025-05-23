@@ -21,15 +21,16 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const getVariant = () => {
     switch (status) {
-      case 'draft': return 'default';
-      case 'submitted': return 'info';
-      case 'approved': return 'success';
-      case 'rejected': return 'destructive';
-      case 'cancelled': return 'destructive';
-      case 'converted': return 'secondary';
-      case 'partial': return 'warning';
-      case 'completed': return 'success';
-      case 'pending': return 'outline';
+      // Use specific color variants for each status
+      case 'draft': return 'status-draft';
+      case 'submitted': return 'status-submitted';
+      case 'approved': return 'status-approved';
+      case 'rejected': return 'status-destructive';
+      case 'cancelled': return 'status-destructive';
+      case 'converted': return 'status-converted';
+      case 'partial': return 'status-warning';
+      case 'completed': return 'status-success';
+      case 'pending': return 'status-pending';
       default: return 'default';
     }
   };
