@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,18 @@ import { LogOut, User } from 'lucide-react';
 
 const UserProfile: React.FC = () => {
   const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
-    await signOut();
+    console.log('Sign out button clicked');
+    const { error } = await signOut();
+    
+    if (error) {
+      console.error('Sign out error:', error);
+    } else {
+      console.log('Sign out successful, redirecting to /auth');
+      navigate('/auth', { replace: true });
+    }
   };
 
   if (!user || !profile) {
