@@ -119,13 +119,13 @@ import GoodsReceiveFormPage from '@/pages/purchasing/GoodsReceiveFormPage';
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public auth route - this is now the entry point */}
+      {/* Public auth route */}
       <Route path="/auth" element={<AuthRoute />} />
       
       {/* Redirect root to auth for unauthenticated users */}
       <Route path="/" element={<AuthRoute />} />
       
-      {/* Protected routes wrapped in Layout */}
+      {/* Protected dashboard route */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <Layout>
@@ -133,130 +133,723 @@ const AppRoutes: React.FC = () => {
           </Layout>
         </ProtectedRoute>
       } />
-      
-      <Route path="/*" element={
+
+      {/* All other protected routes */}
+      <Route path="/overview" element={
         <ProtectedRoute>
           <Layout>
-            <Routes>
-              <Route path="/overview" element={<Overview />} />
+            <Overview />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Admin Routes */}
-              <Route path="/admin/setup/client" element={<ClientPage />} />
-              <Route path="/admin/setup/client/:id" element={<ClientDetailPage />} />
-              <Route path="/admin/setup/company" element={<CompanyPage />} />
-              <Route path="/admin/setup/company/:id" element={<CompanyDetailPage />} />
-              <Route path="/admin/setup/project" element={<ProjectPage />} />
-              <Route path="/admin/setup/project/:id" element={<ProjectDetailPage />} />
-              <Route path="/admin/setup/sensor" element={<SensorPage />} />
-              <Route path="/admin/setup/sensor/:id" element={<SensorDetailPage />} />
-              <Route path="/admin/setup/vendor" element={<VendorPage />} />
-              <Route path="/admin/setup/vendor/:id" element={<VendorDetailPage />} />
-              <Route path="/admin/setup/work-center" element={<WorkCenterPage />} />
-              <Route path="/admin/setup/work-center/:id" element={<WorkCenterDetailPage />} />
+      {/* Admin Routes */}
+      <Route path="/admin/setup/client" element={
+        <ProtectedRoute>
+          <Layout>
+            <ClientPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/client/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <ClientDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/company" element={
+        <ProtectedRoute>
+          <Layout>
+            <CompanyPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/company/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <CompanyDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/project" element={
+        <ProtectedRoute>
+          <Layout>
+            <ProjectPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/project/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <ProjectDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/sensor" element={
+        <ProtectedRoute>
+          <Layout>
+            <SensorPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/sensor/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <SensorDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/vendor" element={
+        <ProtectedRoute>
+          <Layout>
+            <VendorPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/vendor/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <VendorDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/work-center" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkCenterPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/setup/work-center/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkCenterDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Settings Routes */}
-              <Route path="/admin/settings/asset-class" element={<AssetClassPage />} />
-              <Route path="/admin/settings/asset-class/:id" element={<AssetClassDetailPage />} />
-              <Route path="/admin/settings/asset-tag" element={<AssetTagPage />} />
-              <Route path="/admin/settings/asset-tag/:id" element={<AssetTagDetailPage />} />
-              <Route path="/admin/settings/corrosion-group" element={<CorrosionGroupPage />} />
-              <Route path="/admin/settings/corrosion-group/:id" element={<CorrosionGroupDetailPage />} />
-              <Route path="/admin/settings/data-category" element={<DataCategoryPage />} />
-              <Route path="/admin/settings/data-category/:id" element={<DataCategoryDetailPage />} />
-              <Route path="/admin/settings/discipline" element={<DisciplinePage />} />
-              <Route path="/admin/settings/discipline/:id" element={<DisciplineDetailPage />} />
-              <Route path="/admin/settings/frequency-setup" element={<FrequencySetupPage />} />
-              <Route path="/admin/settings/frequency-setup/:id" element={<FrequencySetupDetailPage />} />
-              <Route path="/admin/settings/maintenance-type" element={<MaintenanceTypePage />} />
-              <Route path="/admin/settings/maintenance-type/:id" element={<MaintenanceTypeDetailPage />} />
-              <Route path="/admin/settings/user-management" element={<UserManagementPage />} />
-              <Route path="/admin/settings/average-uars" element={<AverageUARSPage />} />
-              <Route path="/admin/settings/average-uars/:id" element={<AverageUARSDetailPage />} />
+      {/* Settings Routes */}
+      <Route path="/admin/settings/asset-class" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetClassPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/asset-class/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetClassDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/asset-tag" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetTagPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/asset-tag/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetTagDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/corrosion-group" element={
+        <ProtectedRoute>
+          <Layout>
+            <CorrosionGroupPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/corrosion-group/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <CorrosionGroupDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/data-category" element={
+        <ProtectedRoute>
+          <Layout>
+            <DataCategoryPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/data-category/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <DataCategoryDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/discipline" element={
+        <ProtectedRoute>
+          <Layout>
+            <DisciplinePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/discipline/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <DisciplineDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/frequency-setup" element={
+        <ProtectedRoute>
+          <Layout>
+            <FrequencySetupPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/frequency-setup/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <FrequencySetupDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/maintenance-type" element={
+        <ProtectedRoute>
+          <Layout>
+            <MaintenanceTypePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/maintenance-type/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <MaintenanceTypeDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/user-management" element={
+        <ProtectedRoute>
+          <Layout>
+            <UserManagementPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/average-uars" element={
+        <ProtectedRoute>
+          <Layout>
+            <AverageUARSPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/admin/settings/average-uars/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AverageUARSDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Manage Routes */}
-              <Route path="/manage/assets" element={<AssetsPage />} />
-              <Route path="/manage/assets/:id" element={<AssetDetailPage />} />
-              <Route path="/manage/assets/details/:id" element={<AssetDetailsPage />} />
-              <Route path="/manage/asset-hierarchy" element={<AssetHierarchyPage />} />
-              <Route path="/manage/asset-register" element={<AssetRegisterPage />} />
-              <Route path="/manage/asset-register/:id" element={<AssetRegisterDetailPage />} />
-              <Route path="/manage/bom-assembly" element={<BomAssemblyPage />} />
-              <Route path="/manage/facilities" element={<FacilitiesPage />} />
-              <Route path="/manage/facilities/:id" element={<FacilityDetailPage />} />
-              <Route path="/manage/inventory" element={<InventoryPage />} />
-              <Route path="/manage/inventory/:id" element={<InventoryDetailPage />} />
-              <Route path="/manage/inventory/item/:id" element={<InventoryItemDetailPage />} />
-              <Route path="/manage/inventory/create-po" element={<CreatePurchaseOrderPage />} />
-              <Route path="/manage/items-master" element={<ItemsMasterPage />} />
-              <Route path="/manage/items-master/:id" element={<ItemsMasterDetailPage />} />
-              <Route path="/manage/material" element={<MaterialPage />} />
-              <Route path="/manage/material/:id" element={<MaterialDetailPage />} />
-              <Route path="/manage/package" element={<PackagePage />} />
-              <Route path="/manage/package/:id" element={<PackageDetailPage />} />
-              <Route path="/manage/parts-inventory" element={<PartsInventoryPage />} />
-              <Route path="/manage/parts-inventory/:id" element={<PartsInventoryDetailPage />} />
-              <Route path="/manage/system" element={<SystemPage />} />
-              <Route path="/manage/system/:id" element={<SystemDetailPage />} />
+      {/* Manage Routes */}
+      <Route path="/manage/assets" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/assets/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/assets/details/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetDetailsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/asset-hierarchy" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetHierarchyPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/asset-register" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetRegisterPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/asset-register/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetRegisterDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/bom-assembly" element={
+        <ProtectedRoute>
+          <Layout>
+            <BomAssemblyPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/facilities" element={
+        <ProtectedRoute>
+          <Layout>
+            <FacilitiesPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/facilities/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <FacilityDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/inventory" element={
+        <ProtectedRoute>
+          <Layout>
+            <InventoryPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/inventory/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <InventoryDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/inventory/item/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <InventoryItemDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/inventory/create-po" element={
+        <ProtectedRoute>
+          <Layout>
+            <CreatePurchaseOrderPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/items-master" element={
+        <ProtectedRoute>
+          <Layout>
+            <ItemsMasterPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/items-master/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <ItemsMasterDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/material" element={
+        <ProtectedRoute>
+          <Layout>
+            <MaterialPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/material/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <MaterialDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/package" element={
+        <ProtectedRoute>
+          <Layout>
+            <PackagePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/package/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PackageDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/parts-inventory" element={
+        <ProtectedRoute>
+          <Layout>
+            <PartsInventoryPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/parts-inventory/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PartsInventoryDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/system" element={
+        <ProtectedRoute>
+          <Layout>
+            <SystemPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/manage/system/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <SystemDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Maintain Routes */}
-              <Route path="/maintain/pm-schedule" element={<PMSchedulePage />} />
-              <Route path="/maintain/pm-schedule/:id" element={<PMScheduleDetailPage />} />
-              <Route path="/maintain/task-library" element={<TaskLibraryPage />} />
-              <Route path="/maintain/task-library/:id" element={<TaskLibraryDetailPage />} />
-              <Route path="/maintain/wo-history" element={<WOHistoryPage />} />
-              <Route path="/maintain/wo-history/:id" element={<WOHistoryDetailPage />} />
-              <Route path="/maintain/work-orders" element={<WorkOrderListPage />} />
-              <Route path="/maintain/work-order-list" element={<WorkOrderListPage />} />
-              <Route path="/maintain/work-order-list/:id" element={<WorkOrderDetailPage />} />
-              <Route path="/maintain/work-orders/:id" element={<WorkOrderDetailPage />} />
-              <Route path="/maintain/work-request" element={<WorkRequestPage />} />
-              <Route path="/maintain/work-request/:id" element={<WorkRequestDetailPage />} />
+      {/* Maintain Routes */}
+      <Route path="/maintain/pm-schedule" element={
+        <ProtectedRoute>
+          <Layout>
+            <PMSchedulePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/pm-schedule/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PMScheduleDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/task-library" element={
+        <ProtectedRoute>
+          <Layout>
+            <TaskLibraryPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/task-library/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <TaskLibraryDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/wo-history" element={
+        <ProtectedRoute>
+          <Layout>
+            <WOHistoryPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/wo-history/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <WOHistoryDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-orders" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkOrderListPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-order-list" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkOrderListPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-order-list/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkOrderDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-orders/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkOrderDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-request" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkRequestPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/maintain/work-request/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkRequestDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Measure Routes */}
-              <Route path="/measure/asset-performance" element={<AssetPerformancePage />} />
-              <Route path="/measure/cost-analysis" element={<CostAnalysisPage />} />
-              <Route path="/measure/kpi-dashboard" element={<KPIDashboardPage />} />
-              <Route path="/measure/work-analytics" element={<WorkAnalyticsPage />} />
+      {/* Measure Routes */}
+      <Route path="/measure/asset-performance" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetPerformancePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/measure/cost-analysis" element={
+        <ProtectedRoute>
+          <Layout>
+            <CostAnalysisPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/measure/kpi-dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <KPIDashboardPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/measure/work-analytics" element={
+        <ProtectedRoute>
+          <Layout>
+            <WorkAnalyticsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Monitor Routes */}
-              <Route path="/monitor/asset-integrity/:id" element={<AssetIntegrityDetailPage />} />
-              <Route path="/monitor/corrosion-studies" element={<CorrosionStudiesPage />} />
-              <Route path="/monitor/corrosion-studies/:id" element={<CorrosionStudiesDetailPage />} />
-              <Route path="/monitor/critical-assets" element={<CriticalAssetsPage />} />
-              <Route path="/monitor/ims-dashboard" element={<IMSDashboardPage />} />
-              <Route path="/monitor/inspection-data" element={<InspectionDataPage />} />
-              <Route path="/monitor/integrity" element={<IntegrityPage />} />
-              <Route path="/monitor/integrity/pressureVessel/:id" element={<RBIAssessmentPVDetailPage />} />
-              <Route path="/monitor/integrity/piping/new" element={<PipingFormPage />} />
-              <Route path="/monitor/integrity/piping/:id" element={<PipingDetailPage />} />
-              <Route path="/monitor/inventory-groups" element={<InventoryGroupsPage />} />
-              <Route path="/monitor/rbi-assessment" element={<RBIAssessmentPage />} />
-              <Route path="/monitor/rbi-assessment/:id" element={<RBIAssessmentDetailPage />} />
-              <Route path="/monitor/rbi-assessment-pv/:id" element={<RBIAssessmentPVDetailPage />} />
-              <Route path="/monitor/rms-asset-list" element={<RMSAssetListPage />} />
-              <Route path="/monitor/rms-asset-detail/:id" element={<RMSAssetDetailPage />} />
-              <Route path="/monitor/rms-dashboard" element={<RMSDashboardPage />} />
+      {/* Monitor Routes */}
+      <Route path="/monitor/asset-integrity/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <AssetIntegrityDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/corrosion-studies" element={
+        <ProtectedRoute>
+          <Layout>
+            <CorrosionStudiesPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/corrosion-studies/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <CorrosionStudiesDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/critical-assets" element={
+        <ProtectedRoute>
+          <Layout>
+            <CriticalAssetsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/ims-dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <IMSDashboardPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/inspection-data" element={
+        <ProtectedRoute>
+          <Layout>
+            <InspectionDataPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/integrity" element={
+        <ProtectedRoute>
+          <Layout>
+            <IntegrityPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/integrity/pressureVessel/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <RBIAssessmentPVDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/integrity/piping/new" element={
+        <ProtectedRoute>
+          <Layout>
+            <PipingFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/integrity/piping/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PipingDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/inventory-groups" element={
+        <ProtectedRoute>
+          <Layout>
+            <InventoryGroupsPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rbi-assessment" element={
+        <ProtectedRoute>
+          <Layout>
+            <RBIAssessmentPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rbi-assessment/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <RBIAssessmentDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rbi-assessment-pv/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <RBIAssessmentPVDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rms-asset-list" element={
+        <ProtectedRoute>
+          <Layout>
+            <RMSAssetListPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rms-asset-detail/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <RMSAssetDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/monitor/rms-dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <RMSDashboardPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Vendor Routes */}
-              <Route path="/vendor/dashboard" element={<VendorDashboardPage />} />
+      {/* Vendor Routes */}
+      <Route path="/vendor/dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <VendorDashboardPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* Purchasing Routes */}
-              <Route path="/purchasing/request" element={<PurchaseRequestPage />} />
-              <Route path="/purchasing/request/:id" element={<PurchaseRequestDetailPage />} />
-              <Route path="/purchasing/request/new" element={<PurchaseRequestFormPage />} />
-              <Route path="/purchasing/request/:id/edit" element={<PurchaseRequestFormPage />} />
-              <Route path="/purchasing/orders" element={<PurchaseOrderPage />} />
-              <Route path="/purchasing/orders/:id" element={<PurchaseOrderDetailPage />} />
-              <Route path="/purchasing/orders/new" element={<PurchaseOrderFormPage />} />
-              <Route path="/purchasing/orders/:id/edit" element={<PurchaseOrderFormPage />} />
-              <Route path="/purchasing/goods-receive" element={<GoodsReceivePage />} />
-              <Route path="/purchasing/goods-receive/:id" element={<GoodsReceiveDetailPage />} />
-              <Route path="/purchasing/goods-receive/new" element={<GoodsReceiveFormPage />} />
-              <Route path="/purchasing/goods-receive/:id/receive" element={<GoodsReceiveFormPage />} />
+      {/* Purchasing Routes */}
+      <Route path="/purchasing/request" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseRequestPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/request/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseRequestDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/request/new" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseRequestFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/request/:id/edit" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseRequestFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/orders" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseOrderPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/orders/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseOrderDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/orders/new" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseOrderFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/orders/:id/edit" element={
+        <ProtectedRoute>
+          <Layout>
+            <PurchaseOrderFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/goods-receive" element={
+        <ProtectedRoute>
+          <Layout>
+            <GoodsReceivePage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/goods-receive/:id" element={
+        <ProtectedRoute>
+          <Layout>
+            <GoodsReceiveDetailPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/goods-receive/new" element={
+        <ProtectedRoute>
+          <Layout>
+            <GoodsReceiveFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/purchasing/goods-receive/:id/receive" element={
+        <ProtectedRoute>
+          <Layout>
+            <GoodsReceiveFormPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
-              {/* 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+      {/* 404 */}
+      <Route path="*" element={
+        <ProtectedRoute>
+          <Layout>
+            <NotFound />
           </Layout>
         </ProtectedRoute>
       } />
