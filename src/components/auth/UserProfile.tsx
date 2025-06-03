@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,12 +13,22 @@ const UserProfile: React.FC = () => {
 
   const handleSignOut = async () => {
     console.log('Sign out button clicked');
-    const { error } = await signOut();
     
-    if (error) {
-      console.error('Sign out error:', error);
-    } else {
-      console.log('Sign out successful, redirecting to /auth');
+    try {
+      const { error } = await signOut();
+      
+      if (error) {
+        console.error('Sign out error:', error);
+      } else {
+        console.log('Sign out successful, redirecting to /auth');
+      }
+      
+      // Always redirect to auth page regardless of errors
+      // since we clear local state in signOut function
+      navigate('/auth', { replace: true });
+    } catch (error) {
+      console.error('Unexpected sign out error:', error);
+      // Still redirect even if there's an unexpected error
       navigate('/auth', { replace: true });
     }
   };

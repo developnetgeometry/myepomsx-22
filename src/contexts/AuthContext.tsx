@@ -124,13 +124,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
+    console.log('Sign out initiated');
+    
+    // Check if there's actually a session to sign out from
+    if (!session) {
+      console.log('No active session found, clearing local state');
+      // Clear local state even if there's no session
       setUser(null);
       setSession(null);
       setProfile(null);
+      return { error: null };
     }
-    return { error };
+
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        // Handle specific case where session is missing
+        if (error.message?.includes('session') || error.message?.includes('missing')) {
+          console.log('Session already cleared, updating local state');
+          setUser(null);
+          setSession(null);
+          setProfile(null);
+          return { error: null };
+        }
+        console.error('Sign out error:', error);
+        return { error };
+      }
+
+      console.log('Sign out successful');
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+      return { error: null };
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Even if sign out fails, clear local state
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+      return { error: null };
+    }
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
