@@ -32,7 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ loading, setLoading, setError, se
       setLoading(false);
     } else {
       setSuccess('Successfully logged in! Redirecting to dashboard...');
-      // The useEffect in AuthPage will handle the redirect when user state updates
+      // The ProtectedRoute and AuthPage useEffect will handle the redirect when user state updates
     }
   };
 

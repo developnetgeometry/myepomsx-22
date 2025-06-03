@@ -1,18 +1,14 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProject } from '@/contexts/ProjectContext';
 import Overview from './Overview';
 import UserProfile from '@/components/auth/UserProfile';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Loader2, LogIn, UserPlus } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
   const { user, loading } = useAuth();
   const { currentProject } = useProject();
-  const navigate = useNavigate();
   
   console.log(`Loading data for project: ${currentProject.name} (ID: ${currentProject.id})`);
   
@@ -25,7 +21,7 @@ const Index = () => {
     );
   }
 
-  // If user is authenticated, show the main overview and user profile
+  // If user is authenticated, show the main dashboard with overview and user profile
   if (user) {
     return (
       <div className="space-y-6">
@@ -37,39 +33,10 @@ const Index = () => {
     );
   }
 
-  // If user is not authenticated, show welcome page with auth options
+  // This should not happen due to ProtectedRoute, but just in case
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome</CardTitle>
-          <CardDescription>
-            Please sign in to access the Asset Management System
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button 
-            onClick={() => navigate('/auth')} 
-            className="w-full"
-            size="lg"
-          >
-            <LogIn className="mr-2 h-5 w-5" />
-            Sign In
-          </Button>
-          
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link 
-                to="/auth" 
-                className="font-medium text-primary hover:underline"
-              >
-                Sign up here
-              </Link>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin" />
     </div>
   );
 };
