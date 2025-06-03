@@ -1377,17 +1377,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "e_cm_report_e_new_work_request_fk"
-            columns: ["work_request_id"]
-            isOneToOne: false
-            referencedRelation: "e_new_work_request"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "e_cm_report_e_shutdown_type_fk"
             columns: ["shutdown_type_id"]
             isOneToOne: false
             referencedRelation: "e_shutdown_type"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_cm_report_work_request_id_fkey"
+            columns: ["work_request_id"]
+            isOneToOne: false
+            referencedRelation: "e_new_work_request"
             referencedColumns: ["id"]
           },
         ]
@@ -6758,6 +6758,33 @@ export type Database = {
         Update: {
           id?: number
           name?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
         }
         Relationships: []
       }
