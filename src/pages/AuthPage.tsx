@@ -28,10 +28,10 @@ const AuthPage: React.FC = () => {
   const [signupFullName, setSignupFullName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // Redirect authenticated users
+  // Redirect authenticated users to dashboard
   useEffect(() => {
     if (user && !authLoading) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [user, authLoading, navigate]);
 
@@ -45,11 +45,11 @@ const AuthPage: React.FC = () => {
     
     if (error) {
       setError(error.message);
+      setLoading(false);
     } else {
-      setSuccess('Successfully logged in! Redirecting...');
+      setSuccess('Successfully logged in! Redirecting to dashboard...');
+      // The useEffect above will handle the redirect when user state updates
     }
-    
-    setLoading(false);
   };
 
   const handleSignup = async (e: React.FormEvent) => {
