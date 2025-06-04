@@ -31,7 +31,7 @@ interface ManageFormProps {
   fields: {
     name: string;
     label: string;
-    type: "text" | "number" | "select" | "date" | "textarea";
+    type: "text" | "number" | "select" | "date" | "textarea" | "checkbox";
     options?: { value: string; label: string }[];
     required?: boolean;
     placeholder?: string;
@@ -148,7 +148,6 @@ const ManageForm = ({
                         {...formField}
                         disabled={isSubmitting}
                         placeholder={field.placeholder}
-                        richText={field.richText}
                         className="min-h-[150px]"
                       />
                     ) : (
@@ -303,7 +302,6 @@ const ManageForm = ({
                             {...formField}
                             disabled={isSubmitting}
                             placeholder={field.placeholder}
-                            richText={field.richText}
                             className="min-h-[150px]"
                           />
                         ) : (

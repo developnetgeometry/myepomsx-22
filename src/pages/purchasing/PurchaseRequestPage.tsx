@@ -5,7 +5,6 @@ import { ClipboardList, PlusCircle, Search, ArrowUpDown } from 'lucide-react';
 import { purchaseRequests } from '@/data/purchasingSampleData';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import DataTable, { Column } from '@/components/shared/DataTable';
 import { Button } from '@/components/ui/button';
 import StatusBadge from '@/components/purchasing/StatusBadge';
 import { Input } from '@/components/ui/input';
@@ -15,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import DataTable, { Column } from './DataTable';
 
 const PurchaseRequestPage: React.FC = () => {
   const navigate = useNavigate();

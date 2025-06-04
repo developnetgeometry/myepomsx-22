@@ -5,7 +5,7 @@ import { Truck, PlusCircle, Search, ArrowUpDown } from 'lucide-react';
 import { goodsReceive } from '@/data/purchasingSampleData';
 import PageHeader from '@/components/shared/PageHeader';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import DataTable, { Column } from '@/components/shared/DataTable';
+import DataTable, { Column } from './DataTable';
 import { Button } from '@/components/ui/button';
 import StatusBadge from '@/components/purchasing/StatusBadge';
 import { Input } from '@/components/ui/input';

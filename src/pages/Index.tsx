@@ -1,17 +1,18 @@
-
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useProject } from '@/contexts/ProjectContext';
-import Overview from './Overview';
-import UserProfile from '@/components/auth/UserProfile';
-import { Loader2 } from 'lucide-react';
+import React from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProject } from "@/contexts/ProjectContext";
+import Overview from "./Overview";
+import UserProfile from "@/components/auth/UserProfile";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
   const { user, loading } = useAuth();
   const { currentProject } = useProject();
-  
-  console.log(`Loading data for project: ${currentProject.name} (ID: ${currentProject.id})`);
-  
+
+  console.log(
+    `Loading data for project: ${currentProject.name} (ID: ${currentProject.id})`
+  );
+
   // Show loading spinner while checking auth state
   if (loading) {
     return (
@@ -25,10 +26,7 @@ const Index = () => {
   if (user) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-end">
-          <UserProfile />
-        </div>
-        <Overview />
+          <Overview />
       </div>
     );
   }

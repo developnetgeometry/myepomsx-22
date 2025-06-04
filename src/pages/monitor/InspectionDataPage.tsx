@@ -1,7 +1,6 @@
-
-import React from 'react';
-import BlankPageTemplate from '@/components/shared/BlankPageTemplate';
-import { ClipboardList } from 'lucide-react';
+import React from "react";
+import BlankPageTemplate from "@/components/shared/BlankPageTemplate";
+import { ClipboardList } from "lucide-react";
 
 const InspectionDataPage: React.FC = () => {
   return (
