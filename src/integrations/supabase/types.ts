@@ -2940,6 +2940,7 @@ export type Database = {
       }
       e_material_construction: {
         Row: {
+          composition: string | null
           created_at: string | null
           created_by: string | null
           id: number
@@ -2949,6 +2950,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          composition?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: number
@@ -2958,6 +2960,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          composition?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: number

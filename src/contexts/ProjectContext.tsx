@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from './AuthContext';
@@ -30,9 +29,16 @@ const defaultContext: ProjectContextType = {
 
 const ProjectContext = createContext<ProjectContextType>(defaultContext);
 
-export const useProject = () => useContext(ProjectContext);
+export const useProject = () => {
+  console.log('useProject hook called');
+  const context = useContext(ProjectContext);
+  console.log('useProject context value:', context);
+  return context;
+};
 
 export const ProjectProvider = ({ children }: { children: ReactNode }) => {
+  console.log('🔥 ProjectProvider component initialized');
+  
   const { user } = useAuth();
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -183,6 +189,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     loading,
     error,
   };
+
+  console.log('ProjectProvider rendering with value:', value);
 
   return (
     <ProjectContext.Provider value={value}>

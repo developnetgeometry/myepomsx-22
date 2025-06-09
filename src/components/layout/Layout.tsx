@@ -30,10 +30,14 @@ const getPageTitle = (pathname: string): string => {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  console.log('🏗️ Layout component rendered');
+  
   const location = useLocation();
   const isMobile = useIsMobile();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const pageTitle = getPageTitle(location.pathname);
+
+  console.log('Layout - pathname:', location.pathname, 'pageTitle:', pageTitle);
 
   useEffect(() => {
     setIsSidebarCollapsed(isMobile);
