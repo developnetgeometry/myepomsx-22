@@ -39,7 +39,13 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('ProjectProvider rendered, user exists:', !!user, 'user ID:', user?.id);
+
   const fetchUserProjects = async () => {
+    console.log('=== fetchUserProjects called ===');
+    console.log('User object:', user);
+    console.log('User ID:', user?.id);
+    
     if (!user) {
       console.log('No user found, clearing projects');
       setProjects([]);
@@ -49,23 +55,25 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
     setLoading(true);
     setError(null);
+    console.log('Starting to fetch projects for user:', user.id);
 
     try {
-      console.log('Fetching projects for user:', user.id);
-
       // First, let's check if user_projects table has data for this user
+      console.log('Checking user_projects table...');
       const { data: userProjectsCheck, error: userProjectsError } = await supabase
         .from('user_projects')
         .select('*')
         .eq('user_id', user.id);
 
-      console.log('User projects check:', userProjectsCheck);
+      console.log('User projects check result:', userProjectsCheck);
+      console.log('User projects check error:', userProjectsError);
       
       if (userProjectsError) {
         console.error('Error checking user_projects:', userProjectsError);
       }
 
       // Use the exact SQL structure you provided
+      console.log('Fetching projects with relations...');
       const { data, error: fetchError } = await supabase
         .from('user_projects')
         .select(`
@@ -126,12 +134,14 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       setError('Failed to fetch projects');
     } finally {
       setLoading(false);
+      console.log('=== fetchUserProjects completed ===');
     }
   };
 
   // Let's also add a function to check if projects exist in e_project table
   const checkProjectsExist = async () => {
     try {
+      console.log('Checking if projects exist in database...');
       const { data: allProjects, error } = await supabase
         .from('e_project')
         .select('id, project_name, project_code')
@@ -148,10 +158,23 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    console.log('ProjectProvider effect triggered, user:', user?.id);
-    checkProjectsExist(); // Check if projects exist in database
-    fetchUserProjects();
-  }, [user]);
+    console.log('=== ProjectProvider useEffect triggered ===');
+    console.log('User in effect:', user);
+    console.log('User ID in effect:', user?.id);
+    console.log('User email in effect:', user?.email);
+    
+    // Add a small delay to ensure auth is fully settled
+    const timer = setTimeout(() => {
+      console.log('Timer triggered, calling functions...');
+      checkProjectsExist(); // Check if projects exist in database
+      fetchUserProjects();
+    }, 100);
+
+    return () => {
+      console.log('ProjectProvider useEffect cleanup');
+      clearTimeout(timer);
+    };
+  }, [user?.id]); // Changed dependency to be more specific
 
   const value = {
     currentProject,
