@@ -1,3 +1,4 @@
+
 import { supabase } from "@/lib/supabaseClient";
 import { CreateItemMasterDTO, ItemMasterDetaiWithRelations, ItemMasterWithRelations } from "@/types/material";
 
@@ -21,7 +22,14 @@ export const itemMasterService = {
       throw new Error(`Error fetching items master: ${error.message}`);
     }
 
-    return data || [];
+    // Transform data to match the expected interface
+    const transformedData = data?.map((item: any) => ({
+      ...item,
+      item_group_id: item.item_group,
+      manufacturer_id: item.manufacturer,
+    })) || [];
+
+    return transformedData;
   },
 
   async getItemMasterById(id: number): Promise<ItemMasterDetaiWithRelations> {
@@ -48,7 +56,14 @@ export const itemMasterService = {
       throw new Error(`Item master with id ${id} not found`);
     }
 
-    return data;
+    // Transform data to match the expected interface
+    const transformedData = {
+      ...data,
+      item_group_id: data.item_group,
+      manufacturer_id: data.manufacturer,
+    };
+
+    return transformedData;
   },
 
   async createItemMaster(item: CreateItemMasterDTO) {

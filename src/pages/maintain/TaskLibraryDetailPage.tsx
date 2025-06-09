@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
@@ -38,6 +39,24 @@ import { useToast } from "@/hooks/use-toast";
 import { TaskDetailCreate } from "@/types/maintain";
 import ManageDialog from "@/components/manage/ManageDialog";
 
+interface TaskWithDetails {
+  id: number;
+  task_code: string;
+  task_name: string;
+  discipline_id: number;
+  is_active: boolean;
+  details?: TaskDetail[];
+}
+
+interface TaskDetail {
+  id?: number;
+  seq: number;
+  task_list: string;
+  task_id: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
 const TaskLibraryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -52,7 +71,9 @@ const TaskLibraryDetailPage: React.FC = () => {
   const { data: taskData, isLoading, error } = useTaskWithDetails(Number(id));
   const { data: disciplineOptions, isLoading: isLoadingDiscipline } =
     useDisciplineOptions();
-  const sequences = taskData?.details || [];
+  
+  const typedTaskData = taskData as TaskWithDetails | undefined;
+  const sequences = typedTaskData?.details || [];
 
   const updateTaskMutation = useUpdateTask();
   const addDetailToTaskMutation = useAddDetailToTask();
@@ -98,15 +119,15 @@ const TaskLibraryDetailPage: React.FC = () => {
 
   // Reset form when taskData is available
   useEffect(() => {
-    if (taskData) {
+    if (typedTaskData) {
       form.reset({
-        task_code: taskData.task_code,
-        task_name: taskData.task_name,
-        discipline_id: String(taskData.discipline_id),
-        is_active: taskData.is_active,
+        task_code: typedTaskData.task_code,
+        task_name: typedTaskData.task_name,
+        discipline_id: String(typedTaskData.discipline_id),
+        is_active: typedTaskData.is_active,
       });
     }
-  }, [taskData, form]);
+  }, [typedTaskData, form]);
 
   const onSubmit = async (values: z.infer<typeof taskFormSchema>) => {
     try {
@@ -252,24 +273,16 @@ const TaskLibraryDetailPage: React.FC = () => {
     }
   };
 
-  // const handleRowClick = (row: any) => {
-  //   // Handle row click - could be used for selecting a row
-  //   console.log("Row clicked:", row);
-  //   const isSelected = selectedRows.some((item) => item.id === row.id);
-
-  //   if (isSelected) {
-  //     setSelectedRows(selectedRows.filter((item) => item.id !== row.id));
-  //   } else {
-  //     setSelectedRows([...selectedRows, row]);
-  //   }
-  // };
-
   if (isLoading || isLoadingDiscipline) {
     return <div>Loading...</div>;
   }
 
   if (error) {
     return <div>Error: {error.message}</div>;
+  }
+
+  if (!typedTaskData) {
+    return <div>Task not found</div>;
   }
 
   return (
@@ -288,7 +301,7 @@ const TaskLibraryDetailPage: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Task: {taskData.task_name}</CardTitle>
+          <CardTitle>Task: {typedTaskData.task_name}</CardTitle>
         </CardHeader>
 
         <CardContent>

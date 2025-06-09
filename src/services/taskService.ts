@@ -1,16 +1,21 @@
+
 import { supabase } from "@/lib/supabaseClient";
-import { createTaskDTO, Task, TaskDetail, TaskDetailCreate, TaskWithDetails, UpdateTaskDetail, updateTaskDTO } from "@/types/maintain";
+import {
+  Task,
+  TaskCreate,
+  TaskUpdate,
+  TaskDetail,
+  TaskDetailCreate,
+  TaskDetailUpdate,
+  TaskWithDetails,
+  DisciplineOption,
+} from "@/types/maintain";
 
 export const taskService = {
   async getTasks(): Promise<Task[]> {
     const { data, error } = await supabase
       .from("e_task")
-      .select(
-        `
-            *,
-            discipline: discipline_id(code, name)
-          `
-      )
+      .select("*")
       .order("task_code");
 
     if (error) {
@@ -20,15 +25,13 @@ export const taskService = {
     return data || [];
   },
 
-  async getTask(id: number): Promise<Task> {
+  async getTaskWithDetails(id: number): Promise<TaskWithDetails> {
     const { data, error } = await supabase
       .from("e_task")
-      .select(
-        `
-            *,
-            discipline: discipline_id(code, name)
-          `
-      )
+      .select(`
+        *,
+        details: e_task_detail(*)
+      `)
       .eq("id", id)
       .single();
 
@@ -43,32 +46,17 @@ export const taskService = {
     return data;
   },
 
-  async getTaskWithDetails(id: number): Promise<TaskWithDetails> {
-    const { data, error } = await supabase
-      .from('e_task')
-      .select(`
-        *,
-        discipline:discipline_id (id, code, name),
-        details:e_task_detail (id, seq, task_list)
-      `)
-      .eq('id', id)
-      .single();
-  
-    if (error) {
-      throw new Error(`Error fetching task: ${error.message}`);
-    }
-  
-    if (!data) {
-      throw new Error(`Task with id ${id} not found`);
-    }
-    // @ts-ignore
-    return data;
-  },
+  async createTask(task: TaskCreate): Promise<Task> {
+    // Convert Date objects to ISO strings
+    const taskData = {
+      ...task,
+      created_at: task.created_at ? task.created_at.toISOString() : undefined,
+      updated_at: task.updated_at ? task.updated_at.toISOString() : undefined,
+    };
 
-  async createTask(payload: createTaskDTO): Promise<Task> {
     const { data, error } = await supabase
       .from("e_task")
-      .insert(payload)
+      .insert(taskData)
       .select()
       .single();
 
@@ -79,14 +67,16 @@ export const taskService = {
     return data;
   },
 
-  async updateTask(task: updateTaskDTO): Promise<Task> {
-    if (!task.id) {
-      throw new Error("Task ID is required for update");
-    }
+  async updateTask(task: TaskUpdate): Promise<Task> {
+    // Convert Date objects to ISO strings
+    const taskData = {
+      ...task,
+      updated_at: task.updated_at ? task.updated_at.toISOString() : undefined,
+    };
 
     const { data, error } = await supabase
       .from("e_task")
-      .update(task)
+      .update(taskData)
       .eq("id", task.id)
       .select()
       .single();
@@ -97,25 +87,23 @@ export const taskService = {
 
     return data;
   },
+
   async deleteTask(id: number): Promise<void> {
-    const { error } = await supabase
-      .from("e_task")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("e_task").delete().eq("id", id);
 
     if (error) {
       throw new Error(`Error deleting task: ${error.message}`);
     }
   },
 
-  async getDisciplineOptions(): Promise<{ value: number; label: string }[]> {
+  async getDisciplineOptions(): Promise<DisciplineOption[]> {
     const { data, error } = await supabase
-      .from("e_discipline") // Adjust table name as needed
-      .select("id, code, name")
+      .from("e_discipline")
+      .select("id, name")
       .order("name");
 
     if (error) {
-      throw new Error(`Error fetching discipline options: ${error.message}`);
+      throw new Error(`Error fetching disciplines: ${error.message}`);
     }
 
     return (
@@ -126,43 +114,53 @@ export const taskService = {
     );
   },
 
-  async addDetailsToTask(payload: TaskDetailCreate): Promise<TaskDetailCreate> {
+  async addDetailsToTask(detail: TaskDetailCreate): Promise<TaskDetail> {
+    // Convert Date objects to ISO strings
+    const detailData = {
+      ...detail,
+      created_at: detail.created_at ? detail.created_at.toISOString() : undefined,
+      updated_at: detail.updated_at ? detail.updated_at.toISOString() : undefined,
+    };
+
     const { data, error } = await supabase
       .from("e_task_detail")
-      .insert(payload)
+      .insert(detailData)
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Error creating task: ${error.message}`);
+      throw new Error(`Error adding task detail: ${error.message}`);
     }
 
     return data;
   },
 
-  async updateTaskDetail(payload: UpdateTaskDetail): Promise<TaskDetail> {
+  async updateTaskDetail(detail: TaskDetailUpdate): Promise<TaskDetail> {
+    // Convert Date objects to ISO strings
+    const detailData = {
+      ...detail,
+      updated_at: detail.updated_at ? detail.updated_at.toISOString() : undefined,
+    };
+
     const { data, error } = await supabase
       .from("e_task_detail")
-      .update(payload)
-      .eq("id", payload.id)
+      .update(detailData)
+      .eq("id", detail.id)
       .select()
       .single();
 
     if (error) {
-      throw new Error(`Error updating task: ${error.message}`);
+      throw new Error(`Error updating task detail: ${error.message}`);
     }
 
     return data;
   },
 
   async deleteTaskDetail(id: number): Promise<void> {
-    const { error } = await supabase
-      .from("e_task_detail")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("e_task_detail").delete().eq("id", id);
 
     if (error) {
-      throw new Error(`Error deleting task: ${error.message}`);
+      throw new Error(`Error deleting task detail: ${error.message}`);
     }
   },
 };
