@@ -41,6 +41,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserProjects = async () => {
     if (!user) {
+      console.log('No user found, clearing projects');
       setProjects([]);
       setCurrentProject(null);
       return;
@@ -51,6 +52,18 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       console.log('Fetching projects for user:', user.id);
+
+      // First, let's check if user_projects table has data for this user
+      const { data: userProjectsCheck, error: userProjectsError } = await supabase
+        .from('user_projects')
+        .select('*')
+        .eq('user_id', user.id);
+
+      console.log('User projects check:', userProjectsCheck);
+      
+      if (userProjectsError) {
+        console.error('Error checking user_projects:', userProjectsError);
+      }
 
       // Use the exact SQL structure you provided
       const { data, error: fetchError } = await supabase
@@ -67,6 +80,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
         `)
         .eq('user_id', user.id);
 
+      console.log('Raw fetch result:', { data, error: fetchError });
+
       if (fetchError) {
         console.error('Error fetching user projects:', fetchError);
         setError(fetchError.message);
@@ -76,13 +91,22 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       console.log('Fetched user projects data:', data);
 
       // Transform the data to match our Project type
-      const userProjects: Project[] = (data || []).map((item: any) => ({
-        id: item.e_project.id.toString(),
-        name: item.e_project.project_name || 'Unnamed Project',
-        project_code: item.e_project.project_code,
-        short_name: item.e_project.short_name,
-        project_purpose: item.e_project.project_purpose,
-      }));
+      const userProjects: Project[] = (data || []).map((item: any) => {
+        console.log('Processing item:', item);
+        
+        if (!item.e_project) {
+          console.warn('Missing e_project data for item:', item);
+          return null;
+        }
+
+        return {
+          id: item.e_project.id.toString(),
+          name: item.e_project.project_name || 'Unnamed Project',
+          project_code: item.e_project.project_code,
+          short_name: item.e_project.short_name,
+          project_purpose: item.e_project.project_purpose,
+        };
+      }).filter(Boolean); // Remove null entries
 
       console.log('Transformed projects:', userProjects);
 
@@ -90,7 +114,11 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
       // Set the first project as current if no current project is set
       if (userProjects.length > 0 && !currentProject) {
+        console.log('Setting current project to:', userProjects[0]);
         setCurrentProject(userProjects[0]);
+      } else if (userProjects.length === 0) {
+        console.log('No projects found for user');
+        setCurrentProject(null);
       }
 
     } catch (err) {
@@ -101,7 +129,27 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Let's also add a function to check if projects exist in e_project table
+  const checkProjectsExist = async () => {
+    try {
+      const { data: allProjects, error } = await supabase
+        .from('e_project')
+        .select('id, project_name, project_code')
+        .limit(5);
+      
+      console.log('All projects in database (first 5):', allProjects);
+      
+      if (error) {
+        console.error('Error fetching all projects:', error);
+      }
+    } catch (err) {
+      console.error('Error checking projects exist:', err);
+    }
+  };
+
   useEffect(() => {
+    console.log('ProjectProvider effect triggered, user:', user?.id);
+    checkProjectsExist(); // Check if projects exist in database
     fetchUserProjects();
   }, [user]);
 
