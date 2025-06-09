@@ -1,84 +1,68 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import PageHeader from "@/components/shared/PageHeader";
-import DataTable, { Column } from "@/components/shared/DataTable";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { X } from "lucide-react";
-import { System } from "@/types/manage";
-import {
-  useCreateSystem,
-  useDeleteSystem,
-  useSystems,
-  useUpdateSystem,
-} from "@/hooks/queries/useSystems";
-import { useLoadingState } from "@/hooks/use-loading-state";
-import { useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageHeader from '@/components/shared/PageHeader';
+import { Card, CardContent } from '@/components/ui/card';
+import { Cpu, Plus } from 'lucide-react';
+import DataTable from '@/components/shared/DataTable';
+import { Column } from '@/components/shared/DataTable';
+import { System } from '@/types/manage';
+import ManageDialog from '@/components/manage/ManageDialog';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useLoadingState } from '@/hooks/use-loading-state';
+import { 
+  useSystems, 
+  useCreateSystem, 
+  useUpdateSystem 
+} from '@/hooks/queries/useSystems';
+import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabaseClient';
+import { useToast } from '@/hooks/use-toast';
 
 const SystemPage: React.FC = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
-
+  const { toast } = useToast();
+  
+  // State
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newSystem, setNewSystem] = useState({
-    system_code: "",
-    system_name: "",
-    is_active: true,
-    facility_id: null,
-    system_no: null,
-  });
-
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState<System | null>(null);
-  
-
-  // Search state
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredSystems, setFilteredSystems] = useState<System[]>([]);
-
+  const [filteredData, setFilteredData] = useState<System[]>([]);
+  
+  // Custom hooks
   const { isLoading: isProcessing, withLoading } = useLoadingState();
-
-  // Query to fetch systems
-  const { data: systems, isLoading } = useSystems();
-  const addSystemMutation = useCreateSystem();
+  
+  // TanStack Query hooks
+  const { data: systems, isLoading, error } = useSystems();
+  const createSystemMutation = useCreateSystem();
   const updateSystemMutation = useUpdateSystem();
-  const deleteSystemMutation = useDeleteSystem();
 
+  // Update filtered data when systems data changes or search term is applied
   useEffect(() => {
     if (!systems) return;
-
+    
     if (!searchTerm.trim()) {
-      setFilteredSystems(systems);
+      setFilteredData(systems);
       return;
     }
-
-    const filtered = systems.filter(
-      (item) =>
-        item.system_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        false ||
-        item.system_code.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    const filtered = systems.filter(item => 
+      (item.system_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) || 
+      item.system_code.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    setFilteredSystems(filtered);
-
-    if (filtered.length === 0 && searchTerm.trim() !== "") {
+    
+    setFilteredData(filtered);
+    
+    if (filtered.length === 0 && searchTerm.trim() !== '') {
       toast({
         title: "No matching systems found",
         description: "Please try a different search term.",
         variant: "destructive",
-      });
+      })
     }
   }, [systems, searchTerm]);
 
@@ -87,23 +71,25 @@ const SystemPage: React.FC = () => {
     setCurrentItem(null);
     setIsDialogOpen(true);
   };
+
   const handleEdit = (item: System) => {
     setIsEditMode(true);
     setCurrentItem(item);
-    setNewSystem({
-      system_code: item.system_code,
-      system_name: item.system_name || '',
-      is_active: item.is_active,
-      facility_id: item.facility_id,
-      system_no: item.system_no,
-    });
     setIsDialogOpen(true);
-};
+  };
 
   const handleDelete = async (item: System) => {
     withLoading(async () => {
       try {
-        await deleteSystemMutation.mutateAsync(item.id);
+        const { data, error } = await supabase
+          .from('e_system')
+          .delete()
+          .eq('id', item.id);
+          
+        if (error) throw error;
+        
+        // Refresh data after deletion
+        queryClient.invalidateQueries({ queryKey: ['systems'] });
         toast({
           title: "System deleted successfully",
           variant: "default",
@@ -118,62 +104,54 @@ const SystemPage: React.FC = () => {
     });
   };
 
-  // Handle search function
-  const handleSearch = (query: string) => {
-    setSearchTerm(query);
+  const handleRowClick = (row: System) => {
+    navigate(`/manage/systems/${row.id}`);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = (values: any) => {
     withLoading(async () => {
       try {
-        // Validate required fields
-        if (!newSystem.system_code || !newSystem.system_name) {
-          toast({
-            title: "Validation Error",
-            description: "System ID and System Name are required",
-            variant: "destructive",
-          });
-          return;
-        }
-
         if (isEditMode && currentItem) {
-          // Update existing system
-          const updatedSystem = {
-            ...currentItem,
-            system_code: newSystem.system_code,
-            system_name: newSystem.system_name,
-            is_active: newSystem.is_active,
-            system_no: newSystem.system_no,
-          };
-
-          await updateSystemMutation.mutateAsync(updatedSystem);
+          // Update existing record
+          await updateSystemMutation.mutateAsync({
+            id: Number(currentItem.id),
+            system_code: values.code,
+            system_name: values.name,
+            system_no: values.systemNo,
+            facility_id: values.facilityId,
+            is_active: currentItem.is_active,
+            created_at: currentItem.created_at,
+            created_by: currentItem.created_by,
+            updated_at: new Date().toISOString(),
+            updated_by: 'system'
+          });
           toast({
             title: "System updated successfully",
             variant: "default",
           });
         } else {
-          // Create new system
-          await addSystemMutation.mutateAsync(newSystem);
+          // Create new record
+          await createSystemMutation.mutateAsync({
+            system_code: values.code,
+            system_name: values.name,
+            system_no: values.systemNo,
+            facility_id: values.facilityId,
+            is_active: true,
+            created_at: new Date().toISOString(),
+            created_by: 'system',
+            updated_at: new Date().toISOString(),
+            updated_by: 'system'
+          });
           toast({
-            title: "System created successfully",
+            title: "System added successfully",
             variant: "default",
           });
         }
-
-        // Close dialog and reset form
+        
         setIsDialogOpen(false);
-        setNewSystem({
-          system_code: "",
-          system_name: "",
-          is_active: true,
-          facility_id: null,
-          system_no: null,
-        });
       } catch (error: any) {
         toast({
-          title: isEditMode ? "Error updating system" : "Error creating system",
+          title: "Error saving system",
           description: error.message,
           variant: "destructive",
         });
@@ -181,137 +159,147 @@ const SystemPage: React.FC = () => {
     });
   };
 
-  const columns: Column[] = [
-    {
-      id: "system_code",
-      header: "System ID",
-      accessorKey: "system_code",
-    },
-    {
-      id: "system_name",
-      header: "Name",
-      accessorKey: "system_name",
-    },
-    {
-      id: "system_no",
-      header: "System Number",
-      accessorKey: "system_no",
-    },
-    {
-      id: "is_active",
-      header: "Status",
-      accessorKey: "is_active",
-      cell: (original) => (original ? "Active" : "Inactive"),
-    },
-  ];
-
-  const handleRowClick = (row: System) => {
-    navigate(`/manage/system/${row.id}`);
+  const handleSearch = () => {
+    // The filtering happens in the useEffect
+    // This is just to trigger immediate search on button click
+    if (!systems) return;
+    
+    if (!searchTerm.trim()) {
+      setFilteredData(systems);
+      return;
+    }
+    
+    const filtered = systems.filter(item => 
+      (item.system_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) || 
+      item.system_code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    setFilteredData(filtered);
+    
+    if (filtered.length === 0) {
+      toast({
+        title: "No matching systems found",
+        description: "Please try a different search term.",
+        variant: "destructive",
+      });
+    }
   };
 
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Systems"
-        subtitle="Manage plant systems and subsystems"
-        onAddNew={handleAddNew}
-        addNewLabel="Add System"
-        onSearch={handleSearch}
+  const columns: Column[] = [{
+    id: 'system_code',
+    header: 'System Code',
+    accessorKey: 'system_code'
+  }, {
+    id: 'system_name',
+    header: 'System Name',
+    accessorKey: 'system_name'
+  }, {
+    id: 'system_no',
+    header: 'System Number',
+    accessorKey: 'system_no'
+  }];
+
+  const formSchema = z.object({
+    code: z.string().min(1, "System Code is required"),
+    name: z.string().min(1, "System Name is required"),
+    systemNo: z.string().min(1, "System Number is required"),
+    facilityId: z.number().min(1, "Facility ID is required")
+  });
+
+  const formFields = [{
+    name: 'code',
+    label: 'System Code',
+    type: 'text' as const
+  }, {
+    name: 'name',
+    label: 'System Name',
+    type: 'text' as const
+  }, {
+    name: 'systemNo',
+    label: 'System Number',
+    type: 'text' as const
+  }, {
+    name: 'facilityId',
+    label: 'Facility ID',
+    type: 'number' as const
+  }];
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-64">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-2">Loading systems...</p>
+      </div>
+    </div>;
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center h-64">
+      <div className="text-center text-red-500">
+        <p>Error loading systems: {(error as Error).message}</p>
+        <Button 
+          onClick={() => queryClient.invalidateQueries({ queryKey: ['systems'] })}
+          className="mt-4"
+        >
+          Retry
+        </Button>
+      </div>
+    </div>;
+  }
+
+  return <div className="space-y-6">
+      <PageHeader title="Systems" icon={<Cpu className="h-6 w-6" />} onAddNew={handleAddNew} />
+      
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center mb-4">
+            <div className="flex-1">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search systems..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                />
+                <Button onClick={handleSearch}>Search</Button>
+              </div>
+            </div>
+          </div>
+          
+          <DataTable 
+            data={filteredData} 
+            columns={columns} 
+            onEdit={handleEdit} 
+            onDelete={handleDelete} 
+            onRowClick={handleRowClick} 
+          />
+        </CardContent>
+      </Card>
+
+      <ManageDialog 
+        open={isDialogOpen} 
+        onOpenChange={open => {
+          if (!isProcessing) setIsDialogOpen(open);
+        }} 
+        title={isEditMode ? "Edit System" : "Add New System"} 
+        formSchema={formSchema} 
+        defaultValues={currentItem ? {
+          code: currentItem.system_code,
+          name: currentItem.system_name || "",
+          systemNo: currentItem.system_no || "",
+          facilityId: currentItem.facility_id || 0
+        } : {
+          code: "",
+          name: "",
+          systemNo: "",
+          facilityId: 0
+        }} 
+        formFields={formFields} 
+        onSubmit={handleSubmit} 
+        isEdit={isEditMode} 
+        isProcessing={isProcessing || createSystemMutation.isPending || updateSystemMutation.isPending} 
       />
-
-      <DataTable
-        columns={columns}
-        data={filteredSystems}
-        onRowClick={handleRowClick}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Add New System</DialogTitle>
-            <DialogDescription>
-              Fill in the details to create a new system.
-            </DialogDescription>
-          </DialogHeader>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-4 top-4"
-            onClick={() => setIsDialogOpen(false)}
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </Button>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="system_code">System ID</Label>
-              <Input
-                id="system_code"
-                value={newSystem.system_code}
-                onChange={(e) =>
-                  setNewSystem({ ...newSystem, system_code: e.target.value })
-                }
-                required
-                placeholder="e.g. SYS006"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="system_name">System Name</Label>
-              <Input
-                id="system_name"
-                value={newSystem.system_name || ""}
-                onChange={(e) =>
-                  setNewSystem({ ...newSystem, system_name: e.target.value })
-                }
-                required
-                placeholder="System name"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="system_no">System Number</Label>
-              <Input
-                id="system_no"
-                value={newSystem.system_no || ""}
-                onChange={(e) =>
-                  setNewSystem({ ...newSystem, system_no: e.target.value })
-                }
-                placeholder="System number"
-              />
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <Checkbox
-                id="is_active"
-                checked={!!newSystem.is_active}
-                onCheckedChange={(checked) =>
-                  setNewSystem({ ...newSystem, is_active: checked === true })
-                }
-              />
-              <Label htmlFor="is_active" className="cursor-pointer">
-                Active
-              </Label>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type="submit">Create System</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+    </div>;
 };
 
 export default SystemPage;

@@ -94,10 +94,43 @@ export interface Asset {
   updated_by: string;
 }
 
+export interface AssetDetail {
+  id: number;
+  manufacturer_id: number;
+  model: string;
+  serial_number: string;
+  specification: string;
+  // Add other asset detail properties as needed
+}
+
+export interface AssetInstallation {
+  id: number;
+  asset_id: number;
+  installation_date: string;
+  description: string;
+  // Add other installation properties as needed
+}
+
+export interface AssetTag {
+  id: number;
+  name: string;
+  is_active: boolean;
+}
+
+export interface AssetStatus {
+  id: number;
+  name: string;
+  is_active: boolean;
+}
+
 export interface AssetWithRelations extends Asset {
   facility?: Facility;
   system?: System;
   package?: Package;
+  asset_detail?: AssetDetail;
+  asset_installation?: AssetInstallation;
+  asset_tag?: AssetTag;
+  asset_status?: AssetStatus;
 }
 
 export interface AssetDetailWithRelations {
@@ -109,4 +142,63 @@ export interface AssetHierarchyNode {
   id: number;
   name: string;
   children?: AssetHierarchyNode[];
+}
+
+// Add missing types for material.ts
+export interface AssetCategory {
+  id: number;
+  name: string;
+  asset_category_group_id?: number;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface AssetType {
+  id: number;
+  name: string;
+  asset_category_id?: number;
+  asset_type_group_id?: number;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface Criticality {
+  id: number;
+  name: string;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface ItemGroup {
+  id: number;
+  name: string;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface Manufacturer {
+  id: number;
+  name: string;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface Unit {
+  id: number;
+  name: string;
+  symbol?: string;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
 }

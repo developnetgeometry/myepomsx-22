@@ -27,8 +27,8 @@ vi.mock('@/components/manage/ManageDialog', () => ({
         <button 
           data-testid="submit-edit"
           onClick={() => onSubmit({ 
-            location_code: 'NEW-CODE', 
-            location_name: 'New Facility Name' 
+            code: 'NEW-CODE', 
+            name: 'New Facility Name' 
           })}
         >
           Submit
@@ -179,8 +179,8 @@ describe('FacilityDetailPage', () => {
         project_id: 456,
         created_at: mockFacility.created_at,
         created_by: mockFacility.created_by,
-        updated_at: mockFacility.updated_at,
-        updated_by: mockFacility.updated_by
+        updated_at: expect.any(String),
+        updated_by: 'system'
       });
       expect(toast.success).toHaveBeenCalledWith('Facility updated successfully');
     });

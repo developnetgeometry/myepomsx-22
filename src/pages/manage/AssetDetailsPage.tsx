@@ -17,7 +17,7 @@ const AssetDetailsPage = () => {
 
   const { data: asset, isLoading, error } = useQuery({
     queryKey: ["asset", assetId],
-    queryFn: () => assetService.getAssetById(assetId),
+    queryFn: () => assetService.getAssetByIdWithRelations(assetId),
     enabled: !!assetId,
   });
 
@@ -28,26 +28,26 @@ const AssetDetailsPage = () => {
   const getStatusBadge = (statusId: number) => {
     switch (statusId) {
       case 1:
-        return <Badge variant="success">Active</Badge>;
+        return <Badge variant="default">Active</Badge>;
       case 2:
-        return <Badge variant="warning">Maintenance</Badge>;
+        return <Badge variant="secondary">Maintenance</Badge>;
       case 3:
-        return <Badge variant="info">Standby</Badge>;
+        return <Badge variant="outline">Standby</Badge>;
       default:
-        return <Badge variant="danger">Inactive</Badge>;
+        return <Badge variant="destructive">Inactive</Badge>;
     }
   };
 
   const getCriticalityBadge = (criticalityId: number) => {
     switch (criticalityId) {
       case 1:
-        return <Badge variant="danger">Critical</Badge>;
+        return <Badge variant="destructive">Critical</Badge>;
       case 2:
-        return <Badge variant="warning">High</Badge>;
+        return <Badge variant="secondary">High</Badge>;
       case 3:
-        return <Badge variant="success">Medium</Badge>;
+        return <Badge variant="default">Medium</Badge>;
       default:
-        return <Badge variant="success">Low</Badge>;
+        return <Badge variant="outline">Low</Badge>;
     }
   };
 

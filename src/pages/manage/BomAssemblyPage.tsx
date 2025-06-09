@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import ManageDialog from "@/components/manage/ManageDialog";
+import { z } from "zod";
 
 const BomAssemblyPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -32,7 +33,8 @@ const BomAssemblyPage = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: bomAssemblyService.updateBomAssembly,
+    mutationFn: ({ id, ...updates }: { id: number } & any) => 
+      bomAssemblyService.updateBomAssembly(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bomAssemblies"] });
       setIsDialogOpen(false);
@@ -56,9 +58,21 @@ const BomAssemblyPage = () => {
   });
 
   const columns = [
-    { header: "BOM Code", accessorKey: "bom_code" },
-    { header: "BOM Name", accessorKey: "bom_name" },
-    { header: "Description", accessorKey: "description" },
+    { 
+      id: "bom_code",
+      header: "BOM Code", 
+      accessorKey: "bom_code" 
+    },
+    { 
+      id: "bom_name",
+      header: "BOM Name", 
+      accessorKey: "bom_name" 
+    },
+    { 
+      id: "description",
+      header: "Description", 
+      accessorKey: "description" 
+    },
   ];
 
   const handleSubmit = (formData: any) => {
@@ -69,7 +83,7 @@ const BomAssemblyPage = () => {
     };
 
     if (editingItem) {
-      updateMutation.mutate({ ...processedData, id: editingItem.id });
+      updateMutation.mutate({ id: editingItem.id, ...processedData });
     } else {
       createMutation.mutate(processedData);
     }
@@ -80,37 +94,39 @@ const BomAssemblyPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (item: any) => {
     if (window.confirm("Are you sure you want to delete this BOM Assembly?")) {
-      deleteMutation.mutate(id);
+      deleteMutation.mutate(item.id);
     }
   };
+
+  const formSchema = z.object({
+    bom_code: z.string().min(1, "BOM Code is required"),
+    bom_name: z.string().optional(),
+    description: z.string().optional(),
+    item_master_id: z.number().optional(),
+  });
 
   const formFields = [
     {
       name: "bom_code",
       label: "BOM Code",
       type: "text" as const,
-      placeholder: "Enter BOM code",
-      required: true,
     },
     {
       name: "bom_name",
       label: "BOM Name",
       type: "text" as const,
-      placeholder: "Enter BOM name",
     },
     {
       name: "description",
       label: "Description",
       type: "text" as const,
-      placeholder: "Enter description",
     },
     {
       name: "item_master_id",
       label: "Item Master ID",
       type: "number" as const,
-      placeholder: "Enter item master ID",
     },
   ];
 
@@ -145,10 +161,17 @@ const BomAssemblyPage = () => {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         title={editingItem ? "Edit BOM Assembly" : "Add BOM Assembly"}
-        fields={formFields}
+        formSchema={formSchema}
+        defaultValues={editingItem || {
+          bom_code: "",
+          bom_name: "",
+          description: "",
+          item_master_id: 0,
+        }}
+        formFields={formFields}
         onSubmit={handleSubmit}
-        defaultValues={editingItem}
-        isLoading={createMutation.isPending || updateMutation.isPending}
+        isEdit={!!editingItem}
+        isProcessing={createMutation.isPending || updateMutation.isPending}
       />
     </div>
   );
