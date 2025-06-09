@@ -36,7 +36,11 @@ const FacilityDetailPage: React.FC = () => {
         location_code: values.code,
         location_name: values.name,
         is_active: facility.is_active,
-        project_id: facility.project_id
+        project_id: facility.project_id,
+        created_at: facility.created_at,
+        created_by: facility.created_by,
+        updated_at: new Date().toISOString(),
+        updated_by: 'system'
       });
       
       toast.success("Facility updated successfully");

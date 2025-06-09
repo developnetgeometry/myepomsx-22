@@ -29,6 +29,17 @@ export const useCreateFacility = () => {
   });
 };
 
+export const useAddFacility = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: facilityService.createFacility,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
+    },
+  });
+};
+
 export const useUpdateFacility = () => {
   const queryClient = useQueryClient();
 

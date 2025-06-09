@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/shared/PageHeader';
@@ -117,7 +118,11 @@ const FacilitiesPage: React.FC = () => {
             location_code: values.code,
             location_name: values.name,
             is_active: currentItem.is_active,
-            project_id: currentItem.project_id
+            project_id: currentItem.project_id,
+            created_at: currentItem.created_at,
+            created_by: currentItem.created_by,
+            updated_at: new Date().toISOString(),
+            updated_by: 'system'
           });
           toast({
             title: "Facility updated successfully",
@@ -129,7 +134,11 @@ const FacilitiesPage: React.FC = () => {
             location_code: values.code,
             location_name: values.name,
             is_active: true,
-            project_id: null
+            project_id: 1,
+            created_at: new Date().toISOString(),
+            created_by: 'system',
+            updated_at: new Date().toISOString(),
+            updated_by: 'system'
           });
           toast({
             title: "Facility added successfully",
