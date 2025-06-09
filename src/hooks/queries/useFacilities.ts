@@ -1,106 +1,52 @@
-import { supabase } from '@/lib/supabaseClient';
-import { facilityService } from '@/services/facilityService';
-import { Facility } from '@/types/manage';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const facilityKeys = {
-  all: ['facilities'] as const,
-  lists: () => [...facilityKeys.all, 'list'] as const,
-  list: (filters: Record<string, any>) => [...facilityKeys.lists(), filters] as const,
-  details: () => [...facilityKeys.all, 'detail'] as const,
-  detail: (id: number) => [...facilityKeys.details(), id] as const,
-  byCode: (code: string) => [...facilityKeys.details(), { code }] as const,
-  byProject: (projectId: number) => [...facilityKeys.lists(), { projectId }] as const,
-};
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { facilityService } from "@/services/facilityService";
+import { Facility } from "@/types/manage";
 
-export const useFacilities = (isActive?: boolean) => {
+export const useFacilities = () => {
   return useQuery({
-    queryKey: facilityKeys.list({ isActive }),
-    queryFn: () => facilityService.getFacilities(isActive),
+    queryKey: ["facilities"],
+    queryFn: facilityService.getFacilities,
   });
 };
 
 export const useFacility = (id: number) => {
   return useQuery({
-    queryKey: facilityKeys.detail(id),
+    queryKey: ["facility", id],
     queryFn: () => facilityService.getFacilityById(id),
-    enabled: !!id, 
+    enabled: !!id,
   });
 };
 
-export const useFacilityByCode = (locationCode: string) => {
-  return useQuery({
-    queryKey: facilityKeys.byCode(locationCode),
-    queryFn: () => facilityService.getFacilityByCode(locationCode),
-    enabled: !!locationCode,
-  });
-};
-
-export const useFacilitiesByProject = (projectId: number) => {
-  return useQuery({
-    queryKey: facilityKeys.byProject(projectId),
-    queryFn: () => facilityService.getFacilitiesByProjectId(projectId),
-    enabled: !!projectId,
-  });
-};
-
-export const useAddFacility = () => {
+export const useCreateFacility = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (newFacility: Omit<Facility, 'id'>) => {
-      const { data, error } = await supabase
-        .from('e_facility')
-        .insert(newFacility)
-        .select()
-        .single();
-        
-      if (error) throw error;
-      return data as Facility;
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: facilityKeys.lists() });
-      
-      if (variables.project_id) {
-        queryClient.invalidateQueries({ 
-          queryKey: facilityKeys.byProject(variables.project_id) 
-        });
-      }
+    mutationFn: facilityService.createFacility,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
     },
   });
 };
 
 export const useUpdateFacility = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (facility: Facility) => {
-      const { data, error } = await supabase
-        .from('e_facility')
-        .update({
-          location_code: facility.location_code,
-          location_name: facility.location_name,
-          is_active: facility.is_active,
-          project_id: facility.project_id
-        })
-        .eq('id', facility.id)
-        .select()
-        .single();
-        
-      if (error) throw error;
-      return data as Facility;
+    mutationFn: facilityService.updateFacility,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
     },
-    onSuccess: (updatedFacility) => {
-      queryClient.invalidateQueries({ queryKey: facilityKeys.detail(updatedFacility.id) });
-      queryClient.invalidateQueries({ queryKey: facilityKeys.byCode(updatedFacility.location_code) });
-      
-      if (updatedFacility.project_id) {
-        queryClient.invalidateQueries({ 
-          queryKey: facilityKeys.byProject(updatedFacility.project_id) 
-        });
-      }
-      
-      queryClient.invalidateQueries({ queryKey: facilityKeys.lists() });
+  });
+};
+
+export const useDeleteFacility = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: facilityService.deleteFacility,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["facilities"] });
     },
   });
 };

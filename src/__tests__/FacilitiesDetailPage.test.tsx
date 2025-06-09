@@ -17,18 +17,18 @@ vi.mock('sonner', () => ({
 }));
 
 vi.mock('@/components/shared/PageHeader', () => ({
-  default: ({ title }) => <h1>{title}</h1>
+  default: ({ title }: { title: string }) => <h1>{title}</h1>
 }));
 
 vi.mock('@/components/manage/ManageDialog', () => ({
-  default: ({ open, onSubmit, defaultValues }) => 
+  default: ({ open, onSubmit, defaultValues }: { open: boolean; onSubmit: (data: any) => void; defaultValues: any }) => 
     open ? (
       <div data-testid="edit-dialog">
         <button 
           data-testid="submit-edit"
           onClick={() => onSubmit({ 
-            code: 'NEW-CODE', 
-            name: 'New Facility Name' 
+            location_code: 'NEW-CODE', 
+            location_name: 'New Facility Name' 
           })}
         >
           Submit
@@ -53,7 +53,11 @@ describe('FacilityDetailPage', () => {
     location_code: 'FAC-001',
     location_name: 'Main Facility',
     is_active: true,
-    project_id: 456
+    project_id: 456,
+    created_at: new Date().toISOString(),
+    created_by: 'test-user',
+    updated_at: new Date().toISOString(),
+    updated_by: 'test-user'
   };
   
   const mockUpdateMutation = {
@@ -172,7 +176,11 @@ describe('FacilityDetailPage', () => {
         location_code: 'NEW-CODE',
         location_name: 'New Facility Name',
         is_active: true,
-        project_id: 456
+        project_id: 456,
+        created_at: mockFacility.created_at,
+        created_by: mockFacility.created_by,
+        updated_at: mockFacility.updated_at,
+        updated_by: mockFacility.updated_by
       });
       expect(toast.success).toHaveBeenCalledWith('Facility updated successfully');
     });

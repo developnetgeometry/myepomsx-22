@@ -52,12 +52,12 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     try {
       console.log('Fetching projects for user:', user.id);
 
-      // Fetch user's assigned projects with project details
+      // Use the exact SQL structure you provided
       const { data, error: fetchError } = await supabase
         .from('user_projects')
         .select(`
           project_id,
-          e_project (
+          e_project!inner (
             id,
             project_name,
             project_code,
