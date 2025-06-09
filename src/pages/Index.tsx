@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/contexts/ProjectContext";
@@ -9,9 +10,12 @@ const Index = () => {
   const { user, loading } = useAuth();
   const { currentProject } = useProject();
 
-  console.log(
-    `Loading data for project: ${currentProject.name} (ID: ${currentProject.id})`
-  );
+  // Only log if currentProject exists
+  if (currentProject) {
+    console.log(
+      `Loading data for project: ${currentProject.name} (ID: ${currentProject.id})`
+    );
+  }
 
   // Show loading spinner while checking auth state
   if (loading) {
