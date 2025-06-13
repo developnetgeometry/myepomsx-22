@@ -40,12 +40,25 @@ declare namespace google {
       constructor(opts?: MarkerOptions);
       setPosition(latLng: LatLng | LatLngLiteral): void;
       setMap(map: Map | null): void;
+      addListener(eventName: string, handler: Function): void;
     }
 
     interface MarkerOptions {
       position?: LatLng | LatLngLiteral;
       map?: Map;
       title?: string;
+    }
+
+    class InfoWindow {
+      constructor(opts?: InfoWindowOptions);
+      open(map?: Map, anchor?: Marker): void;
+      close(): void;
+      setContent(content: string | Element): void;
+    }
+
+    interface InfoWindowOptions {
+      content?: string | Element;
+      position?: LatLng | LatLngLiteral;
     }
   }
 }

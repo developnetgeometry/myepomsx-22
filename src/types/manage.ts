@@ -157,11 +157,11 @@ export interface AssetStatus {
 }
 
 export interface AssetWithRelations extends Asset {
-  facility?: Facility;
-  system?: System;
-  package?: Package;
-  asset_detail?: AssetDetail;
-  asset_installation?: AssetInstallation[];
+  facility?: Partial<Facility>;
+  system?: Partial<System>;
+  package?: Partial<Package>;
+  asset_detail?: Partial<AssetDetail>;
+  asset_installation?: Partial<AssetInstallation>[];
   asset_tag?: AssetTag;
   asset_status?: AssetStatus;
 }
