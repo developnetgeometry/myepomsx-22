@@ -1,29 +1,45 @@
 
-declare global {
-  interface Window {
-    google: typeof google;
-  }
-}
-
 declare namespace google {
   namespace maps {
     class Map {
       constructor(mapDiv: Element | null, opts?: MapOptions);
-    }
-
-    class Marker {
-      constructor(opts?: MarkerOptions);
-      addListener(eventName: string, handler: Function): void;
-    }
-
-    class InfoWindow {
-      constructor(opts?: InfoWindowOptions);
-      open(map?: Map, anchor?: Marker): void;
+      setCenter(latLng: LatLng | LatLngLiteral): void;
+      setZoom(zoom: number): void;
+      panTo(latLng: LatLng | LatLngLiteral): void;
     }
 
     interface MapOptions {
       center?: LatLng | LatLngLiteral;
       zoom?: number;
+      mapTypeId?: MapTypeId;
+      disableDefaultUI?: boolean;
+      zoomControl?: boolean;
+      streetViewControl?: boolean;
+      fullscreenControl?: boolean;
+    }
+
+    interface LatLngLiteral {
+      lat: number;
+      lng: number;
+    }
+
+    class LatLng {
+      constructor(lat: number, lng: number);
+      lat(): number;
+      lng(): number;
+    }
+
+    enum MapTypeId {
+      HYBRID = 'hybrid',
+      ROADMAP = 'roadmap',
+      SATELLITE = 'satellite',
+      TERRAIN = 'terrain'
+    }
+
+    class Marker {
+      constructor(opts?: MarkerOptions);
+      setPosition(latLng: LatLng | LatLngLiteral): void;
+      setMap(map: Map | null): void;
     }
 
     interface MarkerOptions {
@@ -31,21 +47,5 @@ declare namespace google {
       map?: Map;
       title?: string;
     }
-
-    interface InfoWindowOptions {
-      content?: string | Element;
-    }
-
-    interface LatLng {
-      lat(): number;
-      lng(): number;
-    }
-
-    interface LatLngLiteral {
-      lat: number;
-      lng: number;
-    }
   }
 }
-
-export {};

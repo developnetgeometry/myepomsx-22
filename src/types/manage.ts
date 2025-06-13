@@ -87,7 +87,7 @@ export interface Asset {
   asset_sce_id: number;
   asset_detail_id: number;
   commission_date: string;
-  parent_asset_no: number;
+  parent_asset_no?: number; // Made optional
   created_at: string;
   created_by: string;
   updated_at: string;
@@ -100,7 +100,39 @@ export interface AssetDetail {
   model: string;
   serial_number: string;
   specification: string;
-  // Add other asset detail properties as needed
+  maker_no: string;
+  hs_code: string;
+  is_active: boolean;
+  is_integrity: boolean;
+  is_reliability: boolean;
+  bom_id?: number;
+  category: AssetCategory;
+  type: AssetType;
+  manufacturer: Manufacturer;
+  asset_class: AssetClass;
+  iot_sensor: IoTSensor;
+  child_assets: ChildAsset[];
+}
+
+export interface AssetClass {
+  id: number;
+  name: string;
+}
+
+export interface IoTSensor {
+  id: number;
+  sensor_type: SensorType;
+}
+
+export interface SensorType {
+  id: number;
+  name: string;
+}
+
+export interface ChildAsset {
+  id: number;
+  type: AssetType;
+  asset: Asset[];
 }
 
 export interface AssetInstallation {
@@ -108,7 +140,8 @@ export interface AssetInstallation {
   asset_id: number;
   installation_date: string;
   description: string;
-  // Add other installation properties as needed
+  intermittent_service: string;
+  actual_installation_date: string;
 }
 
 export interface AssetTag {
@@ -128,7 +161,7 @@ export interface AssetWithRelations extends Asset {
   system?: System;
   package?: Package;
   asset_detail?: AssetDetail;
-  asset_installation?: AssetInstallation;
+  asset_installation?: AssetInstallation[];
   asset_tag?: AssetTag;
   asset_status?: AssetStatus;
 }
@@ -201,4 +234,17 @@ export interface Unit {
   created_by?: string;
   updated_at?: string;
   updated_by?: string;
+}
+
+// Asset attachment interface
+export interface AssetAttachment {
+  id: number;
+  asset_id: number;
+  type: string;
+  file_path: string;
+  notes: string;
+  created_at: string;
+  created_by: string;
+  updated_at: string;
+  updated_by: string;
 }

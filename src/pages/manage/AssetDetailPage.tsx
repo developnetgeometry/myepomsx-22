@@ -127,8 +127,8 @@ const AssetDetailPage: React.FC = () => {
   console.log("Attachments:", attachments);
   
 
-  const childAssets = assetDetails?.child_assets;
-  const assetInstallation = asset?.asset_installation;
+  const childAssets = assetDetails?.child_assets || [];
+  const assetInstallation = asset?.asset_installation || [];
   
 
   const commissionDate = asset?.commission_date ? formatDate(asset.commission_date) : "";
@@ -307,67 +307,57 @@ const AssetDetailPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Category</label>
-                <Input value={assetDetails.category.name} />
+                <Input value={assetDetails?.category?.name || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Type</label>
-                <Input value={assetDetails.type.name} />
+                <Input value={assetDetails?.type?.name || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Manufacturer</label>
-                <Input value={assetDetails.manufacturer.name} />
+                <Input value={assetDetails?.manufacturer?.name || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Maker No</label>
-                <Input value={assetDetails.maker_no} />
+                <Input value={assetDetails?.maker_no || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Model</label>
-                <Input value={assetDetails.model} />
+                <Input value={assetDetails?.model || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Serial Number</label>
-                <Input value={assetDetails.serial_number} />
+                <Input value={assetDetails?.serial_number || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Asset Class</label>
-                <Input value={assetDetails.asset_class.name} />
+                <Input value={assetDetails?.asset_class?.name || ""} />
               </div>
-
-              {/* <div className="space-y-1.5">
-                <label className="text-sm font-medium">Drawing No</label>
-                <Input value={assetInstallation.drawing_no} />
-              </div> */}
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">HCode</label>
-                <Input value={assetDetails.hs_code} />
+                <Input value={assetDetails?.hs_code || ""} />
               </div>
-
-              {/* <div className="space-y-1.5">
-                <label className="text-sm font-medium">Axis</label>
-                <Input value={assetInstallation.orientation} />
-              </div> */}
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Specification</label>
-                <Input value={assetDetails.specification} />
+                <Input value={assetDetails?.specification || ""} />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">Sensor</label>
-                <Select defaultValue={assetDetails.iot_sensor.sensor_type.name}>
+                <Select defaultValue={assetDetails?.iot_sensor?.sensor_type?.name || ""}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select sensor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={assetDetails.iot_sensor.sensor_type.name}>{assetDetails.iot_sensor.sensor_type.name}</SelectItem>
+                    <SelectItem value={assetDetails?.iot_sensor?.sensor_type?.name || ""}>{assetDetails?.iot_sensor?.sensor_type?.name || "No sensor"}</SelectItem>
                     <SelectItem value="TEMP-110">TEMP-110</SelectItem>
                     <SelectItem value="LVL-110">LVL-110</SelectItem>
                   </SelectContent>
@@ -376,22 +366,10 @@ const AssetDetailPage: React.FC = () => {
 
               <div className="space-y-1.5">
                 <label className="text-sm font-medium">EC Class</label>
-                <Input value={assetDetails.asset_class.name} />
+                <Input value={assetDetails?.asset_class?.name || ""} />
               </div>
 
-              {/* <div className="space-y-1.5">
-                <label className="text-sm font-medium">EC Certificate</label>
-                <Input value={assetInstallation.ex_certificate} />
-              </div> */}
-
               <div className="col-span-2 grid grid-cols-2 gap-4 pt-2">
-                {/* <div className="flex items-center space-x-2">
-                  <Checkbox id="sce" checked={true} />
-                  <label htmlFor="sce" className="text-sm font-medium">
-                    SCE Code
-                  </label>
-                </div> */}
-
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="criticality"
@@ -403,14 +381,14 @@ const AssetDetailPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="active" checked={assetDetails.is_active} />
+                  <Checkbox id="active" checked={assetDetails?.is_active || false} />
                   <label htmlFor="active" className="text-sm font-medium">
                     Active
                   </label>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="integrity" checked={assetDetails.is_integrity} />
+                  <Checkbox id="integrity" checked={assetDetails?.is_integrity || false} />
                   <label htmlFor="integrity" className="text-sm font-medium">
                     Integrity
                   </label>
@@ -419,7 +397,7 @@ const AssetDetailPage: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="reliability"
-                    checked={assetDetails.is_reliability}
+                    checked={assetDetails?.is_reliability || false}
                   />
                   <label htmlFor="reliability" className="text-sm font-medium">
                     Reliability

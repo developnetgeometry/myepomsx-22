@@ -1,6 +1,5 @@
-
 import { supabase } from "@/lib/supabaseClient";
-import { Asset, AssetWithRelations, AssetHierarchyNode } from "@/types/manage";
+import { Asset, AssetWithRelations, AssetHierarchyNode, AssetAttachment } from "@/types/manage";
 
 export const assetService = {
   async getAssets(): Promise<Asset[]> {
@@ -19,7 +18,6 @@ export const assetService = {
         asset_sce_id,
         asset_detail_id,
         commission_date,
-        parent_asset_no,
         created_at,
         created_by,
         updated_at,
@@ -50,7 +48,6 @@ export const assetService = {
         asset_sce_id,
         asset_detail_id,
         commission_date,
-        parent_asset_no,
         created_at,
         created_by,
         updated_at,
@@ -144,7 +141,6 @@ export const assetService = {
         asset_sce_id,
         asset_detail_id,
         commission_date,
-        parent_asset_no,
         created_at,
         created_by,
         updated_at,
@@ -220,6 +216,20 @@ export const assetService = {
 
     if (error) {
       throw new Error(`Error fetching work orders: ${error.message}`);
+    }
+
+    return data || [];
+  },
+
+  async getAssetAttachments(assetId: number): Promise<AssetAttachment[]> {
+    const { data, error } = await supabase
+      .from("e_asset_attachment")
+      .select("*")
+      .eq("asset_id", assetId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw new Error(`Error fetching asset attachments: ${error.message}`);
     }
 
     return data || [];

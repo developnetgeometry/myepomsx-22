@@ -368,6 +368,7 @@ export type Database = {
           category_id: number | null
           created_at: string | null
           created_by: string | null
+          criticality_id: number | null
           drawing_no: string | null
           ex_certificate: string | null
           ex_class: string | null
@@ -375,6 +376,7 @@ export type Database = {
           id: number
           iot_sensor_id: number | null
           is_active: boolean | null
+          is_criticality: boolean | null
           is_integrity: boolean | null
           is_reliability: boolean | null
           is_sce: boolean | null
@@ -382,6 +384,7 @@ export type Database = {
           manufacturer_id: number | null
           model: string | null
           parent_asset_id: number | null
+          sce_id: number | null
           serial_number: string | null
           specification: string | null
           type_id: number | null
@@ -396,6 +399,7 @@ export type Database = {
           category_id?: number | null
           created_at?: string | null
           created_by?: string | null
+          criticality_id?: number | null
           drawing_no?: string | null
           ex_certificate?: string | null
           ex_class?: string | null
@@ -403,6 +407,7 @@ export type Database = {
           id?: number
           iot_sensor_id?: number | null
           is_active?: boolean | null
+          is_criticality?: boolean | null
           is_integrity?: boolean | null
           is_reliability?: boolean | null
           is_sce?: boolean | null
@@ -410,6 +415,7 @@ export type Database = {
           manufacturer_id?: number | null
           model?: string | null
           parent_asset_id?: number | null
+          sce_id?: number | null
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
@@ -424,6 +430,7 @@ export type Database = {
           category_id?: number | null
           created_at?: string | null
           created_by?: string | null
+          criticality_id?: number | null
           drawing_no?: string | null
           ex_certificate?: string | null
           ex_class?: string | null
@@ -431,6 +438,7 @@ export type Database = {
           id?: number
           iot_sensor_id?: number | null
           is_active?: boolean | null
+          is_criticality?: boolean | null
           is_integrity?: boolean | null
           is_reliability?: boolean | null
           is_sce?: boolean | null
@@ -438,6 +446,7 @@ export type Database = {
           manufacturer_id?: number | null
           model?: string | null
           parent_asset_id?: number | null
+          sce_id?: number | null
           serial_number?: string | null
           specification?: string | null
           type_id?: number | null
@@ -446,10 +455,24 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "e_asset_detail_asset_sce_id_fkey"
+            columns: ["sce_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_sce"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "e_asset_detail_bom_id_fkey"
             columns: ["bom_id"]
             isOneToOne: false
             referencedRelation: "e_bom_assembly"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_asset_detail_criticality_id_fkey"
+            columns: ["criticality_id"]
+            isOneToOne: false
+            referencedRelation: "e_criticality"
             referencedColumns: ["id"]
           },
           {
@@ -1061,6 +1084,7 @@ export type Database = {
           description: string | null
           file_path: string | null
           id: number
+          is_from_new_work_attachment: boolean | null
           updated_at: string | null
           updated_by: string | null
         }
@@ -1071,6 +1095,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_new_work_attachment?: boolean | null
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -1081,6 +1106,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_new_work_attachment?: boolean | null
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -1137,6 +1163,13 @@ export type Database = {
             columns: ["cm_general_id"]
             isOneToOne: false
             referencedRelation: "e_cm_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_cm_defer_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1578,33 +1611,6 @@ export type Database = {
         }
         Relationships: []
       }
-      e_data_confidence: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: number
-          name: string
-          updated_at: string | null
-          updated_by: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          name: string
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          name?: string
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
       e_design_fabrication: {
         Row: {
           created_at: string | null
@@ -1637,7 +1643,8 @@ export type Database = {
           created_at: string | null
           created_by: string | null
           id: number
-          name: string
+          name: string | null
+          remark: string
           updated_at: string | null
           updated_by: string | null
         }
@@ -1645,7 +1652,8 @@ export type Database = {
           created_at?: string | null
           created_by?: string | null
           id?: number
-          name: string
+          name?: string | null
+          remark: string
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -1653,7 +1661,8 @@ export type Database = {
           created_at?: string | null
           created_by?: string | null
           id?: number
-          name?: string
+          name?: string | null
+          remark?: string
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -2167,6 +2176,13 @@ export type Database = {
             referencedRelation: "e_store"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "e_inventory_rack_id_fkey"
+            columns: ["rack_id"]
+            isOneToOne: false
+            referencedRelation: "e_rack"
+            referencedColumns: ["id"]
+          },
         ]
       }
       e_inventory_adjustment: {
@@ -2328,6 +2344,13 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "e_inventory_receive_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "e_inventory_receive_e_inventory_fk"
             columns: ["inventory_id"]
@@ -2945,6 +2968,8 @@ export type Database = {
           created_by: string | null
           id: number
           material_construction_type: number | null
+          mts_mpa: number | null
+          mys_mpa: number | null
           name: string
           updated_at: string | null
           updated_by: string | null
@@ -2955,6 +2980,8 @@ export type Database = {
           created_by?: string | null
           id?: number
           material_construction_type?: number | null
+          mts_mpa?: number | null
+          mys_mpa?: number | null
           name: string
           updated_at?: string | null
           updated_by?: string | null
@@ -2965,6 +2992,8 @@ export type Database = {
           created_by?: string | null
           id?: number
           material_construction_type?: number | null
+          mts_mpa?: number | null
+          mys_mpa?: number | null
           name?: string
           updated_at?: string | null
           updated_by?: string | null
@@ -3000,21 +3029,36 @@ export type Database = {
       }
       e_new_work_attachment: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           description: string | null
           file_path: string | null
           id: number
+          is_from_new_work_attachment: boolean | null
+          updated_at: string | null
+          updated_by: string | null
           work_request_id: number | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_new_work_attachment?: boolean | null
+          updated_at?: string | null
+          updated_by?: string | null
           work_request_id?: number | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_new_work_attachment?: boolean | null
+          updated_at?: string | null
+          updated_by?: string | null
           work_request_id?: number | null
         }
         Relationships: [
@@ -3269,6 +3313,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "e_new_work_request_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "e_new_work_request_system_id_fkey"
             columns: ["system_id"]
             isOneToOne: false
@@ -3520,36 +3571,6 @@ export type Database = {
         }
         Relationships: []
       }
-      e_piping_material_construction: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: number
-          identification: string
-          metals: string | null
-          updated_at: string | null
-          updated_by: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          identification: string
-          metals?: string | null
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          identification?: string
-          metals?: string | null
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
       e_pm_actual_labour: {
         Row: {
           created_at: string | null
@@ -3732,6 +3753,7 @@ export type Database = {
           description: string | null
           file_path: string | null
           id: number
+          is_from_pm_schedule: boolean | null
           pm_wo_id: number | null
           updated_at: string | null
           updated_by: string | null
@@ -3742,6 +3764,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_pm_schedule?: boolean | null
           pm_wo_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
@@ -3752,6 +3775,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           id?: number
+          is_from_pm_schedule?: boolean | null
           pm_wo_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
@@ -3811,34 +3835,49 @@ export type Database = {
             referencedRelation: "e_pm_work_order"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "e_pm_defer_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       e_pm_group: {
         Row: {
+          asset_detail_id: number | null
           created_at: string | null
           created_by: string | null
           id: number
-          name: string
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
+          asset_detail_id?: number | null
           created_at?: string | null
           created_by?: string | null
           id?: never
-          name: string
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
+          asset_detail_id?: number | null
           created_at?: string | null
           created_by?: string | null
           id?: never
-          name?: string
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_group_e_asset_detail_fk"
+            columns: ["asset_detail_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       e_pm_maintainable_group: {
         Row: {
@@ -4038,7 +4077,7 @@ export type Database = {
           created_by: string | null
           detail_description: string | null
           equipment_status: string | null
-          general_maintainence_id: number | null
+          general_maintenances: string[] | null
           id: number
           pm_wo_id: number | null
           sce_result: string | null
@@ -4050,7 +4089,7 @@ export type Database = {
           created_by?: string | null
           detail_description?: string | null
           equipment_status?: string | null
-          general_maintainence_id?: number | null
+          general_maintenances?: string[] | null
           id?: number
           pm_wo_id?: number | null
           sce_result?: string | null
@@ -4062,7 +4101,7 @@ export type Database = {
           created_by?: string | null
           detail_description?: string | null
           equipment_status?: string | null
-          general_maintainence_id?: number | null
+          general_maintenances?: string[] | null
           id?: number
           pm_wo_id?: number | null
           sce_result?: string | null
@@ -4070,13 +4109,6 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "e_pm_report_e_general_maintenance_fk"
-            columns: ["general_maintainence_id"]
-            isOneToOne: false
-            referencedRelation: "e_general_maintenance"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "e_pm_report_e_pm_work_order_fk"
             columns: ["pm_wo_id"]
@@ -4088,26 +4120,23 @@ export type Database = {
       }
       e_pm_schedule: {
         Row: {
-          additional_info: string | null
           asset_id: number | null
-          checksheet_attachment: string | null
-          checksheet_notes: string | null
           created_at: string | null
           created_by: string | null
           discipline_id: number | null
-          due_date: string | null
+          due_date: string
           facility_id: number | null
-          frequency_id: number | null
+          frequency_id: number
           id: number
           is_active: boolean | null
+          is_deleted: boolean | null
           maintenance_id: number | null
           package_id: number | null
           pm_description: string | null
           pm_group_id: number | null
-          pm_no: string
+          pm_no: string | null
           pm_sce_group_id: number | null
           priority_id: number | null
-          service_notes: string | null
           system_id: number | null
           task_id: number | null
           updated_at: string | null
@@ -4115,26 +4144,23 @@ export type Database = {
           work_center_id: number | null
         }
         Insert: {
-          additional_info?: string | null
           asset_id?: number | null
-          checksheet_attachment?: string | null
-          checksheet_notes?: string | null
           created_at?: string | null
           created_by?: string | null
           discipline_id?: number | null
-          due_date?: string | null
+          due_date: string
           facility_id?: number | null
-          frequency_id?: number | null
+          frequency_id: number
           id?: number
           is_active?: boolean | null
+          is_deleted?: boolean | null
           maintenance_id?: number | null
           package_id?: number | null
           pm_description?: string | null
           pm_group_id?: number | null
-          pm_no: string
+          pm_no?: string | null
           pm_sce_group_id?: number | null
           priority_id?: number | null
-          service_notes?: string | null
           system_id?: number | null
           task_id?: number | null
           updated_at?: string | null
@@ -4142,26 +4168,23 @@ export type Database = {
           work_center_id?: number | null
         }
         Update: {
-          additional_info?: string | null
           asset_id?: number | null
-          checksheet_attachment?: string | null
-          checksheet_notes?: string | null
           created_at?: string | null
           created_by?: string | null
           discipline_id?: number | null
-          due_date?: string | null
+          due_date?: string
           facility_id?: number | null
-          frequency_id?: number | null
+          frequency_id?: number
           id?: number
           is_active?: boolean | null
+          is_deleted?: boolean | null
           maintenance_id?: number | null
           package_id?: number | null
           pm_description?: string | null
           pm_group_id?: number | null
-          pm_no?: string
+          pm_no?: string | null
           pm_sce_group_id?: number | null
           priority_id?: number | null
-          service_notes?: string | null
           system_id?: number | null
           task_id?: number | null
           updated_at?: string | null
@@ -4255,6 +4278,340 @@ export type Database = {
           },
         ]
       }
+      e_pm_schedule_additional_info: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: number
+          pm_schedule_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_additional_info_pm_schedule_id_fkey"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_checksheet: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          file_path: string | null
+          id: number
+          is_from_pm_schedule: boolean | null
+          pm_schedule_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: number
+          is_from_pm_schedule?: boolean | null
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          id?: number
+          is_from_pm_schedule?: boolean | null
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_checksheet_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_maintainable_group: {
+        Row: {
+          asset_id: number | null
+          created_at: string | null
+          created_by: string | null
+          group_id: number | null
+          id: number
+          pm_schedule_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          group_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          group_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_maintainable_group_pm_schedule_id_fkey"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_schedule_maintainable_group_e_asset_fk"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_schedule_maintainable_group_e_asset_group_fk"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_group"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_min_acceptance_criteria: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          criteria: string | null
+          field_name: string | null
+          id: number
+          pm_schedule_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          criteria?: string | null
+          field_name?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          criteria?: string | null
+          field_name?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_min_acceptance_criteria_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_plan_labour: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          duration: number | null
+          employee_id: number | null
+          id: number
+          pm_schedule_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          duration?: number | null
+          employee_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          duration?: number | null
+          employee_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_plan_labour_employee_fk"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "e_employee"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_pm_schedule_plan_labour_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_plan_material: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          item_id: number | null
+          pm_schedule_id: number | null
+          quantity: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          item_id?: number | null
+          pm_schedule_id?: number | null
+          quantity?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          item_id?: number | null
+          pm_schedule_id?: number | null
+          quantity?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_plan_material_item_fk"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "e_item_master"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_pm_schedule_plan_material_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_schedule_task_detail: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          is_custom: boolean
+          is_deleted: boolean
+          is_template_copy: boolean
+          original_task_detail_id: number | null
+          pm_schedule_id: number | null
+          sequence: number | null
+          task_list: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          is_custom?: boolean
+          is_deleted?: boolean
+          is_template_copy?: boolean
+          original_task_detail_id?: number | null
+          pm_schedule_id?: number | null
+          sequence?: number | null
+          task_list?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          is_custom?: boolean
+          is_deleted?: boolean
+          is_template_copy?: boolean
+          original_task_detail_id?: number | null
+          pm_schedule_id?: number | null
+          sequence?: number | null
+          task_list?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_schedule_task_detail_original_fk"
+            columns: ["original_task_detail_id"]
+            isOneToOne: false
+            referencedRelation: "e_task_detail"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_pm_schedule_task_detail_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       e_pm_task_detail: {
         Row: {
           created_at: string | null
@@ -4318,6 +4675,93 @@ export type Database = {
           },
           {
             foreignKeyName: "e_pm_task_detail_schedule_fk"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_wo_generate: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          end_date: string | null
+          id: number
+          is_individual: boolean | null
+          start_date: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: number
+          is_individual?: boolean | null
+          start_date?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          end_date?: string | null
+          id?: number
+          is_individual?: boolean | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_wo_generate_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      e_pm_wo_multiple_generate: {
+        Row: {
+          created_by: string | null
+          due_date: string | null
+          end_date: string | null
+          frequency_id: number | null
+          id: number
+          pm_schedule_id: number | null
+          start_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          due_date?: string | null
+          end_date?: string | null
+          frequency_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          start_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          due_date?: string | null
+          end_date?: string | null
+          frequency_id?: number | null
+          id?: number
+          pm_schedule_id?: number | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_pm_wo_multiple_generate_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_pm_wo_multiple_generate_frequency_id_fkey"
+            columns: ["frequency_id"]
+            isOneToOne: false
+            referencedRelation: "e_frequency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_pm_wo_multiple_generate_pm_schedule_id_fkey"
             columns: ["pm_schedule_id"]
             isOneToOne: false
             referencedRelation: "e_pm_schedule"
@@ -4598,33 +5042,6 @@ export type Database = {
         ]
       }
       e_project_type: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: number
-          name: string
-          updated_at: string | null
-          updated_by: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          name: string
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: never
-          name?: string
-          updated_at?: string | null
-          updated_by?: string | null
-        }
-        Relationships: []
-      }
-      e_pv_material_construction: {
         Row: {
           created_at: string | null
           created_by: string | null
@@ -4996,6 +5413,65 @@ export type Database = {
         }
         Relationships: []
       }
+      e_wo_pm_schedule: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          due_date: string | null
+          id: number
+          pm_schedule_id: number | null
+          pm_wo_generate: number | null
+          wo_id: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          pm_wo_generate?: number | null
+          wo_id?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          id?: number
+          pm_schedule_id?: number | null
+          pm_wo_generate?: number | null
+          wo_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "e_wo_pm_schedule_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_wo_pm_schedule_pm_schedule_id_fkey"
+            columns: ["pm_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "e_pm_schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_wo_pm_schedule_pm_wo_generate_fkey"
+            columns: ["pm_wo_generate"]
+            isOneToOne: false
+            referencedRelation: "e_pm_wo_generate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_wo_pm_schedule_wo_id_fkey"
+            columns: ["wo_id"]
+            isOneToOne: false
+            referencedRelation: "e_work_order"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       e_work_center: {
         Row: {
           code: string
@@ -5047,6 +5523,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           due_date: string | null
+          facility_id: number | null
           id: number
           pm_work_order_id: number | null
           task_id: number | null
@@ -5064,6 +5541,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           due_date?: string | null
+          facility_id?: number | null
           id?: number
           pm_work_order_id?: number | null
           task_id?: number | null
@@ -5081,6 +5559,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           due_date?: string | null
+          facility_id?: number | null
           id?: number
           pm_work_order_id?: number | null
           task_id?: number | null
@@ -5096,6 +5575,13 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "e_asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_work_order_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -5124,6 +5610,13 @@ export type Database = {
             columns: ["work_order_type"]
             isOneToOne: false
             referencedRelation: "e_work_order_type"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "e_work_order_facility_id_fkey"
+            columns: ["facility_id"]
+            isOneToOne: false
+            referencedRelation: "e_facility"
             referencedColumns: ["id"]
           },
           {
@@ -5325,6 +5818,125 @@ export type Database = {
         }
         Relationships: []
       }
+      i_branch_diameter: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_code_sheet: {
+        Row: {
+          description: string | null
+          id: number
+          ims_asset_type_id: number
+          sheet_name: string
+        }
+        Insert: {
+          description?: string | null
+          id?: number
+          ims_asset_type_id: number
+          sheet_name: string
+        }
+        Update: {
+          description?: string | null
+          id?: number
+          ims_asset_type_id?: number
+          sheet_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "i_code_sheet_ims_asset_type_id_fkey"
+            columns: ["ims_asset_type_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_asset_type"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      i_corrective_action: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_cyclic_load_type: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
       i_data_confidence: {
         Row: {
           created_at: string | null
@@ -5354,297 +5966,397 @@ export type Database = {
       }
       i_df_cui: {
         Row: {
-          age: number | null
-          agecoat_yr: number | null
-          agetk: number | null
-          art: number | null
-          bcuif1: number | null
-          bcuif2: number | null
-          bcuif3: number | null
-          coatadj: number | null
           created_at: string | null
           created_by: string | null
-          crexp: number | null
+          data_confidence_id: number | null
           dfcuiff: number | null
-          fscuif: number | null
-          icuif2: number | null
-          icuif3: number | null
+          i_ims_design_id: number | null
+          i_ims_protection_id: number | null
           id: number
           ims_pof_assessment_id: number | null
-          last_coating_date_cui: string | null
-          last_inspection_date_cui: string | null
-          lcuif1: number | null
-          pocuifp1: number | null
-          pocuifp2: number | null
-          pocuifp3: number | null
-          srcuif: number | null
+          last_inspection_date: string | null
+          ncuifa: number | null
+          ncuifb: number | null
+          ncuifc: number | null
+          ncuifd: number | null
+          new_coating_date: string | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
-          age?: number | null
-          agecoat_yr?: number | null
-          agetk?: number | null
-          art?: number | null
-          bcuif1?: number | null
-          bcuif2?: number | null
-          bcuif3?: number | null
-          coatadj?: number | null
           created_at?: string | null
           created_by?: string | null
-          crexp?: number | null
+          data_confidence_id?: number | null
           dfcuiff?: number | null
-          fscuif?: number | null
-          icuif2?: number | null
-          icuif3?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          last_coating_date_cui?: string | null
-          last_inspection_date_cui?: string | null
-          lcuif1?: number | null
-          pocuifp1?: number | null
-          pocuifp2?: number | null
-          pocuifp3?: number | null
-          srcuif?: number | null
+          last_inspection_date?: string | null
+          ncuifa?: number | null
+          ncuifb?: number | null
+          ncuifc?: number | null
+          ncuifd?: number | null
+          new_coating_date?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
-          age?: number | null
-          agecoat_yr?: number | null
-          agetk?: number | null
-          art?: number | null
-          bcuif1?: number | null
-          bcuif2?: number | null
-          bcuif3?: number | null
-          coatadj?: number | null
           created_at?: string | null
           created_by?: string | null
-          crexp?: number | null
+          data_confidence_id?: number | null
           dfcuiff?: number | null
-          fscuif?: number | null
-          icuif2?: number | null
-          icuif3?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          last_coating_date_cui?: string | null
-          last_inspection_date_cui?: string | null
-          lcuif1?: number | null
-          pocuifp1?: number | null
-          pocuifp2?: number | null
-          pocuifp3?: number | null
-          srcuif?: number | null
+          last_inspection_date?: string | null
+          ncuifa?: number | null
+          ncuifb?: number | null
+          ncuifc?: number | null
+          ncuifd?: number | null
+          new_coating_date?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_cui_i_data_confidence_fk"
+            columns: ["data_confidence_id"]
+            isOneToOne: false
+            referencedRelation: "i_data_confidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_cui_i_ims_design_fk"
+            columns: ["i_ims_design_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_design"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_cui_i_ims_pof_assessment_general_fk"
+            columns: ["ims_pof_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_cui_i_ims_protection_fk"
+            columns: ["i_ims_protection_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_protection"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_ext: {
         Row: {
-          agecoat_year: number | null
-          agetk: number | null
-          art: number | null
-          bext_corrp1: number | null
-          bext_corrp2: number | null
-          bext_corrp3: number | null
-          cract_year: number | null
           created_at: string | null
           created_by: string | null
-          crexp: number | null
           data_confidence_id: number | null
           dfextcorrf: number | null
-          fsextcorr: number | null
+          i_ims_design_id: number | null
+          i_ims_protection_id: number | null
           id: number
           ims_por_assessment_id: number | null
-          last_coating_date: string | null
           last_inspection_date: string | null
-          lext_corr1: number | null
-          lext_corr2: number | null
-          lext_corr3: number | null
-          poext_corrp1: number | null
-          poext_corrp2: number | null
-          poext_corrp3: number | null
-          srextcorr: number | null
+          new_coating_date: string | null
+          nextcorra: number | null
+          nextcorrb: number | null
+          nextcorrc: number | null
+          nextcorrd: number | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
-          agecoat_year?: number | null
-          agetk?: number | null
-          art?: number | null
-          bext_corrp1?: number | null
-          bext_corrp2?: number | null
-          bext_corrp3?: number | null
-          cract_year?: number | null
           created_at?: string | null
           created_by?: string | null
-          crexp?: number | null
           data_confidence_id?: number | null
           dfextcorrf?: number | null
-          fsextcorr?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_por_assessment_id?: number | null
-          last_coating_date?: string | null
           last_inspection_date?: string | null
-          lext_corr1?: number | null
-          lext_corr2?: number | null
-          lext_corr3?: number | null
-          poext_corrp1?: number | null
-          poext_corrp2?: number | null
-          poext_corrp3?: number | null
-          srextcorr?: number | null
+          new_coating_date?: string | null
+          nextcorra?: number | null
+          nextcorrb?: number | null
+          nextcorrc?: number | null
+          nextcorrd?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
-          agecoat_year?: number | null
-          agetk?: number | null
-          art?: number | null
-          bext_corrp1?: number | null
-          bext_corrp2?: number | null
-          bext_corrp3?: number | null
-          cract_year?: number | null
           created_at?: string | null
           created_by?: string | null
-          crexp?: number | null
           data_confidence_id?: number | null
           dfextcorrf?: number | null
-          fsextcorr?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_por_assessment_id?: number | null
-          last_coating_date?: string | null
           last_inspection_date?: string | null
-          lext_corr1?: number | null
-          lext_corr2?: number | null
-          lext_corr3?: number | null
-          poext_corrp1?: number | null
-          poext_corrp2?: number | null
-          poext_corrp3?: number | null
-          srextcorr?: number | null
+          new_coating_date?: string | null
+          nextcorra?: number | null
+          nextcorrb?: number | null
+          nextcorrc?: number | null
+          nextcorrd?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_ext_i_data_confidence_fk"
+            columns: ["data_confidence_id"]
+            isOneToOne: false
+            referencedRelation: "i_data_confidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_i_ims_design_fk"
+            columns: ["i_ims_design_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_design"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_i_ims_pof_assessment_general_fk"
+            columns: ["ims_por_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_i_ims_protection_fk"
+            columns: ["i_ims_protection_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_protection"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_ext_clscc: {
         Row: {
-          age: number | null
-          age_coat: number | null
-          age_crack: number | null
-          coat_adj: number | null
           created_at: string | null
           created_by: string | null
-          dfextcisc: number | null
-          dfextcisccfb: number | null
-          ext_scc_susc: number | null
+          data_confidence_id: number | null
+          df_ext_cl_scc: number | null
+          i_ims_design_id: number | null
+          i_ims_protection_id: number | null
           id: number
           ims_pof_asessment_id: number | null
           inspection_efficiency: number | null
-          last_coating_date: string | null
           last_inspection_date: string | null
-          svi: number | null
+          new_coating_date: string | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
-          age?: number | null
-          age_coat?: number | null
-          age_crack?: number | null
-          coat_adj?: number | null
           created_at?: string | null
           created_by?: string | null
-          dfextcisc?: number | null
-          dfextcisccfb?: number | null
-          ext_scc_susc?: number | null
+          data_confidence_id?: number | null
+          df_ext_cl_scc?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_asessment_id?: number | null
           inspection_efficiency?: number | null
-          last_coating_date?: string | null
           last_inspection_date?: string | null
-          svi?: number | null
+          new_coating_date?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
-          age?: number | null
-          age_coat?: number | null
-          age_crack?: number | null
-          coat_adj?: number | null
           created_at?: string | null
           created_by?: string | null
-          dfextcisc?: number | null
-          dfextcisccfb?: number | null
-          ext_scc_susc?: number | null
+          data_confidence_id?: number | null
+          df_ext_cl_scc?: number | null
+          i_ims_design_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_asessment_id?: number | null
           inspection_efficiency?: number | null
-          last_coating_date?: string | null
           last_inspection_date?: string | null
-          svi?: number | null
+          new_coating_date?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_ext_clscc_i_data_confidence_fk"
+            columns: ["data_confidence_id"]
+            isOneToOne: false
+            referencedRelation: "i_data_confidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_clscc_i_ims_design_fk"
+            columns: ["i_ims_design_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_design"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_clscc_i_ims_pof_assessment_general_fk"
+            columns: ["ims_pof_asessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_clscc_i_ims_protection_fk"
+            columns: ["i_ims_protection_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_protection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_ext_clscc_i_inspection_efficiency_fk"
+            columns: ["inspection_efficiency"]
+            isOneToOne: false
+            referencedRelation: "i_inspection_efficiency"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_mfat: {
         Row: {
-          brach_diameter: number | null
-          corrective_action: number | null
+          brach_diameter_id: number | null
+          corrective_action_id: number | null
           created_at: string | null
           created_by: string | null
-          cyclic_load_type: number | null
-          dmfat: number | null
+          cyclic_load_type_id: number | null
+          data_confidence_id: number | null
           dmfatfb: number | null
           id: number
           ims_pof_assessment_id: number | null
-          joint_branch_design: number | null
-          pipe_complexity: number | null
-          pipe_condition: number | null
-          previous_failure: number | null
-          shaking_frequency: number | null
+          joint_branch_design_id: number | null
+          pipe_complexity_id: number | null
+          pipe_condition_id: number | null
+          previous_failure_id: number | null
+          shaking_frequency_id: number | null
           updated_at: string | null
           updated_by: string | null
-          visible_audible_shaking: number | null
+          visible_audible_shaking_id: number | null
         }
         Insert: {
-          brach_diameter?: number | null
-          corrective_action?: number | null
+          brach_diameter_id?: number | null
+          corrective_action_id?: number | null
           created_at?: string | null
           created_by?: string | null
-          cyclic_load_type?: number | null
-          dmfat?: number | null
+          cyclic_load_type_id?: number | null
+          data_confidence_id?: number | null
           dmfatfb?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          joint_branch_design?: number | null
-          pipe_complexity?: number | null
-          pipe_condition?: number | null
-          previous_failure?: number | null
-          shaking_frequency?: number | null
+          joint_branch_design_id?: number | null
+          pipe_complexity_id?: number | null
+          pipe_condition_id?: number | null
+          previous_failure_id?: number | null
+          shaking_frequency_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
-          visible_audible_shaking?: number | null
+          visible_audible_shaking_id?: number | null
         }
         Update: {
-          brach_diameter?: number | null
-          corrective_action?: number | null
+          brach_diameter_id?: number | null
+          corrective_action_id?: number | null
           created_at?: string | null
           created_by?: string | null
-          cyclic_load_type?: number | null
-          dmfat?: number | null
+          cyclic_load_type_id?: number | null
+          data_confidence_id?: number | null
           dmfatfb?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          joint_branch_design?: number | null
-          pipe_complexity?: number | null
-          pipe_condition?: number | null
-          previous_failure?: number | null
-          shaking_frequency?: number | null
+          joint_branch_design_id?: number | null
+          pipe_complexity_id?: number | null
+          pipe_condition_id?: number | null
+          previous_failure_id?: number | null
+          shaking_frequency_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
-          visible_audible_shaking?: number | null
+          visible_audible_shaking_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_mfat_i_branch_diameter_fk"
+            columns: ["brach_diameter_id"]
+            isOneToOne: false
+            referencedRelation: "i_branch_diameter"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_corrective_action_fk"
+            columns: ["corrective_action_id"]
+            isOneToOne: false
+            referencedRelation: "i_corrective_action"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_cyclic_load_type_fk"
+            columns: ["cyclic_load_type_id"]
+            isOneToOne: false
+            referencedRelation: "i_cyclic_load_type"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_data_confidence_fk"
+            columns: ["data_confidence_id"]
+            isOneToOne: false
+            referencedRelation: "i_data_confidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_ims_pof_assessment_general_fk"
+            columns: ["ims_pof_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_joint_branch_design_fk"
+            columns: ["joint_branch_design_id"]
+            isOneToOne: false
+            referencedRelation: "i_joint_branch_design"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_pipe_complexity_fk"
+            columns: ["pipe_complexity_id"]
+            isOneToOne: false
+            referencedRelation: "i_pipe_complexity"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_pipe_condition_fk"
+            columns: ["pipe_condition_id"]
+            isOneToOne: false
+            referencedRelation: "i_pipe_condition"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_previous_failure_fk"
+            columns: ["previous_failure_id"]
+            isOneToOne: false
+            referencedRelation: "i_previous_failure"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_shaking_frequency_fk"
+            columns: ["shaking_frequency_id"]
+            isOneToOne: false
+            referencedRelation: "i_shaking_frequency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_mfat_i_visible_audio_shaking_fk"
+            columns: ["visible_audible_shaking_id"]
+            isOneToOne: false
+            referencedRelation: "i_visible_audio_shaking"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_scc_scc: {
         Row: {
@@ -5652,14 +6364,13 @@ export type Database = {
           created_by: string | null
           df_scc_scc: number | null
           dfsccfb: number | null
-          env_severity_id: number | null
+          h2s_in_water: number | null
           hardness_brinnel: number | null
+          i_ims_general_id: number | null
           id: number
           inspection_efficiency_id: number | null
-          scsuch_f_h: number | null
-          steelcontent_id: number | null
-          susceptibility_id: number | null
-          svi: number | null
+          last_inspection_date: string | null
+          ph: number | null
           updated_at: string | null
           updated_by: string | null
         }
@@ -5668,14 +6379,13 @@ export type Database = {
           created_by?: string | null
           df_scc_scc?: number | null
           dfsccfb?: number | null
-          env_severity_id?: number | null
+          h2s_in_water?: number | null
           hardness_brinnel?: number | null
+          i_ims_general_id?: number | null
           id?: number
           inspection_efficiency_id?: number | null
-          scsuch_f_h?: number | null
-          steelcontent_id?: number | null
-          susceptibility_id?: number | null
-          svi?: number | null
+          last_inspection_date?: string | null
+          ph?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -5684,182 +6394,181 @@ export type Database = {
           created_by?: string | null
           df_scc_scc?: number | null
           dfsccfb?: number | null
-          env_severity_id?: number | null
+          h2s_in_water?: number | null
           hardness_brinnel?: number | null
+          i_ims_general_id?: number | null
           id?: number
           inspection_efficiency_id?: number | null
-          scsuch_f_h?: number | null
-          steelcontent_id?: number | null
-          susceptibility_id?: number | null
-          svi?: number | null
+          last_inspection_date?: string | null
+          ph?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_scc_scc_i_ims_general_fk"
+            columns: ["i_ims_general_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_scc_scc_i_inspection_efficiency_fk"
+            columns: ["inspection_efficiency_id"]
+            isOneToOne: false
+            referencedRelation: "i_inspection_efficiency"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_scc_sohic: {
         Row: {
           created_at: string | null
           created_by: string | null
-          df_sohic_fb: number | null
           dfscc_sohic: number | null
-          env_severity: number | null
+          h2s_in_water: number | null
           harness_brinnel: number | null
+          i_ims_general_id: number | null
+          i_ims_protection_id: number | null
           id: number
           ims_pof_assessment_id: number | null
           inspection_efficiency_id: number | null
+          last_inspection_date: string | null
+          ph: number | null
           steelscontent_id: number | null
-          susc_crack_id: number | null
-          susceptibility_id: number | null
-          svi: number | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
           created_at?: string | null
           created_by?: string | null
-          df_sohic_fb?: number | null
           dfscc_sohic?: number | null
-          env_severity?: number | null
+          h2s_in_water?: number | null
           harness_brinnel?: number | null
+          i_ims_general_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
           inspection_efficiency_id?: number | null
+          last_inspection_date?: string | null
+          ph?: number | null
           steelscontent_id?: number | null
-          susc_crack_id?: number | null
-          susceptibility_id?: number | null
-          svi?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
           created_at?: string | null
           created_by?: string | null
-          df_sohic_fb?: number | null
           dfscc_sohic?: number | null
-          env_severity?: number | null
+          h2s_in_water?: number | null
           harness_brinnel?: number | null
+          i_ims_general_id?: number | null
+          i_ims_protection_id?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
           inspection_efficiency_id?: number | null
+          last_inspection_date?: string | null
+          ph?: number | null
           steelscontent_id?: number | null
-          susc_crack_id?: number | null
-          susceptibility_id?: number | null
-          svi?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_scc_sohic_i_ims_general_fk"
+            columns: ["i_ims_general_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_scc_sohic_i_ims_pof_assessment_general_fk"
+            columns: ["ims_pof_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_scc_sohic_i_ims_protection_fk"
+            columns: ["i_ims_protection_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_protection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_scc_sohic_i_inspection_efficiency_fk"
+            columns: ["inspection_efficiency_id"]
+            isOneToOne: false
+            referencedRelation: "i_inspection_efficiency"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_scc_sohic_i_steelscontent_fk"
+            columns: ["steelscontent_id"]
+            isOneToOne: false
+            referencedRelation: "i_steelscontent"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_df_thin: {
         Row: {
           agerc: string | null
-          agetk: number | null
-          art: number | null
-          bthin1: number | null
-          bthin2: number | null
-          bthin3: number | null
-          cr_act: number | null
-          crcm: number | null
-          crexp: number | null
           data_confidence_id: number | null
-          dfthin_fb: number | null
-          dthinf: number | null
-          fs_thin: number | null
+          dfthinfb: number | null
           id: number
           ims_pof_assessment_id: number | null
-          ithin1: number | null
-          ithin2: number | null
-          ithin3: number | null
           last_coating_date: string | null
           last_inspection_date: string | null
           nthin_a: number | null
           nthin_b: number | null
           nthin_c: number | null
           nthin_d: number | null
-          pothin1: number | null
-          pothin2: number | null
-          pothin3: number | null
-          sr_thin: number | null
         }
         Insert: {
           agerc?: string | null
-          agetk?: number | null
-          art?: number | null
-          bthin1?: number | null
-          bthin2?: number | null
-          bthin3?: number | null
-          cr_act?: number | null
-          crcm?: number | null
-          crexp?: number | null
           data_confidence_id?: number | null
-          dfthin_fb?: number | null
-          dthinf?: number | null
-          fs_thin?: number | null
+          dfthinfb?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          ithin1?: number | null
-          ithin2?: number | null
-          ithin3?: number | null
           last_coating_date?: string | null
           last_inspection_date?: string | null
           nthin_a?: number | null
           nthin_b?: number | null
           nthin_c?: number | null
           nthin_d?: number | null
-          pothin1?: number | null
-          pothin2?: number | null
-          pothin3?: number | null
-          sr_thin?: number | null
         }
         Update: {
           agerc?: string | null
-          agetk?: number | null
-          art?: number | null
-          bthin1?: number | null
-          bthin2?: number | null
-          bthin3?: number | null
-          cr_act?: number | null
-          crcm?: number | null
-          crexp?: number | null
           data_confidence_id?: number | null
-          dfthin_fb?: number | null
-          dthinf?: number | null
-          fs_thin?: number | null
+          dfthinfb?: number | null
           id?: number
           ims_pof_assessment_id?: number | null
-          ithin1?: number | null
-          ithin2?: number | null
-          ithin3?: number | null
           last_coating_date?: string | null
           last_inspection_date?: string | null
           nthin_a?: number | null
           nthin_b?: number | null
           nthin_c?: number | null
           nthin_d?: number | null
-          pothin1?: number | null
-          pothin2?: number | null
-          pothin3?: number | null
-          sr_thin?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_df_thin_i_data_confidence_fk"
+            columns: ["data_confidence_id"]
+            isOneToOne: false
+            referencedRelation: "i_data_confidence"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_df_thin_i_ims_pof_assessment_general_fk"
+            columns: ["ims_pof_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_pof_assessment_general"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_env_severity: {
-        Row: {
-          id: number
-          name: string | null
-        }
-        Insert: {
-          id?: number
-          name?: string | null
-        }
-        Update: {
-          id?: number
-          name?: string | null
-        }
-        Relationships: []
-      }
-      i_ims_asset_type: {
         Row: {
           created_at: string | null
           created_by: string | null
@@ -5877,6 +6586,65 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      i_header_master: {
+        Row: {
+          code_sheet_id: number
+          header_label: string
+          header_value: number
+          id: number
+        }
+        Insert: {
+          code_sheet_id: number
+          header_label: string
+          header_value: number
+          id?: number
+        }
+        Update: {
+          code_sheet_id?: number
+          header_label?: string
+          header_value?: number
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "i_header_master_code_sheet_id_fkey"
+            columns: ["code_sheet_id"]
+            isOneToOne: false
+            referencedRelation: "i_code_sheet"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      i_ims_asset_type: {
+        Row: {
+          code: string | null
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          code?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: number
@@ -5932,20 +6700,13 @@ export type Database = {
           asset_detail_id: number | null
           created_at: string | null
           created_by: string | null
-          dcaffa: number | null
           envcost: number | null
           fc: number | null
-          fccmd: number | null
           fcenviron: number | null
-          fcinj: number | null
-          fcprod: number | null
           fracevap: number | null
           id: number
           injcost: number | null
-          lraprod: number | null
-          outageaffa: number | null
           outagemult: number | null
-          propdens: number | null
           updated_at: string | null
           updated_by: string | null
           volenv: number | null
@@ -5954,20 +6715,13 @@ export type Database = {
           asset_detail_id?: number | null
           created_at?: string | null
           created_by?: string | null
-          dcaffa?: number | null
           envcost?: number | null
           fc?: number | null
-          fccmd?: number | null
           fcenviron?: number | null
-          fcinj?: number | null
-          fcprod?: number | null
           fracevap?: number | null
           id?: number
           injcost?: number | null
-          lraprod?: number | null
-          outageaffa?: number | null
           outagemult?: number | null
-          propdens?: number | null
           updated_at?: string | null
           updated_by?: string | null
           volenv?: number | null
@@ -5976,151 +6730,110 @@ export type Database = {
           asset_detail_id?: number | null
           created_at?: string | null
           created_by?: string | null
-          dcaffa?: number | null
           envcost?: number | null
           fc?: number | null
-          fccmd?: number | null
           fcenviron?: number | null
-          fcinj?: number | null
-          fcprod?: number | null
           fracevap?: number | null
           id?: number
           injcost?: number | null
-          lraprod?: number | null
-          outageaffa?: number | null
           outagemult?: number | null
-          propdens?: number | null
           updated_at?: string | null
           updated_by?: string | null
           volenv?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_ims_cof_assessment_cof_prod_e_asset_detail_fk"
+            columns: ["asset_detail_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_ims_cof_asssessment_cof_area: {
         Row: {
-          ca_cmdail: number | null
-          ca_cmdail_cont: number | null
-          ca_cmdail_insl: number | null
-          ca_cmdainl: number | null
-          ca_cmdainl_cont: number | null
-          ca_cmdainl_inst: number | null
+          asset_detail_id: number | null
           ca_cmdflam: number | null
-          ca_injail: number | null
-          ca_injail_cont: number | null
-          ca_injail_inst: number | null
-          ca_injainl: number | null
-          ca_injainl_inst: number | null
           ca_injflam: number | null
-          cp: number | null
           created_at: string | null
           created_by: string | null
-          det_sys: number | null
-          eneff: number | null
-          factait: number | null
-          factdi: number | null
-          factic: number | null
+          det_sys_id: number | null
           id: number
-          id_: number | null
           ideal_gas_specific_heat_eq: number | null
-          idmax: number | null
-          inventory_kg: number | null
-          iso_sys: number | null
-          k: number | null
-          mitigation_system: number | null
-          mrelease_kg: number | null
-          op_temp_k: number | null
-          ps_kpa: number | null
-          ptrans_kpa: number | null
-          raten: number | null
-          release_type: string | null
-          timeempty: number | null
+          ims_service_id: number | null
+          iso_sys_id: number | null
+          mitigation_system_id: number | null
           updated_at: string | null
           updated_by: string | null
-          w1_kg: number | null
         }
         Insert: {
-          ca_cmdail?: number | null
-          ca_cmdail_cont?: number | null
-          ca_cmdail_insl?: number | null
-          ca_cmdainl?: number | null
-          ca_cmdainl_cont?: number | null
-          ca_cmdainl_inst?: number | null
+          asset_detail_id?: number | null
           ca_cmdflam?: number | null
-          ca_injail?: number | null
-          ca_injail_cont?: number | null
-          ca_injail_inst?: number | null
-          ca_injainl?: number | null
-          ca_injainl_inst?: number | null
           ca_injflam?: number | null
-          cp?: number | null
           created_at?: string | null
           created_by?: string | null
-          det_sys?: number | null
-          eneff?: number | null
-          factait?: number | null
-          factdi?: number | null
-          factic?: number | null
+          det_sys_id?: number | null
           id?: number
-          id_?: number | null
           ideal_gas_specific_heat_eq?: number | null
-          idmax?: number | null
-          inventory_kg?: number | null
-          iso_sys?: number | null
-          k?: number | null
-          mitigation_system?: number | null
-          mrelease_kg?: number | null
-          op_temp_k?: number | null
-          ps_kpa?: number | null
-          ptrans_kpa?: number | null
-          raten?: number | null
-          release_type?: string | null
-          timeempty?: number | null
+          ims_service_id?: number | null
+          iso_sys_id?: number | null
+          mitigation_system_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
-          w1_kg?: number | null
         }
         Update: {
-          ca_cmdail?: number | null
-          ca_cmdail_cont?: number | null
-          ca_cmdail_insl?: number | null
-          ca_cmdainl?: number | null
-          ca_cmdainl_cont?: number | null
-          ca_cmdainl_inst?: number | null
+          asset_detail_id?: number | null
           ca_cmdflam?: number | null
-          ca_injail?: number | null
-          ca_injail_cont?: number | null
-          ca_injail_inst?: number | null
-          ca_injainl?: number | null
-          ca_injainl_inst?: number | null
           ca_injflam?: number | null
-          cp?: number | null
           created_at?: string | null
           created_by?: string | null
-          det_sys?: number | null
-          eneff?: number | null
-          factait?: number | null
-          factdi?: number | null
-          factic?: number | null
+          det_sys_id?: number | null
           id?: number
-          id_?: number | null
           ideal_gas_specific_heat_eq?: number | null
-          idmax?: number | null
-          inventory_kg?: number | null
-          iso_sys?: number | null
-          k?: number | null
-          mitigation_system?: number | null
-          mrelease_kg?: number | null
-          op_temp_k?: number | null
-          ps_kpa?: number | null
-          ptrans_kpa?: number | null
-          raten?: number | null
-          release_type?: string | null
-          timeempty?: number | null
+          ims_service_id?: number | null
+          iso_sys_id?: number | null
+          mitigation_system_id?: number | null
           updated_at?: string | null
           updated_by?: string | null
-          w1_kg?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_ims_cof_asssessment_cof_area_e_asset_detail_fk"
+            columns: ["asset_detail_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_cof_asssessment_cof_area_e_detection_system_fk"
+            columns: ["det_sys_id"]
+            isOneToOne: false
+            referencedRelation: "e_detection_system"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_cof_asssessment_cof_area_e_isolation_system_fk"
+            columns: ["iso_sys_id"]
+            isOneToOne: false
+            referencedRelation: "e_isolation_system"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_cof_asssessment_cof_area_e_mitigation_system_fk"
+            columns: ["mitigation_system_id"]
+            isOneToOne: false
+            referencedRelation: "e_mitigation_system"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_cof_asssessment_cof_area_i_ims_service_fk"
+            columns: ["ims_service_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_service"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_ims_design: {
         Row: {
@@ -6439,49 +7152,68 @@ export type Database = {
         Row: {
           asset_detail_id: number | null
           cladding: boolean | null
-          coating_quality: number | null
+          coating_quality_id: number | null
           created_at: string | null
           created_by: string | null
           current_thickness: number | null
-          data_confidence: number | null
           description: string | null
           id: number
+          ims_general_id: number | null
           nominal_thickness: number | null
-          tmin: number | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
           asset_detail_id?: number | null
           cladding?: boolean | null
-          coating_quality?: number | null
+          coating_quality_id?: number | null
           created_at?: string | null
           created_by?: string | null
           current_thickness?: number | null
-          data_confidence?: number | null
           description?: string | null
           id?: number
+          ims_general_id?: number | null
           nominal_thickness?: number | null
-          tmin?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
           asset_detail_id?: number | null
           cladding?: boolean | null
-          coating_quality?: number | null
+          coating_quality_id?: number | null
           created_at?: string | null
           created_by?: string | null
           current_thickness?: number | null
-          data_confidence?: number | null
           description?: string | null
           id?: number
+          ims_general_id?: number | null
           nominal_thickness?: number | null
-          tmin?: number | null
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "i_ims_pof_assessment_general_e_asset_detail_fk"
+            columns: ["asset_detail_id"]
+            isOneToOne: false
+            referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_pof_assessment_general_e_coating_quality_fk"
+            columns: ["coating_quality_id"]
+            isOneToOne: false
+            referencedRelation: "e_coating_quality"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_pof_assessment_general_i_ims_general_fk"
+            columns: ["ims_general_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_general"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       i_ims_protection: {
         Row: {
@@ -6635,7 +7367,67 @@ export type Database = {
           },
         ]
       }
-      "i_ims_risk_&_irp": {
+      i_ims_rbi_risk_irp: {
+        Row: {
+          cof_area: number | null
+          cof_financial: number | null
+          created_at: string | null
+          created_by: string | null
+          dbrit: number | null
+          dextd: number | null
+          dhtha: number | null
+          dmfat: number | null
+          dscc: number | null
+          dthin: number | null
+          id: number
+          pof: number | null
+          pof_value: number | null
+          risk_level: number | null
+          risk_ranking: number | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          cof_area?: number | null
+          cof_financial?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          dbrit?: number | null
+          dextd?: number | null
+          dhtha?: number | null
+          dmfat?: number | null
+          dscc?: number | null
+          dthin?: number | null
+          id?: number
+          pof?: number | null
+          pof_value?: number | null
+          risk_level?: number | null
+          risk_ranking?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          cof_area?: number | null
+          cof_financial?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          dbrit?: number | null
+          dextd?: number | null
+          dhtha?: number | null
+          dmfat?: number | null
+          dscc?: number | null
+          dthin?: number | null
+          id?: number
+          pof?: number | null
+          pof_value?: number | null
+          risk_level?: number | null
+          risk_ranking?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      i_ims_risk_irp: {
         Row: {
           asset_detail_id: number | null
           cof_area: number | null
@@ -6651,6 +7443,7 @@ export type Database = {
           id: number
           pof: number | null
           pof_value: number | null
+          rbi_risk_irp_id: number | null
           risk_level: number | null
           risk_ranking: number | null
           updated_at: string | null
@@ -6671,6 +7464,7 @@ export type Database = {
           id?: number
           pof?: number | null
           pof_value?: number | null
+          rbi_risk_irp_id?: number | null
           risk_level?: number | null
           risk_ranking?: number | null
           updated_at?: string | null
@@ -6691,6 +7485,7 @@ export type Database = {
           id?: number
           pof?: number | null
           pof_value?: number | null
+          rbi_risk_irp_id?: number | null
           risk_level?: number | null
           risk_ranking?: number | null
           updated_at?: string | null
@@ -6702,6 +7497,13 @@ export type Database = {
             columns: ["asset_detail_id"]
             isOneToOne: false
             referencedRelation: "e_asset_detail"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_ims_risk_irp_i_ims_rbi_risk_irp_fk"
+            columns: ["rbi_risk_irp_id"]
+            isOneToOne: false
+            referencedRelation: "i_ims_rbi_risk_irp"
             referencedColumns: ["id"]
           },
         ]
@@ -6779,20 +7581,89 @@ export type Database = {
       }
       i_inspection_efficiency: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
       }
       i_insulation_complexity: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_insulation_condition: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      i_joint_branch_design: {
         Row: {
           created_at: string | null
           created_by: string | null
@@ -6876,18 +7747,239 @@ export type Database = {
         }
         Relationships: []
       }
-      i_steelscontent: {
+      i_pipe_complexity: {
         Row: {
+          created_at: string | null
+          created_by: string | null
           id: number
           name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
         }
         Insert: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
         }
         Update: {
+          created_at?: string | null
+          created_by?: string | null
           id?: number
           name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_pipe_condition: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_previous_failure: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_shaking_frequency: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      i_spec_header_value: {
+        Row: {
+          cell_value: number | null
+          header_id: number
+          spec_id: number
+        }
+        Insert: {
+          cell_value?: number | null
+          header_id: number
+          spec_id: number
+        }
+        Update: {
+          cell_value?: number | null
+          header_id?: number
+          spec_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "i_spec_header_value_header_id_fkey"
+            columns: ["header_id"]
+            isOneToOne: false
+            referencedRelation: "i_header_master"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "i_spec_header_value_spec_id_fkey"
+            columns: ["spec_id"]
+            isOneToOne: false
+            referencedRelation: "i_spec_master"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      i_spec_master: {
+        Row: {
+          code_sheet_id: number
+          id: number
+          spec_code: string
+        }
+        Insert: {
+          code_sheet_id: number
+          id?: number
+          spec_code: string
+        }
+        Update: {
+          code_sheet_id?: number
+          id?: number
+          spec_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "i_spec_master_code_sheet_id_fkey"
+            columns: ["code_sheet_id"]
+            isOneToOne: false
+            referencedRelation: "i_code_sheet"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      i_steelscontent: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      i_visible_audio_shaking: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: number
+          name: string | null
+          updated_at: string | null
+          updated_by: string | null
+          value: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          name?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: number | null
         }
         Relationships: []
       }
@@ -6940,41 +8032,53 @@ export type Database = {
       }
       r_rms_uptime: {
         Row: {
-          asset_id: number | null
-          code: string | null
+          asset_code: string | null
+          asset_detail_id: number | null
+          created_at: string | null
+          created_by: string | null
           date: string | null
+          description: string | null
           id: number
           planned_shutdown: number | null
-          sum_running_hour: number | null
           unplanned_shutdown: number | null
+          updated_at: string | null
+          updated_by: string | null
           uptime: number | null
         }
         Insert: {
-          asset_id?: number | null
-          code?: string | null
+          asset_code?: string | null
+          asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           date?: string | null
+          description?: string | null
           id?: number
           planned_shutdown?: number | null
-          sum_running_hour?: number | null
           unplanned_shutdown?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
           uptime?: number | null
         }
         Update: {
-          asset_id?: number | null
-          code?: string | null
+          asset_code?: string | null
+          asset_detail_id?: number | null
+          created_at?: string | null
+          created_by?: string | null
           date?: string | null
+          description?: string | null
           id?: number
           planned_shutdown?: number | null
-          sum_running_hour?: number | null
           unplanned_shutdown?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
           uptime?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "r_rms_uptime_e_asset_fk"
-            columns: ["asset_id"]
+            foreignKeyName: "r_rms_uptime_e_asset_detail_fk"
+            columns: ["asset_detail_id"]
             isOneToOne: false
-            referencedRelation: "e_asset"
+            referencedRelation: "e_asset_detail"
             referencedColumns: ["id"]
           },
         ]
@@ -7030,6 +8134,7 @@ export type Database = {
           created_when: string | null
           description: string | null
           id: string
+          is_active: boolean
           name: string | null
           priority: number | null
           updated_at: string | null
@@ -7040,6 +8145,7 @@ export type Database = {
           created_when?: string | null
           description?: string | null
           id?: string
+          is_active?: boolean
           name?: string | null
           priority?: number | null
           updated_at?: string | null
@@ -7050,6 +8156,7 @@ export type Database = {
           created_when?: string | null
           description?: string | null
           id?: string
+          is_active?: boolean
           name?: string | null
           priority?: number | null
           updated_at?: string | null
@@ -7092,6 +8199,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_create_user: {
+        Args: {
+          user_email: string
+          user_full_name: string
+          user_type_id: string
+        }
+        Returns: Json
+      }
       admin_update_user_password: {
         Args: { user_id: string; new_password: string }
         Returns: undefined
@@ -7100,9 +8215,92 @@ export type Database = {
         Args: { p_user_id: string; p_project_id: number }
         Returns: undefined
       }
+      create_admin_user: {
+        Args: {
+          user_email: string
+          user_password: string
+          user_full_name: string
+        }
+        Returns: Json
+      }
       direct_query: {
         Args: { query_text: string }
         Returns: Json
+      }
+      func_five: {
+        Args: {
+          p_new_work_order_id: number
+          p_pm_work_order_id: number
+          p_pm_schedule_id: number
+          p_wo_pm_schedule_id: number
+          p_next_due_date: string
+        }
+        Returns: undefined
+      }
+      func_four: {
+        Args: { p_frequency_id: number; p_due_date: string }
+        Returns: string
+      }
+      func_many_one: {
+        Args: { p_created_by: string; p_start_date: string; p_end_date: string }
+        Returns: number
+      }
+      func_many_three: {
+        Args: { p_frequency_id: number; p_due_date: string }
+        Returns: string
+      }
+      func_many_two: {
+        Args: {
+          p_pm_schedule_id: number
+          p_generate_id: number
+          p_created_by: string
+          p_due_date: string
+        }
+        Returns: undefined
+      }
+      func_one: {
+        Args: { p_schedule_id: number; p_created_by: string }
+        Returns: {
+          asset_id: number | null
+          asset_sce_code_id: number | null
+          closed_by: string | null
+          completed_by: string | null
+          created_at: string | null
+          created_by: string | null
+          discipline_id: number | null
+          due_date: string | null
+          facility_id: number | null
+          frequency_id: number | null
+          id: number
+          is_active: boolean | null
+          maintenance_id: number | null
+          package_id: number | null
+          pm_description: string | null
+          pm_group_id: number | null
+          pm_schedule_id: number | null
+          priority_id: number | null
+          system_id: number | null
+          task_id: number | null
+          updated_at: string | null
+          updated_by: string | null
+          work_center_id: number | null
+        }[]
+      }
+      func_three: {
+        Args: {
+          p_created_by: string
+          p_task_id: number
+          p_asset_id: number
+          p_description: string
+          p_due_date: string
+          p_pm_work_order_id: number
+          p_facility_id: number
+        }
+        Returns: number
+      }
+      func_two: {
+        Args: { v_pm_wo_id: number; v_pm_schedule_id: number }
+        Returns: undefined
       }
       get_project_assigned_users: {
         Args: { p_project_id: number }
@@ -7169,6 +8367,65 @@ export type Database = {
           updated_at: string
           avatar_url: string
         }[]
+      }
+      handle_adjustment_inventory: {
+        Args: {
+          p_inventory_id: number
+          p_quantity: number
+          p_adjustment_type_id: number
+          p_adjustment_category_id: number
+          p_created_by: string
+          p_remark: string
+          p_created_at: string
+        }
+        Returns: undefined
+      }
+      handle_issue_inventory: {
+        Args: {
+          p_inventory_id: number
+          p_quantity: number
+          p_work_order_no: number
+          p_created_by: string
+          p_remark: string
+          p_created_at: string
+        }
+        Returns: undefined
+      }
+      handle_receive_inventory: {
+        Args: {
+          p_inventory_id: number
+          p_received_quantity: number
+          p_unit_price: number
+          p_po_receive_no: string
+          p_created_by: string
+          p_created_at: string
+          p_remark: string
+        }
+        Returns: Json
+      }
+      handle_return_inventory: {
+        Args: {
+          p_inventory_id: number
+          p_quantity: number
+          p_work_order_no: number
+          p_created_by: string
+          p_remark: string
+          p_created_at: string
+        }
+        Returns: undefined
+      }
+      handle_transfer_inventory: {
+        Args: {
+          p_source_inventory_id: number
+          p_destination_store_id: number
+          p_quantity: number
+          p_transfer_reason: string
+          p_employee_id: number
+          p_created_by: string
+          p_remark: string
+          p_created_at: string
+        }
+        Returns: undefined
       }
       is_admin: {
         Args: Record<PropertyKey, never>
