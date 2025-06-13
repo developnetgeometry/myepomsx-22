@@ -1,469 +1,409 @@
-
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import PageHeader from "@/components/shared/PageHeader";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Save, PlusCircle } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { taskService } from '@/services/taskService';
+import { Task, TaskDetail, TaskDetailCreate, TaskDetailUpdate, TaskUpdate } from '@/types/maintain';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from '@/hooks/use-toast';
+import { Plus, Trash2, Pencil, Save, XCircle } from 'lucide-react';
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import DataTable from "@/components/shared/DataTable";
-import {
-  useAddDetailToTask,
-  useDeleteTaskDetail,
-  useDisciplineOptions,
-  useTaskWithDetails,
-  useUpdateTask,
-  useUpdateTaskDetail,
-} from "@/hooks/queries/useTasks";
-import { useToast } from "@/hooks/use-toast";
-import { TaskDetailCreate } from "@/types/maintain";
-import ManageDialog from "@/components/manage/ManageDialog";
-
-interface TaskWithDetails {
-  id: number;
-  task_code: string;
-  task_name: string;
-  discipline_id: number;
-  is_active: boolean;
-  details?: TaskDetail[];
-}
-
-interface TaskDetail {
-  id?: number;
-  seq: number;
-  task_list: string;
-  task_id: number;
-  created_at: Date;
-  updated_at: Date;
-}
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 const TaskLibraryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("task");
-  const [loading, setLoading] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [editingDetail, setEditingDetail] = useState<TaskDetailCreate | null>(
-    null
-  );
-  const { toast } = useToast();
-  const { data: taskData, isLoading, error } = useTaskWithDetails(Number(id));
-  const { data: disciplineOptions, isLoading: isLoadingDiscipline } =
-    useDisciplineOptions();
-  
-  const typedTaskData = taskData as TaskWithDetails | undefined;
-  const sequences = typedTaskData?.details || [];
+  const [task, setTask] = useState<Task | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTask, setEditingTask] = useState<Partial<Task> | null>(null);
+  const [editingDetail, setEditingDetail] = useState<TaskDetailUpdate | null>(null);
 
-  const updateTaskMutation = useUpdateTask();
-  const addDetailToTaskMutation = useAddDetailToTask();
-  const updateTaskDetailMutation = useUpdateTaskDetail();
-  const deleteTaskDetailMutation = useDeleteTaskDetail();
-
-  const sequenceColumns = [
-    { id: "seq", header: "Seq", accessorKey: "seq" },
-    { id: "taskList", header: "Task List", accessorKey: "task_list" },
-  ];
-
-  // Form validation schema
-  const taskFormSchema = z.object({
-    task_code: z.string().min(1, { message: "Task Code is required" }),
-    task_name: z.string().min(1, { message: "Task Name is required" }),
-    discipline_id: z.string().min(1, { message: "Discipline is required" }),
-    is_active: z.boolean().default(true),
-  });
-
-  const taskDetailSchema = z.object({
-    task_list: z.string().min(1, "Task description is required"),
-  });
-
-  const taskDetailFormFields = [
-    {
-      name: "task_list",
-      label: "Task Description",
-      type: "text" as const,
-      required: true,
-    },
-  ];
-
-  // Initialize form
-  const form = useForm<z.infer<typeof taskFormSchema>>({
-    resolver: zodResolver(taskFormSchema),
-    defaultValues: {
-      task_code: "",
-      task_name: "",
-      discipline_id: "",
-      is_active: true,
-    },
-  });
-
-  // Reset form when taskData is available
   useEffect(() => {
-    if (typedTaskData) {
-      form.reset({
-        task_code: typedTaskData.task_code,
-        task_name: typedTaskData.task_name,
-        discipline_id: String(typedTaskData.discipline_id),
-        is_active: typedTaskData.is_active,
-      });
-    }
-  }, [typedTaskData, form]);
+    const fetchTask = async () => {
+      if (!id) {
+        toast({
+          title: "Error",
+          description: "Task ID is required",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
 
-  const onSubmit = async (values: z.infer<typeof taskFormSchema>) => {
+      try {
+        const taskData = await taskService.getTaskWithDetails(parseInt(id));
+        setTask(taskData);
+      } catch (error) {
+        console.error("Error fetching task:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load task",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTask();
+  }, [id]);
+
+  const handleTaskUpdate = async () => {
+    if (!editingTask || !task) return;
+
     try {
-      await updateTaskMutation.mutateAsync({
-        id: Number(id),
-        task_code: values.task_code,
-        task_name: values.task_name,
-        discipline_id: Number(values.discipline_id),
-        is_active: Boolean(values.is_active),
-        updated_at: new Date(),
-      });
+      const updatedTask: TaskUpdate = {
+        id: task.id,
+        task_name: editingTask.task_name,
+        task_code: editingTask.task_code,
+        description: editingTask.description,
+        discipline_id: editingTask.discipline_id,
+        is_active: editingTask.is_active,
+        updated_by: "current-user" // Replace with actual user ID
+      };
+
+      await taskService.updateTask(updatedTask);
+      setIsEditing(false);
+      setEditingTask(null);
+      // Refresh data
+      const updatedTaskData = await taskService.getTaskWithDetails(task.id);
+      setTask(updatedTaskData);
+      
       toast({
         title: "Success",
         description: "Task updated successfully",
-        variant: "default",
       });
     } catch (error) {
+      console.error("Error updating task:", error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error ? error.message : "An error occurred",
+        description: "Failed to update task",
         variant: "destructive",
       });
     }
   };
 
-  const handleAddSequence = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Calculate next sequence number
-    const nextSeq =
-      sequences.length > 0 ? Math.max(...sequences.map((s) => s.seq)) + 1 : 1;
-
-    setEditingDetail({
-      task_id: Number(id),
-      seq: nextSeq,
-      task_list: "",
-      created_at: new Date(),
-      updated_at: new Date(),
-    });
-    setIsDetailDialogOpen(true);
+  const handleEditClick = () => {
+    setIsEditing(true);
+    if (task) {
+      setEditingTask({ ...task });
+    }
   };
 
-  const handleEditSequence = (row: any) => {
-    setEditingDetail({
-      ...row,
-      task_id: Number(id),
-    });
-    setIsDetailDialogOpen(true);
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingTask(null);
   };
 
-  const handleSubmitDetail = async (
-    values: z.infer<typeof taskDetailSchema>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!editingTask) return;
+    const { name, value } = e.target;
+    setEditingTask({ ...editingTask, [name]: value });
+  };
+
+  const [newDetail, setNewDetail] = useState<TaskDetailCreate>({
+    task_id: parseInt(id!),
+    sequence: 1,
+    task_list: "",
+    created_by: "current-user",
+    updated_by: "current-user"
+  });
+
+  const handleNewDetailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewDetail({ ...newDetail, [name]: value });
+  };
+
+  const handleDetailEdit = (detail: TaskDetail) => {
+    const detailUpdate: TaskDetailUpdate = {
+      id: detail.id,
+      task_id: detail.task_id,
+      sequence: detail.sequence,
+      task_list: detail.task_list,
+      updated_by: "current-user"
+    };
+    setEditingDetail(detailUpdate);
+  };
+
+  const handleDetailUpdate = async () => {
+    if (!editingDetail) return;
+
     try {
-      const isEditMode = editingDetail && editingDetail.id;
-
-      if (isEditMode) {
-        await updateTaskDetailMutation.mutateAsync({
-          id: editingDetail.id,
-          task_list: values.task_list,
-          updated_at: new Date(),
-        },
-        {
-          onSuccess: () => {
-            toast({
-              title: "Success",
-              description: "Task detail updated successfully",
-              variant: "default",
-            });
-          },
-          onError: (error) => {
-            toast({
-              title: "Error",
-              description:
-                error instanceof Error ? error.message : "An error occurred",
-              variant: "destructive",
-            });
-          },
-        }
-      );
-      } else {
-        const nextSeq =
-          sequences.length > 0
-            ? Math.max(...sequences.map((s) => s.seq)) + 1
-            : 1;
-        await addDetailToTaskMutation.mutateAsync(
-          {
-            task_id: Number(id),
-            seq: nextSeq,
-            task_list: values.task_list,
-            created_at: new Date(),
-            updated_at: new Date(),
-          },
-          {
-            onSuccess: () => {
-              toast({
-                title: "Success",
-                description: "Task detail created successfully",
-                variant: "default",
-              });
-            },
-            onError: (error) => {
-              toast({
-                title: "Error",
-                description:
-                  error instanceof Error ? error.message : "An error occurred",
-                variant: "destructive",
-              });
-            },
-          }
-        );
-      }
-
-      setIsDetailDialogOpen(false);
+      await taskService.updateTaskDetail(editingDetail);
       setEditingDetail(null);
+      
+      // Refresh data
+      const updatedTask = await taskService.getTaskWithDetails(parseInt(id!));
+      setTask(updatedTask);
+      
+      toast({
+        title: "Success",
+        description: "Task detail updated successfully",
+      });
     } catch (error) {
+      console.error("Error updating task detail:", error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error ? error.message : "An error occurred",
+        description: "Failed to update task detail",
         variant: "destructive",
       });
     }
   };
 
-  const handleDeleteSequence = async (row: any) => {
+  const handleDetailInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!editingDetail) return;
+    const { name, value } = e.target;
+    setEditingDetail({ ...editingDetail, [name]: value });
+  };
+
+  const handleAddDetail = async () => {
+    if (!newDetail.task_list.trim()) return;
+
     try {
-      await deleteTaskDetailMutation.mutateAsync(row.id);
+      const detailToAdd: TaskDetailCreate = {
+        task_id: parseInt(id!),
+        sequence: newDetail.sequence,
+        task_list: newDetail.task_list,
+        created_by: "current-user",
+        updated_by: "current-user"
+      };
+
+      await taskService.addDetailsToTask(detailToAdd);
+      
+      // Reset form
+      setNewDetail({
+        task_id: parseInt(id!),
+        sequence: 1,
+        task_list: "",
+        created_by: "current-user",
+        updated_by: "current-user"
+      });
+      
+      // Refresh data
+      const updatedTask = await taskService.getTaskWithDetails(parseInt(id!));
+      setTask(updatedTask);
+      
+      toast({
+        title: "Success",
+        description: "Task detail added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding task detail:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add task detail",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteDetail = async (detailId: number) => {
+    try {
+      await taskService.deleteTaskDetail(detailId);
+      
+      // Refresh data
+      const updatedTask = await taskService.getTaskWithDetails(parseInt(id!));
+      setTask(updatedTask);
+      
       toast({
         title: "Success",
         description: "Task detail deleted successfully",
-        variant: "default",
       });
     } catch (error) {
+      console.error("Error deleting task detail:", error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error ? error.message : "An error occurred",
+        description: "Failed to delete task detail",
         variant: "destructive",
       });
     }
   };
 
-  if (isLoading || isLoadingDiscipline) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!typedTaskData) {
+  if (!task) {
     return <div>Task not found</div>;
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <PageHeader title="Task Detail" />
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => navigate("/maintain/task-library")}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" /> Back to Task Library
-        </Button>
-      </div>
-
+    <div className="container mx-auto p-4">
+      <Button onClick={() => navigate('/maintain/task-library')}>Back to Task Library</Button>
       <Card>
         <CardHeader>
-          <CardTitle>Task: {typedTaskData.task_name}</CardTitle>
+          <CardTitle>Task Details</CardTitle>
+          <CardDescription>View and manage task details</CardDescription>
         </CardHeader>
-
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <Tabs
-                defaultValue="task"
-                value={activeTab}
-                onValueChange={setActiveTab}
-              >
-                <TabsList className="grid w-full md:w-[400px] grid-cols-2">
-                  <TabsTrigger value="task">Task</TabsTrigger>
-                  <TabsTrigger value="details">Details</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="task" className="space-y-6 pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Left Column */}
-                    <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="task_code"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Task Code</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="task_name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Task Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Right Column */}
-                    <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="discipline_id"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Discipline</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select discipline" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {disciplineOptions?.map((option) => (
-                                  <SelectItem
-                                    key={option.value}
-                                    value={String(option.value)}
-                                  >
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="is_active"
-                        render={({ field }) => (
-                          <FormItem className="flex items-center space-x-2">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <FormLabel>Active</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="details" className="pt-4">
-                  <div className="space-y-4">
-                    <div className="flex justify-end">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={handleAddSequence}
-                        className="flex items-center gap-2"
-                      >
-                        <PlusCircle className="h-4 w-4" /> Add Row
-                      </Button>
-                    </div>
-
-                    <DataTable
-                      columns={sequenceColumns}
-                      data={sequences}
-                      onEdit={handleEditSequence}
-                      onDelete={handleDeleteSequence}
-                    />
-
-                    <div className="text-sm text-gray-600">
-                      Total Rows Selected: {selectedRows.length}
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
-
-              <div className="flex justify-end space-x-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate("/maintain/task-library")}
-                >
+          {isEditing ? (
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="task_name">Task Name</Label>
+                <Input
+                  type="text"
+                  id="task_name"
+                  name="task_name"
+                  value={editingTask.task_name || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <Label htmlFor="task_code">Task Code</Label>
+                <Input
+                  type="text"
+                  id="task_code"
+                  name="task_code"
+                  value={editingTask.task_code || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={editingTask.description || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={handleTaskUpdate}>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save
+                </Button>
+                <Button variant="secondary" onClick={handleCancelEdit}>
+                  <XCircle className="h-4 w-4 mr-2" />
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Saving..." : "Apply Changes"}
-                </Button>
               </div>
-            </form>
-          </Form>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              <div>
+                <h3 className="text-lg font-semibold">Task Name</h3>
+                <p>{task.task_name}</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Task Code</h3>
+                <p>{task.task_code}</p>
+              </div>
+              {task.description && (
+                <div>
+                  <h3 className="text-lg font-semibold">Description</h3>
+                  <p>{task.description}</p>
+                </div>
+              )}
+              <Button onClick={handleEditClick}>
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit Task
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <ManageDialog
-        open={isDetailDialogOpen}
-        onOpenChange={setIsDetailDialogOpen}
-        title={editingDetail?.id ? "Edit Task Detail" : "Add New Task Detail"}
-        formSchema={taskDetailSchema}
-        defaultValues={
-          editingDetail || {
-            seq:
-              sequences.length > 0
-                ? Math.max(...sequences.map((s) => s.seq)) + 1
-                : 1,
-            task_list: "",
-          }
-        }
-        formFields={taskDetailFormFields}
-        onSubmit={handleSubmitDetail}
-        isEdit={!!editingDetail?.id}
-      />
+      <Card>
+        <CardHeader>
+          <CardTitle>Task Details</CardTitle>
+          <CardDescription>Manage task details</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Sequence</TableHead>
+                <TableHead>Task List</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {task.task_details && task.task_details.map((detail) => (
+                <TableRow key={detail.id}>
+                  <TableCell>{detail.sequence}</TableCell>
+                  <TableCell>
+                    {editingDetail?.id === detail.id ? (
+                      <Input
+                        type="text"
+                        name="task_list"
+                        value={editingDetail.task_list}
+                        onChange={handleDetailInputChange}
+                      />
+                    ) : (
+                      detail.task_list
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {editingDetail?.id === detail.id ? (
+                      <>
+                        <Button onClick={handleDetailUpdate}>
+                          <Save className="h-4 w-4 mr-2" />
+                          Save
+                        </Button>
+                        <Button variant="secondary" onClick={() => setEditingDetail(null)}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="ghost" onClick={() => handleDetailEdit(detail)}>
+                          <Pencil className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button variant="ghost" onClick={() => handleDeleteDetail(detail.id)}>
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold">Add New Detail</h3>
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="sequence">Sequence</Label>
+                <Input
+                  type="number"
+                  id="sequence"
+                  name="sequence"
+                  value={newDetail.sequence}
+                  onChange={handleNewDetailChange}
+                />
+              </div>
+              <div>
+                <Label htmlFor="task_list">Task List</Label>
+                <Textarea
+                  id="task_list"
+                  name="task_list"
+                  value={newDetail.task_list}
+                  onChange={handleNewDetailChange}
+                />
+              </div>
+              <Button onClick={handleAddDetail}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Detail
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

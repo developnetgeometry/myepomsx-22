@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { render, screen, waitFor } from './test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import FacilityDetailPage from '@/pages/manage/FacilityDetailPage';
 
 // Mock the facility service

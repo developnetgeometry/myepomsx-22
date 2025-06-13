@@ -458,6 +458,48 @@ const PMSchedulePage: React.FC = () => {
     }
   };
 
+  const handleCreate = async (pmData: any) => {
+    try {
+      const newPMSchedule: createPMScheduleDTO = {
+        pm_description: pmData.pm_description,
+        due_date: pmData.due_date,
+        maintenance_id: pmData.maintenance_id,
+        priority_id: pmData.priority_id,
+        work_center_id: pmData.work_center_id,
+        discipline_id: pmData.discipline_id,
+        task_id: pmData.task_id,
+        frequency_id: pmData.frequency_id,
+        asset_id: pmData.asset_id,
+        system_id: pmData.system_id || 1, // Default value
+        package_id: pmData.package_id || 1, // Default value
+        pm_group_id: pmData.pm_group_id || 1, // Default value
+        pm_sce_group_id: pmData.pm_sce_group_id || 1, // Default value
+        facility_id: pmData.facility_id || 1, // Default value
+        is_active: pmData.is_active,
+        created_by: "current-user",
+        updated_by: "current-user",
+        pm_no: pmData.pm_no
+      };
+
+      await PMScheduleService.createPMSchedule(newPMSchedule);
+      
+      toast({
+        title: "Success",
+        description: "PM Schedule created successfully",
+      });
+      
+      // Refresh data
+      await refetch();
+    } catch (error) {
+      console.error("Error creating PM schedule:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create PM schedule",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">

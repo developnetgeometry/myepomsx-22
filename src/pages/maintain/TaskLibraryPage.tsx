@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { PlusCircle, Edit, Trash2, Eye, Search } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
 import {
-  Check,
-  List,
-  Plus,
-  Pencil,
-  X,
-  Search,
-  Copy,
-  Loader2,
-} from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { taskService } from '@/services/taskService';
+import { Task, DisciplineOption, TaskUpdate, TaskCreate } from '@/types/maintain';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,412 +25,496 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { createTaskDTO, Task } from "@/types/maintain";
-import { useTasks, useCreateTask, useUpdateTask, useDeleteTask, useDisciplineOptions } from "@/hooks/queries/useTasks";
-import ManageDialog from "@/components/manage/ManageDialog";
-import * as z from "zod";
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Column } from '@/pages/purchasing/DataTable';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
+interface TaskData {
+  id: number;
+  task_code: string;
+  task_name: string;
+  discipline_id: number;
+  is_active: boolean;
+}
 
 const TaskLibraryPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { data: tasks, isLoading, error } = useTasks();
-  const createTaskMutation = useCreateTask();
-  const updateTaskMutation = useUpdateTask();
-  const deleteTaskMutation = useDeleteTask();
-  
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [currentTask, setCurrentTask] = useState<Task | null>(null);
-  const [activeTab, setActiveTab] = useState("templates");
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
-  const { toast } = useToast();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [disciplines, setDisciplines] = useState<DisciplineOption[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
+  const [newTask, setNewTask] = useState({
+    task_code: '',
+    task_name: '',
+    discipline_id: 1,
+    is_active: true,
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-
-const { data: disciplineOptions = [], isLoading: isLoadingDiscipline } = useDisciplineOptions();
-
-
-// Define form schema for validation
-const taskFormSchema = z.object({
-  taskCode: z.string().min(1, "Task code is required"),
-  taskName: z.string().min(1, "Task name is required"),
-  discipline: z.string().min(1, "Discipline is required"),
-  // counter: z.number().min(0, "Counter must be positive"),
-  // noManPower: z.number().min(0, "Man power must be positive"),
-  // manHour: z.number().min(0, "Man hour must be positive"),
-  // totalHourRequire: z.number().min(0, "Total hours must be positive"),
-  is_active: z.string(),
-});
-
-// Define form fields configuration
-const taskFormFields = [
-  {
-    name: "taskCode",
-    label: "Task Code",
-    type: "text" as const,
-    required: true,
-    section: "main" as const,
-  },
-  // {
-  //   name: "counter",
-  //   label: "Counter",
-  //   type: "number" as const,
-  //   required: true,
-  //   section: "main" as const,
-  //   width: "half" as const,
-  // },
-  {
-    name: "taskName",
-    label: "Task Name",
-    type: "text" as const,
-    required: true,
-    section: "main" as const,
-  },
-  {
-    name: "discipline",
-    label: "Discipline",
-    type: "select" as const,
-    required: true,
-    options: isLoadingDiscipline 
-    ? [] 
-    : disciplineOptions?.map((option) => ({
-        value: String(option.value),
-        label: option.label,
-      })) || [],
-    section: "main" as const,
-  },
-  // {
-  //   name: "noManPower",
-  //   label: "No Man Power",
-  //   type: "number" as const,
-  //   required: true,
-  //   section: "main" as const,
-  //   width: "half" as const,
-  // },
-  // {
-  //   name: "manHour",
-  //   label: "Man Hour",
-  //   type: "number" as const,
-  //   required: true,
-  //   section: "main" as const,
-  //   width: "half" as const,
-  // },
-  // {
-  //   name: "totalHourRequire",
-  //   label: "Total Hour Require",
-  //   type: "number" as const,
-  //   required: true,
-  //   section: "main" as const,
-  // },
-  {
-    name: "is_active",
-    label: "Active",
-    type: "select" as const,
-    section: "main" as const,
-    options: [
-      { value: "true", label: "Active" },
-      { value: "false", label: "Inactive" },
-    ],
-  },
-];
-
-  const handleAddNew = () => {
-    setIsEditMode(false);
-    setCurrentTask(null);
-    setIsDialogOpen(true);
-  };
-
-  const handleEdit = (task: Task) => {
-    setIsEditMode(true);
-    setCurrentTask(task);
-    setIsDialogOpen(true);
-  };
-
-  const handleSubmit = async (values: z.infer<typeof taskFormSchema>) => {
+  const fetchData = async () => {
     try {
-      if (isEditMode && currentTask) {
-        await updateTaskMutation.mutateAsync({ 
-            id: currentTask.id,
-            task_code: values.taskCode,
-            task_name: values.taskName,
-            discipline_id: Number(values.discipline),
-            is_active: Boolean(values.is_active),
-            updated_at: new Date(),
-         });
-        toast({
-          title: "Success",
-          description: "Task updated successfully",
-          variant: "default",
-        });
-      } else {
-        await createTaskMutation.mutateAsync({
-          task_code: values.taskCode,
-          task_name: values.taskName,
-          discipline_id: Number(values.discipline),
-          is_active: Boolean(values.is_active),
-          created_at: new Date(),
-          updated_at: new Date(),
-        } as createTaskDTO);
-        toast({
-          title: "Success",
-          description: "Task created successfully",
-          variant: "default",
-        });
-      }
-      setIsDialogOpen(false);
+      const tasksData = await taskService.getTasks();
+      setTasks(tasksData);
+
+      const disciplinesData = await taskService.getDisciplineOptions();
+      setDisciplines(disciplinesData);
     } catch (error) {
+      console.error("Error fetching data:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: "Failed to load tasks and disciplines",
         variant: "destructive",
       });
     }
   };
 
-  const handleRowClick = (task: Task) => {
-    navigate(`/maintain/task-library/${task.id}`);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const refetch = async () => {
+    await fetchData();
   };
 
-  const handleDuplicate = async (task: Task) => {
+  const handleUpdateTask = async (taskData: any) => {
     try {
-      const newTask = {
-        id: undefined,
-        task_code: `COPY-${task.task_code}`,
-        task_name: task.task_name,
-        discipline_id: task.discipline_id,
-        is_active: task.is_active,
+      const updatedTask: TaskUpdate = {
+        id: taskData.id,
+        task_name: taskData.task_name,
+        task_code: taskData.task_code,
+        discipline_id: taskData.discipline_id,
+        is_active: taskData.is_active,
+        updated_by: "current-user"
       };
-      await createTaskMutation.mutateAsync(newTask);
+
+      await taskService.updateTask(updatedTask);
+      
       toast({
         title: "Success",
-        description: "Task duplicated successfully",
-        variant: "default",
+        description: "Task updated successfully",
       });
+      
+      // Refresh data
+      await refetch();
     } catch (error) {
+      console.error("Error updating task:", error);
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to duplicate task",
+        title: "Error", 
+        description: "Failed to update task",
         variant: "destructive",
       });
     }
   };
 
-  const confirmDelete = (taskId: string) => {
-    setTaskToDelete(taskId);
-    setDeleteDialogOpen(true);
+  const handleAddTask = async (taskData: any) => {
+    try {
+      const newTask: TaskCreate = {
+        task_name: taskData.task_name,
+        task_code: taskData.task_code,
+        discipline_id: taskData.discipline_id,
+        is_active: taskData.is_active,
+        created_by: "current-user",
+        updated_by: "current-user"
+      };
+
+      await taskService.createTask(newTask);
+      
+      toast({
+        title: "Success",
+        description: "Task created successfully",
+      });
+      
+      // Refresh data
+      await refetch();
+    } catch (error) {
+      console.error("Error creating task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create task", 
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDelete = async () => {
-    if (!taskToDelete) return;
+  const filteredTasks = tasks.filter(task =>
+    task.task_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    task.task_code.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleOpenDeleteDialog = (id: number) => {
+    setIsDeleting(true);
+    setTaskToDelete(id);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setIsDeleting(false);
+    setTaskToDelete(null);
+  };
+
+  const handleDeleteTask = async () => {
+    if (taskToDelete === null) return;
+
     try {
-      await deleteTaskMutation.mutateAsync(Number(taskToDelete));
+      await taskService.deleteTask(taskToDelete);
+      
       toast({
         title: "Success",
         description: "Task deleted successfully",
-        variant: "default",
       });
-      setDeleteDialogOpen(false);
-      setTaskToDelete(null);
+      
+      // Refresh data
+      await refetch();
     } catch (error) {
+      console.error("Error deleting task:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to delete task",
+        description: "Failed to delete task",
         variant: "destructive",
       });
+    } finally {
+      handleCloseDeleteDialog();
     }
   };
 
-  const renderTaskCard = (task: Task) => (
-    <Card
-      key={task.id}
-      className="w-full hover:shadow-md transition-shadow duration-300 cursor-pointer"
-      onClick={() => handleRowClick(task)}
-    >
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <div>
-            <div className="text-sm text-gray-500 mb-1">
-              {task.discipline.name}
-            </div>
-            <CardTitle className="text-lg font-medium">
-              {task.task_name}
-            </CardTitle>
-          </div>
-          <div className="bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-1 rounded">
-            {task.task_code}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="text-xs text-gray-400">
-          Last updated: {new Date(task.updated_at || "").toLocaleDateString()}
-        </div>
-        <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+  const columns: Column[] = [
+    {
+      id: 'task_code',
+      header: 'Task Code',
+      accessorKey: 'task_code',
+    },
+    {
+      id: 'task_name', 
+      header: 'Task Name',
+      accessorKey: 'task_name',
+    },
+    {
+      id: 'discipline',
+      header: 'Discipline',
+      accessorKey: 'discipline_id',
+      cell: (value) => {
+        const discipline = disciplines.find(d => d.id === value);
+        return discipline ? discipline.name : '-';
+      }
+    },
+    {
+      id: 'is_active',
+      header: 'Active',
+      accessorKey: 'is_active',
+      cell: (value) => (value ? 'Yes' : 'No'),
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      accessorKey: 'id',
+      cell: (value) => (
+        <div className="flex space-x-2">
+          <Link to={`/maintain/task-library/${value}`}>
+            <Button variant="outline" size="sm">
+              <Eye className="h-4 w-4 mr-2" />
+              View
+            </Button>
+          </Link>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="h-8 px-2 text-gray-600 hover:text-gray-900"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(task);
+            onClick={() => {
+              setIsEditing(true);
+              const taskToEdit = tasks.find(task => task.id === value);
+              setEditingTask(taskToEdit || null);
             }}
           >
-            <Pencil className="h-4 w-4 mr-1" />
+            <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2 text-gray-600 hover:text-gray-900"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDuplicate(task);
-              }}
-            >
-              <Copy className="h-4 w-4 mr-1" />
-              Duplicate
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2 text-red-600 hover:text-red-800 hover:bg-red-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                confirmDelete(String(task.id));
-              }}
-            >
-              <X className="h-4 w-4 mr-1" />
-              Delete
-            </Button>
-          </div>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleOpenDeleteDialog(value)}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete
+          </Button>
         </div>
-      </CardContent>
-    </Card>
-  );
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="mr-2 animate-spin" /> Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+      ),
+    },
+  ];
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Task Library</h1>
-        <p className="text-muted-foreground">
-          Standard procedures and inspection checklists
-        </p>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/">Dashboard</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            Task Library
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Task Library</h1>
+        <Button onClick={() => setIsAdding(true)}>
+          <PlusCircle className="h-4 w-4 mr-2" />
+          Add Task
+        </Button>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input placeholder="Search checklists..." className="pl-9 w-full" />
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Tasks</CardTitle>
+          <CardDescription>Manage and view tasks</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4">
+            <Input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                {columns.map((column) => (
+                  <TableHead key={column.id}>{column.header}</TableHead>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {filteredTasks.map((task) => (
+                  <TableRow key={task.id}>
+                    <TableCell>{task.task_code}</TableCell>
+                    <TableCell>{task.task_name}</TableCell>
+                    <TableCell>
+                      {disciplines.find(d => d.id === task.discipline_id)?.name || '-'}
+                    </TableCell>
+                    <TableCell>{task.is_active ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Link to={`/maintain/task-library/${task.id}`}>
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4 mr-2" />
+                            View
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setIsEditing(true);
+                            setEditingTask(task);
+                          }}
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleOpenDeleteDialog(task.id)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
 
-        <div className="flex items-center gap-3">
-          <Button onClick={handleAddNew} className="whitespace-nowrap">
-            <Plus className="mr-2 h-4 w-4" />
-            Create Tasklist
-          </Button>
-        </div>
-      </div>
-
-      <Tabs
-        defaultValue="templates"
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="w-full"
-      >
-        <TabsList className="mb-6">
-          <TabsTrigger value="templates" className="flex items-center">
-            <List className="mr-2 h-4 w-4" />
-            Checklist Templates
-          </TabsTrigger>
-          <TabsTrigger value="active" className="flex items-center">
-            <Check className="mr-2 h-4 w-4" />
-            Active Checklists
-          </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center">
-            <Check className="mr-2 h-4 w-4" />
-            Completed
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="templates" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tasks?.map((task) => (
-              <div key={task.id}>
-                {renderTaskCard(task)}
+      {/* Add Task Modal */}
+      {isAdding && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Add New Task</h3>
+              <div className="mt-2 px-7 py-3">
+                <Label htmlFor="task_code">Task Code</Label>
+                <Input
+                  type="text"
+                  id="task_code"
+                  value={newTask.task_code}
+                  onChange={(e) => setNewTask({ ...newTask, task_code: e.target.value })}
+                  className="mt-1"
+                />
+                <Label htmlFor="task_name" className="mt-4">Task Name</Label>
+                <Input
+                  type="text"
+                  id="task_name"
+                  value={newTask.task_name}
+                  onChange={(e) => setNewTask({ ...newTask, task_name: e.target.value })}
+                  className="mt-1"
+                />
+                <Label htmlFor="discipline_id" className="mt-4">Discipline</Label>
+                <Select
+                  value={newTask.discipline_id.toString()}
+                  onValueChange={(value) => setNewTask({ ...newTask, discipline_id: parseInt(value) })}
+                >
+                  <SelectTrigger id="discipline_id">
+                    <SelectValue placeholder="Select discipline" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {disciplines.map((discipline) => (
+                      <SelectItem key={discipline.id} value={discipline.id.toString()}>
+                        {discipline.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-4 flex items-center">
+                  <Input
+                    type="checkbox"
+                    id="is_active"
+                    checked={newTask.is_active}
+                    onChange={(e) => setNewTask({ ...newTask, is_active: e.target.checked })}
+                    className="mr-2"
+                  />
+                  <Label htmlFor="is_active">Is Active</Label>
+                </div>
               </div>
-            ))}
+              <div className="items-center px-4 py-3">
+                <Button
+                  onClick={() => {
+                    handleAddTask(newTask);
+                    setIsAdding(false);
+                    setNewTask({
+                      task_code: '',
+                      task_name: '',
+                      discipline_id: 1,
+                      is_active: true,
+                    });
+                  }}
+                  className="mr-2"
+                >
+                  Add
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAdding(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="active" className="mt-0">
-          <div className="text-center py-10 text-gray-500">
-            No active checklists found.
+      {/* Edit Task Modal */}
+      {isEditing && editingTask && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Edit Task</h3>
+              <div className="mt-2 px-7 py-3">
+                <Label htmlFor="edit_task_code">Task Code</Label>
+                <Input
+                  type="text"
+                  id="edit_task_code"
+                  value={editingTask.task_code}
+                  onChange={(e) => setEditingTask({ ...editingTask, task_code: e.target.value })}
+                  className="mt-1"
+                />
+                <Label htmlFor="edit_task_name" className="mt-4">Task Name</Label>
+                <Input
+                  type="text"
+                  id="edit_task_name"
+                  value={editingTask.task_name}
+                  onChange={(e) => setEditingTask({ ...editingTask, task_name: e.target.value })}
+                  className="mt-1"
+                />
+                <Label htmlFor="edit_discipline_id" className="mt-4">Discipline</Label>
+                <Select
+                  value={editingTask.discipline_id.toString()}
+                  onValueChange={(value) => setEditingTask({ ...editingTask, discipline_id: parseInt(value) })}
+                >
+                  <SelectTrigger id="edit_discipline_id">
+                    <SelectValue placeholder="Select discipline" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {disciplines.map((discipline) => (
+                      <SelectItem key={discipline.id} value={discipline.id.toString()}>
+                        {discipline.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-4 flex items-center">
+                  <Input
+                    type="checkbox"
+                    id="edit_is_active"
+                    checked={editingTask.is_active}
+                    onChange={(e) => setEditingTask({ ...editingTask, is_active: e.target.checked })}
+                    className="mr-2"
+                  />
+                  <Label htmlFor="edit_is_active">Is Active</Label>
+                </div>
+              </div>
+              <div className="items-center px-4 py-3">
+                <Button
+                  onClick={() => {
+                    handleUpdateTask(editingTask);
+                    setIsEditing(false);
+                    setEditingTask(null);
+                  }}
+                  className="mr-2"
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsEditing(false);
+                    setEditingTask(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="completed" className="mt-0">
-          <div className="text-center py-10 text-gray-500">
-            No completed checklists found.
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <ManageDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title={isEditMode ? "Edit Task" : "Create New Task"}
-        formSchema={taskFormSchema}
-        defaultValues={isEditMode && currentTask
-          ? {
-            taskCode: currentTask.task_code,
-            taskName: currentTask.task_name,
-            discipline: String(currentTask.discipline_id),
-            is_active: String(currentTask.is_active,)
-          }
-          :
-          {
-          taskCode: "",
-          taskName: "",
-          discipline: "1",
-          is_active: undefined,
-        }}
-        formFields={taskFormFields}
-        onSubmit={handleSubmit}
-        isEdit={isEditMode}
-      />
-
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      {/* Delete Task Confirmation Dialog */}
+      <AlertDialog open={isDeleting}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              selected task.
+              This action cannot be undone. Are you sure you want to delete this task?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete
-            </AlertDialogAction>
+            <AlertDialogCancel onClick={handleCloseDeleteDialog}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteTask}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
