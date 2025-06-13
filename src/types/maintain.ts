@@ -66,6 +66,8 @@ export interface TaskWithDetails extends Task {
 export interface DisciplineOption {
   id: number;
   name: string;
+  value: number;
+  label: string;
 }
 
 export interface createTaskDTO {
@@ -81,6 +83,8 @@ export interface createTaskDTO {
 export interface MinAcceptanceCriteria {
   id: number;
   criteria_name: string;
+  field_name?: string;
+  criteria?: string;
   description?: string;
   min_value?: number;
   max_value?: number;
@@ -104,6 +108,11 @@ export interface createPMScheduleDTO {
   is_active: boolean;
   created_by: string;
   updated_by: string;
+  pm_no?: string;
+  service_notes?: string;
+  checksheet_attachment?: string;
+  checksheet_notes?: string;
+  additional_info?: string;
 }
 
 export interface createPMWorkOrder {
@@ -122,11 +131,16 @@ export interface PMScheduleDetail extends PMSchedule {
   facility?: any;
   system?: any;
   asset?: any;
+  package?: any;
   work_center?: any;
   discipline?: DisciplineOption;
   maintenance_type?: any;
   priority?: any;
   frequency?: any;
+  service_notes?: string;
+  checksheet_attachment?: string;
+  checksheet_notes?: string;
+  additional_info?: string;
 }
 
 export interface PMSchedule {
@@ -151,6 +165,10 @@ export interface PMSchedule {
   created_by: string;
   updated_at: string;
   updated_by: string;
+  service_notes?: string;
+  checksheet_attachment?: string;
+  checksheet_notes?: string;
+  additional_info?: string;
 }
 
 export interface PMScheduleCreate {
@@ -171,6 +189,10 @@ export interface PMScheduleCreate {
   is_active: boolean;
   created_by: string;
   updated_by: string;
+  service_notes?: string;
+  checksheet_attachment?: string;
+  checksheet_notes?: string;
+  additional_info?: string;
 }
 
 export interface PMScheduleUpdate {
@@ -192,4 +214,8 @@ export interface PMScheduleUpdate {
   is_active: boolean;
   created_by: string;
   updated_by: string;
+  service_notes?: string;
+  checksheet_attachment?: string;
+  checksheet_notes?: string;
+  additional_info?: string;
 }

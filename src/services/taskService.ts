@@ -47,16 +47,9 @@ export const taskService = {
   },
 
   async createTask(task: TaskCreate): Promise<Task> {
-    // Convert Date objects to ISO strings
-    const taskData = {
-      ...task,
-      created_at: task.created_at ? task.created_at.toISOString() : undefined,
-      updated_at: task.updated_at ? task.updated_at.toISOString() : undefined,
-    };
-
     const { data, error } = await supabase
       .from("e_task")
-      .insert(taskData)
+      .insert(task)
       .select()
       .single();
 
@@ -68,15 +61,9 @@ export const taskService = {
   },
 
   async updateTask(task: TaskUpdate): Promise<Task> {
-    // Convert Date objects to ISO strings
-    const taskData = {
-      ...task,
-      updated_at: task.updated_at ? task.updated_at.toISOString() : undefined,
-    };
-
     const { data, error } = await supabase
       .from("e_task")
-      .update(taskData)
+      .update(task)
       .eq("id", task.id)
       .select()
       .single();
@@ -108,6 +95,8 @@ export const taskService = {
 
     return (
       data?.map((discipline) => ({
+        id: discipline.id,
+        name: discipline.name,
         value: discipline.id,
         label: discipline.name,
       })) || []
@@ -115,16 +104,9 @@ export const taskService = {
   },
 
   async addDetailsToTask(detail: TaskDetailCreate): Promise<TaskDetail> {
-    // Convert Date objects to ISO strings
-    const detailData = {
-      ...detail,
-      created_at: detail.created_at ? detail.created_at.toISOString() : undefined,
-      updated_at: detail.updated_at ? detail.updated_at.toISOString() : undefined,
-    };
-
     const { data, error } = await supabase
       .from("e_task_detail")
-      .insert(detailData)
+      .insert(detail)
       .select()
       .single();
 
@@ -136,15 +118,9 @@ export const taskService = {
   },
 
   async updateTaskDetail(detail: TaskDetailUpdate): Promise<TaskDetail> {
-    // Convert Date objects to ISO strings
-    const detailData = {
-      ...detail,
-      updated_at: detail.updated_at ? detail.updated_at.toISOString() : undefined,
-    };
-
     const { data, error } = await supabase
       .from("e_task_detail")
-      .update(detailData)
+      .update(detail)
       .eq("id", detail.id)
       .select()
       .single();
