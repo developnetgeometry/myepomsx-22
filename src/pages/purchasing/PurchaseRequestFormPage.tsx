@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { departments, purchaseRequests } from '@/data/purchasingSampleData';
-import { ClipboardList, Plus, Trash2 } from 'lucide-react';
+import { ClipboardList, Plus, Trash2, Package, Wrench } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,11 +27,14 @@ interface FormItem {
   uom: string;
 }
 
+type PurchaseRequestType = 'asset' | 'work_order';
+
 const PurchaseRequestFormPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEdit = id !== 'new';
   
+  const [purchaseRequestType, setPurchaseRequestType] = useState<PurchaseRequestType>('asset');
   const [formData, setFormData] = useState({
     requestNumber: '',
     date: new Date().toISOString().split('T')[0],
@@ -41,7 +44,9 @@ const PurchaseRequestFormPage: React.FC = () => {
     priority: 'medium',
     notes: '',
     items: [] as FormItem[],
-    status: 'draft'
+    status: 'draft',
+    assetId: '',
+    workOrderId: ''
   });
 
   // Fetch data if editing
@@ -58,7 +63,9 @@ const PurchaseRequestFormPage: React.FC = () => {
           priority: request.priority,
           notes: request.notes || '',
           items: request.items,
-          status: request.status
+          status: request.status,
+          assetId: '',
+          workOrderId: ''
         });
       }
     } else {
@@ -127,6 +134,25 @@ const PurchaseRequestFormPage: React.FC = () => {
       });
       return;
     }
+
+    // Additional validation based on purchase request type
+    if (purchaseRequestType === 'asset' && !formData.assetId) {
+      toast({
+        title: "Validation Error", 
+        description: "Please select an asset for asset-based purchase request.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (purchaseRequestType === 'work_order' && !formData.workOrderId) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a work order for work order-based purchase request.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Save and navigate back
     toast({
@@ -157,6 +183,52 @@ const PurchaseRequestFormPage: React.FC = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">{isEdit ? 'Edit' : 'New'} Purchase Request</h1>
       </div>
+
+      {!isEdit && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Purchase Request Type</CardTitle>
+            <CardDescription>Choose the basis for your purchase request</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card 
+                className={`cursor-pointer border-2 transition-colors ${
+                  purchaseRequestType === 'asset' 
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-border hover:border-primary/50'
+                }`}
+                onClick={() => setPurchaseRequestType('asset')}
+              >
+                <CardContent className="p-6 text-center">
+                  <Package className="h-12 w-12 mx-auto mb-4 text-primary" />
+                  <h3 className="font-semibold mb-2">Asset-Based Request</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Create a purchase request for items needed for a specific asset
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className={`cursor-pointer border-2 transition-colors ${
+                  purchaseRequestType === 'work_order' 
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-border hover:border-primary/50'
+                }`}
+                onClick={() => setPurchaseRequestType('work_order')}
+              >
+                <CardContent className="p-6 text-center">
+                  <Wrench className="h-12 w-12 mx-auto mb-4 text-primary" />
+                  <h3 className="font-semibold mb-2">Work Order-Based Request</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Create a purchase request for items needed for a specific work order
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
@@ -229,6 +301,50 @@ const PurchaseRequestFormPage: React.FC = () => {
                 </Select>
               </div>
             </div>
+
+            {!isEdit && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {purchaseRequestType === 'asset' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="assetId">Asset</Label>
+                    <Select
+                      value={formData.assetId}
+                      onValueChange={value => setFormData({...formData, assetId: value})}
+                    >
+                      <SelectTrigger id="assetId">
+                        <SelectValue placeholder="Select asset" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="asset-001">Pump - PMP-001</SelectItem>
+                        <SelectItem value="asset-002">Motor - MTR-002</SelectItem>
+                        <SelectItem value="asset-003">Valve - VLV-003</SelectItem>
+                        <SelectItem value="asset-004">Compressor - CMP-004</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {purchaseRequestType === 'work_order' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="workOrderId">Work Order</Label>
+                    <Select
+                      value={formData.workOrderId}
+                      onValueChange={value => setFormData({...formData, workOrderId: value})}
+                    >
+                      <SelectTrigger id="workOrderId">
+                        <SelectValue placeholder="Select work order" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="wo-001">WO-2025-001 - Pump Maintenance</SelectItem>
+                        <SelectItem value="wo-002">WO-2025-002 - Motor Repair</SelectItem>
+                        <SelectItem value="wo-003">WO-2025-003 - Valve Replacement</SelectItem>
+                        <SelectItem value="wo-004">WO-2025-004 - Compressor Overhaul</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+            )}
             
             <div className="space-y-2">
               <Label htmlFor="notes">Notes</Label>
